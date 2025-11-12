@@ -1,0 +1,286 @@
+/* ---------------------------
+   Полный объединённый CSS
+   --------------------------- */
+
+/* Стиль для всего блока поиска */
+.cmn-l-block-wrap.js-ot-msf {
+    margin: 30px 0;
+}
+
+/* Вкладки (TABs) — оставлены как в исходнике */
+.searchTabs__nav {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #fff;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.searchTabs__nav::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #ebdbdb;
+    z-index: 0;
+}
+
+.searchTabs__nav-item {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #429410;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    white-space: nowrap;
+}
+
+.searchTabs__nav-item:hover,
+.searchTabs__nav-item:focus {
+    color: #2e7d32;
+}
+
+.searchTabs__nav-item_active {
+    border: 1px solid #429410;
+    background-color: #fff;
+    color: #429410;
+    z-index: 1;
+}
+
+.searchTabs__nav-item-text {
+    display: block;
+    padding: 4px 0;
+    border-bottom: 1px dotted #429410;
+}
+
+.searchTabs__nav-item_active .searchTabs__nav-item-text,
+.searchTabs__nav-item_active .searchTabs__nav-item-link {
+    border-bottom: none;
+}
+
+.searchTabs__nav-item a {
+    color: #429410;
+    text-decoration: none;
+    display: inline-block;
+    padding: 4px 0;
+    border-bottom: 1px solid #429410;
+}
+
+.searchTabs__nav-item a:hover {
+    color: #2e7d32;
+}
+
+/* Контент вкладок */
+.searchTabs__content {
+    padding: 0;
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-top: none;
+    margin-top: 16px;
+}
+
+/* ======================================================
+   Форма поиска — единый, чистый и предсказуемый набор правил
+   ====================================================== */
+
+/* общий контейнер формы (внутри .searchTabs__content) */
+.searchTabs__content .ot-msf-form,
+.ot-msf-form {
+    display: flex;
+    align-items: center;      /* все элементы строго по одной горизонтали */              /* визуальный интервал между ячейками */
+    width: 100%;
+    background-color: #fff;
+    overflow-x: auto;         /* fallback: если не помещается */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    box-sizing: border-box;
+}
+
+.ot-msf-form::-webkit-scrollbar {
+    display: none;
+}
+
+/* каждый элемент формы — метка сверху, значение снизу; ширина по содержимому */
+.searchTabs__content .ot-msf-form__item,
+.ot-msf-form__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6px 12px;             /* комфортные внутренние отступы */
+    background: #fff;
+    border-right: 1px solid #ebdbdb; /* старая окантовка-разделитель */
+    flex: 0 1 auto;                /* не растёт бесконтрольно, но может сжиматься */
+    width: auto;
+    min-width: 80px;               /* чтобы совсем короткие не разваливались */
+    max-width: 360px;              /* защитный максимум для очень длинных полей */
+    box-sizing: border-box;
+    white-space: nowrap;
+    min-height: 56px;              /* единая высота строки */
+}
+
+/* При желании убрать правую границу у последнего элемента: */
+.searchTabs__content .ot-msf-form__item:last-child {
+    border-right: 1px solid #ebdbdb; /* можно оставить или убрать по вкусу */
+}
+
+/* подпись/метка */
+.searchTabs__content .ot-msf-form__item-label,
+.ot-msf-form__item-label {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 6px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* блок значения (текст / иконка / кнопка внутри ячейки) */
+.searchTabs__content .ot-msf-form__item-value,
+.ot-msf-form__item-value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    white-space: nowrap;
+    overflow: visible;      /* важное: дата и иконки не обрезаются */
+    text-overflow: clip;
+    min-height: 36px;
+}
+
+/* стрелка: находится в потоке, не абсолютная, не перекрывает текст */
+.searchTabs__content .ot-msf-form__item-value::after,
+.ot-msf-form__item-value::after {
+    content: '▼';
+    font-size: 10px;
+    color: #888;
+    margin-left: 6px;
+    flex-shrink: 0;
+    position: static;
+}
+
+/* инпуты и кнопки внутри поля */
+.searchTabs__content .ot-msf-form__item-value input[type="text"],
+.searchTabs__content .ot-msf-form__item-value button,
+.ot-msf-form__item-value input[type="text"],
+.ot-msf-form__item-value button {
+    border: none;
+    background: transparent;
+    outline: none;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    min-width: 0;           /* позволяет флекс-контейнеру сжимать элемент при необходимости */
+    overflow: visible;
+    white-space: nowrap;
+}
+
+/* Контейнер кнопки "Найти" — займет всё оставшееся пространство */
+.ot-msf-form__submit {
+    flex: 1; /* Растягиваем контейнер кнопки на всё доступное пространство */
+}
+
+.ot-msf-form__submit-button {
+    background-color: #429410;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 67.79px;
+    width: 100%; /* Кнопка занимает 100% ширины своего контейнера */
+    padding: 0 16px; /* Оптимальные отступы */
+}
+
+/* подпись "Показать дополнительные поля" */
+.ot-msf-form__additional-fields {
+    display: inline-block; 
+    float: right;
+    clear: both;
+    padding: 8px 0; 
+    margin-top: 8px;
+    margin-right: 16px; 
+    font-size: 12px;
+    color: #429410;
+    border-bottom: 1px dotted #429410; 
+    text-decoration: none; 
+    cursor: pointer;
+    white-space: nowrap;
+}
+.ot-msf-form__additional-fields:hover { color: #2e7d32; border-bottom-color: #2e7d32; }
+
+/* Общий ресет для кнопок */
+button {
+  background: transparent;   
+  border: none;             
+  padding: 0;                  
+  cursor: pointer;             
+  font: inherit;             
+  color: inherit;                
+  outline: none;                 
+}
+
+/* =========================
+   Адаптивные правила (мобильный)
+   ========================= */
+@media (max-width: 1024px) {
+    .searchTabs__content .ot-msf-form__item,
+    .ot-msf-form__item {
+        min-width: 70px;
+        padding: 6px 10px;
+    }
+    .searchTabs__content .ot-msf-form__submit { min-height: 52px; }
+    .searchTabs__content .ot-msf-form__submit-button { padding: 0 16px; font-size: 15px; }
+}
+
+@media (max-width: 768px) {
+    .searchTabs__content .ot-msf-form,
+    .ot-msf-form {
+        flex-wrap: wrap;
+        gap: 0;
+    }
+    .searchTabs__content .ot-msf-form__item,
+    .ot-msf-form__item {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        flex: 0 0 100%;
+        border-right: none;
+        border-bottom: 1px solid #ebdbdb;
+        padding: 10px 12px;
+    }
+    .searchTabs__content .ot-msf-form__submit,
+    .ot-msf-form__submit {
+        width: 100%;
+        min-width: 0;
+    }
+    .searchTabs__content .ot-msf-form__submit-button,
+    .ot-msf-form__submit-button {
+        width: 100%;
+        min-width: 0;
+        padding: 10px 16px;
+        min-height: 56px;
+    }
+    .searchTabs__content .ot-msf-form__item-value::after,
+    .ot-msf-form__item-value::after {
+        font-size: 9px;
+        margin-left: 6px;
+    }
+}
+
+/* Конец файла */

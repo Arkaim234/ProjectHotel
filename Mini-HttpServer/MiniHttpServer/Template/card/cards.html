@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>47 плиток</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tile {
+            width: calc(25% - 20px);
+            border: 2px solid black;
+            border-radius: 15px;
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .tile-text {
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .tile {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tile {
+                width: calc(100% - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        $foreach(var item in Items)
+        <div class="tile-wrapper">
+            <div class="tile"></div>
+            <div class="tile-text">
+                ${item.Title}, ${item.Price} ₽, ${item.Quantity} шт<br>
+                кнопка купить
+            </div>
+        </div>
+        $endfor
+    </div>
+</body>
+</html>
