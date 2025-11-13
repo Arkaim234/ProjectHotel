@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiniHttpServer.Endpoints
-{
-    internal class CardEndpoint
-    {
-        [HttpGet("card")]
-        public IActionResult LoginPage()
-        {
-            var model = new 
-            return new PageResult("Template/Card/login.thtml", model);
-        }
-    }
-}
+//namespace MiniHttpServer.Endpoints
+//{
+//    internal class CardEndpoint
+//    {
+//        [HttpGet("card")]
+//        public IActionResult LoginPage()
+//        {
+//            //var model = new 
+//            //return new PageResult("Template/Card/login.thtml", model);
+//        }
+//    }
+//}

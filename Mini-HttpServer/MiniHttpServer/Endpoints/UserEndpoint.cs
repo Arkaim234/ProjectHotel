@@ -1,6 +1,7 @@
 ﻿using MiniHttpServer.Frimework.Core;
 using MiniHttpServer.Frimework.Core.Atributes;
 using MiniHttpServer.Frimework.Core.HttpResponse;
+using MiniHttpServer.Frimework.Core.Abstracts;
 using MiniHttpServer.Frimework.Settings;
 using MiniHttpServer.Model;
 using MyORMLibrary;
@@ -10,11 +11,11 @@ namespace MiniHttpServer.Endpoints
     [Endpoint]
     internal class UserEndpoint : EndpointBase
     {
-        private readonly ORMContext _context;
+        private readonly IORMContext _context;
 
-        public UserEndpoint()
+        public UserEndpoint(IORMContext context)
         {
-            _context = new ORMContext(Singleton.GetInstance().Settings.ConectionString);
+            _context = context;
         }
 
         /// <summary>
