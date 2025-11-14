@@ -5,5 +5,5 @@
   "LoginUri": "LoginForm",
   "Domain": "localhost",
   "Port": "1337",
-  "ConectionString" : "Host=localhost;Port=5432;Database=Users;Username=postgres;Password=Olganik496"
+  "ConectionString" : "Host=localhost;Port=5432;Database=onetouche;Username=postgres;Password=Olganik496"
 }

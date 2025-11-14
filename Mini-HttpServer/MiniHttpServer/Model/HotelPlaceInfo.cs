@@ -4,16 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiniHttpServer.DTOs.HelperDTOs
+namespace MiniHttpServer.Model
 {
-    public class InformatioPlaceHotelDto
+    public class HotelPlaceInfo
     {
+        public int Id { get; set; }
+        public int HotelId { get; set; }
+
         public string Address { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
         public string Country { get; set; } = string.Empty;
+
         public string DistanceToAirport { get; set; } = string.Empty;
-        public List<string> NearbyHotels { get; set; } = new();
-        public List<string> TimeDistanceToLandmarks { get; set; } = new();
         public string DistanceToCenter { get; set; } = string.Empty;
         public string DistanceToBeach { get; set; } = string.Empty;
     }

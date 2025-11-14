@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace MiniHttpServer.Model
 {
-    internal class Hotel
+    public class Hotel
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public int CityId { get; set; }      
-        public int TypeHotel { get; set; }          
-        public string Description { get; set; } = string.Empty;
-        public string PhotoUrl { get; set; } = string.Empty;
+        public string Name { get; set; } 
+        public string Slug { get; set; }
+        public int CityId { get; set; }
+        public string HotelType { get; set; } 
+        public string Description { get; set; } 
+        public string PhotoUrl { get; set; } 
         public string? MealPlanCode { get; set; }
+        public int Price { get; set; }
     }
 }

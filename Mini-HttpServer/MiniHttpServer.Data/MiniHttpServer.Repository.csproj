@@ -7,13 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\iniTemplateEngine\MiniTemplateEngine.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Settings\settings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\MyORMContext\MyORMLibrary.csproj" />
   </ItemGroup>
 
 </Project>

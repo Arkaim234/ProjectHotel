@@ -2,341 +2,330 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using MiniHttpServer.Frimework.Core.Abstracts;
 
 namespace MyORMLibrary
 {
+    /// <summary>
+    /// Основной контекст ORM для работы с PostgreSQL.
+    /// Реализует CRUD-операции и простые LINQ-подобные запросы.
+    /// </summary>
     public class ORMContext : IORMContext
     {
         private readonly string _connectionString;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр контекста ORM с указанной строкой подключения.
+        /// </summary>
+        /// <param name="connectionString">Строка подключения к базе данных PostgreSQL.</param>
         public ORMContext(string connectionString)
         {
             _connectionString = connectionString;
         }
 
+        // =====================================================
+        //                      CRUD
+        // =====================================================
+
         /// <summary>
-        /// Возвращает первую запись, соответствующую условию, или null
+        /// Создает новую запись в таблице.
+        /// </summary>
+        /// <typeparam name="T">Тип модели (должен иметь свойство Id).</typeparam>
+        /// <param name="entity">Экземпляр объекта для вставки.</param>
+        /// <param name="tableName">Имя таблицы в базе данных.</param>
+        /// <returns>Созданный объект с обновлённым Id.</returns>
+        public T Create<T>(T entity, string tableName) where T : class
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            var props = typeof(T).GetProperties();
+            var columns = new List<string>();
+            var parameters = new List<string>();
+
+            foreach (var prop in props)
+            {
+                if (!string.Equals(prop.Name, "Id", StringComparison.OrdinalIgnoreCase))
+                {
+                    columns.Add(prop.Name);
+                    parameters.Add($"@{prop.Name}");
+                }
+            }
+
+            string sql = $"INSERT INTO {tableName} ({string.Join(", ", columns)}) VALUES ({string.Join(", ", parameters)}) RETURNING Id";
+
+            using var cmd = new NpgsqlCommand(sql, connection);
+            foreach (var prop in props)
+            {
+                if (!string.Equals(prop.Name, "Id", StringComparison.OrdinalIgnoreCase))
+                {
+                    cmd.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
+                }
+            }
+
+            var newId = cmd.ExecuteScalar();
+            var idProp = typeof(T).GetProperty("Id");
+            if (idProp != null && newId != null)
+            {
+                idProp.SetValue(entity, Convert.ToInt32(newId));
+            }
+
+            return entity;
+        }
+
+        /// <summary>
+        /// Получает запись по её идентификатору.
+        /// </summary>
+        /// <typeparam name="T">Тип модели.</typeparam>
+        /// <param name="id">Значение идентификатора.</param>
+        /// <param name="tableName">Имя таблицы.</param>
+        /// <returns>Объект или null, если запись не найдена.</returns>
+        public T? ReadById<T>(int id, string tableName) where T : class, new()
+        {
+            string sql = $"SELECT * FROM {tableName} WHERE Id = @id";
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            using var cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
+                return MapReaderToObject<T>(reader);
+
+            return null;
+        }
+
+        /// <summary>
+        /// Получает все записи из таблицы.
+        /// </summary>
+        /// <typeparam name="T">Тип модели.</typeparam>
+        /// <param name="tableName">Имя таблицы.</param>
+        /// <returns>Список всех записей таблицы.</returns>
+        public List<T> ReadByAll<T>(string tableName) where T : class, new()
+        {
+            var result = new List<T>();
+            string sql = $"SELECT * FROM {tableName}";
+
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+            using var cmd = new NpgsqlCommand(sql, connection);
+            using var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+                result.Add(MapReaderToObject<T>(reader));
+
+            return result;
+        }
+
+        /// <summary>
+        /// Обновляет запись по идентификатору.
+        /// </summary>
+        /// <typeparam name="T">Тип модели.</typeparam>
+        /// <param name="id">Значение идентификатора.</param>
+        /// <param name="entity">Обновлённый объект.</param>
+        /// <param name="tableName">Имя таблицы.</param>
+        public void Update<T>(int id, T entity, string tableName) where T : class
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            var props = typeof(T).GetProperties()
+                .Where(p => !string.Equals(p.Name, "Id", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            var setClauses = string.Join(", ", props.Select(p => $"{p.Name} = @{p.Name}"));
+            string sql = $"UPDATE {tableName} SET {setClauses} WHERE Id = @id";
+
+            using var cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@id", id);
+            foreach (var prop in props)
+                cmd.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
+
+            cmd.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// Удаляет запись по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор записи.</param>
+        /// <param name="tableName">Имя таблицы.</param>
+        public void Delete(int id, string tableName)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            string sql = $"DELETE FROM {tableName} WHERE Id = @id";
+            using var cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.ExecuteNonQuery();
+        }
+
+        // =====================================================
+        //                  LINQ-методы
+        // =====================================================
+
+        /// <summary>
+        /// Возвращает первый объект, удовлетворяющий условию.
         /// </summary>
         public T? FirstOrDefault<T>(Expression<Func<T, bool>> predicate, string tableName) where T : class, new()
         {
-            var sqlQuery = BuildSqlQuery(predicate, tableName, singleResult: true);
-            return ExecuteQuerySingle<T>(sqlQuery);
+            string sql = BuildSqlQuery(predicate, tableName, true);
+            return ExecuteQuerySingle<T>(sql);
         }
 
         /// <summary>
-        /// Возвращает все записи, соответствующие условию
+        /// Возвращает коллекцию объектов, удовлетворяющих условию.
         /// </summary>
         public IEnumerable<T> Where<T>(Expression<Func<T, bool>> predicate, string tableName) where T : class, new()
         {
-            var sqlQuery = BuildSqlQuery(predicate, tableName, singleResult: false);
-            return ExecuteQueryMultiple<T>(sqlQuery);
+            string sql = BuildSqlQuery(predicate, tableName, false);
+            return ExecuteQueryMultiple<T>(sql);
         }
 
+        // =====================================================
+        //              SQL-построитель и парсер
+        // =====================================================
+
         /// <summary>
-        /// Строит SQL-запрос на основе LINQ-выражения
+        /// Формирует SQL-запрос на основе выражения LINQ.
         /// </summary>
         private string BuildSqlQuery<T>(Expression<Func<T, bool>> predicate, string tableName, bool singleResult)
         {
-            var whereClause = ParseExpression(predicate.Body);
-            var limitClause = singleResult ? "LIMIT 1" : string.Empty;
-
-            return $"SELECT * FROM {tableName} WHERE {whereClause} {limitClause}".Trim();
+            string where = ParseExpression(predicate.Body);
+            string limit = singleResult ? "LIMIT 1" : "";
+            return $"SELECT * FROM {tableName} WHERE {where} {limit}".Trim();
         }
 
         /// <summary>
-        /// Разбирает дерево выражений в SQL WHERE-условие
+        /// Рекурсивно парсит выражение LINQ в SQL-предикат.
         /// </summary>
-        private string ParseExpression(Expression expression)
+        private string ParseExpression(Expression expr)
         {
-            if (expression is BinaryExpression binary)
+            return expr switch
             {
-                var left = ParseExpression(binary.Left);
-                var right = ParseExpression(binary.Right);
-                var op = GetSqlOperator(binary.NodeType);
-                return $"({left} {op} {right})";
-            }
-            else if (expression is MemberExpression member)
-            {
-                return member.Member.Name;
-            }
-            else if (expression is ConstantExpression constant)
-            {
-                return FormatConstant(constant.Value);
-            }
-            else if (expression is UnaryExpression unary && unary.NodeType == ExpressionType.Not)
-            {
-                var operand = ParseExpression(unary.Operand);
-                return $"NOT {operand}";
-            }
-
-            throw new NotSupportedException($"Unsupported expression type: {expression.GetType().Name}");
-        }
-
-        /// <summary>
-        /// Преобразует тип операции Expression в SQL-оператор
-        /// </summary>
-        private string GetSqlOperator(ExpressionType nodeType)
-        {
-            return nodeType switch
-            {
-                ExpressionType.Equal => "=",
-                ExpressionType.AndAlso => "AND",
-                ExpressionType.OrElse => "OR",
-                ExpressionType.NotEqual => "<>",
-                ExpressionType.GreaterThan => ">",
-                ExpressionType.LessThan => "<",
-                ExpressionType.GreaterThanOrEqual => ">=",
-                ExpressionType.LessThanOrEqual => "<=",
-                _ => throw new NotSupportedException($"Unsupported node type: {nodeType}")
+                BinaryExpression binary => $"({ParseExpression(binary.Left)} {GetSqlOperator(binary.NodeType)} {ParseExpression(binary.Right)})",
+                MemberExpression member when member.Expression is ParameterExpression => member.Member.Name,
+                MemberExpression member => FormatConstant(EvaluateExpression(member)),
+                ConstantExpression constant => FormatConstant(constant.Value),
+                UnaryExpression unary when unary.NodeType == ExpressionType.Not => $"NOT {ParseExpression(unary.Operand)}",
+                MethodCallExpression call => ParseMethodCall(call),
+                _ => throw new NotSupportedException($"Unsupported expression: {expr.NodeType}")
             };
         }
 
         /// <summary>
-        /// Форматирует константное значение для SQL
+        /// Обрабатывает вызовы методов (Contains, StartsWith, EndsWith) в SQL.
+        /// </summary>
+        private string ParseMethodCall(MethodCallExpression method)
+        {
+            if (method.Method.DeclaringType == typeof(string))
+            {
+                string member = ParseExpression(method.Object!);
+                string argument = ParseExpression(method.Arguments[0]);
+                return method.Method.Name switch
+                {
+                    nameof(string.Contains) => $"({member} ILIKE '%' || {argument} || '%')",
+                    nameof(string.StartsWith) => $"({member} ILIKE {argument} || '%')",
+                    nameof(string.EndsWith) => $"({member} ILIKE '%' || {argument})",
+                    _ => throw new NotSupportedException($"Unsupported string method: {method.Method.Name}")
+                };
+            }
+
+            throw new NotSupportedException($"Unsupported method call: {method.Method.Name}");
+        }
+
+        /// <summary>
+        /// Выполняет вычисление выражения и возвращает его значение.
+        /// </summary>
+        private object? EvaluateExpression(Expression expr)
+        {
+            var lambda = Expression.Lambda<Func<object>>(Expression.Convert(expr, typeof(object)));
+            return lambda.Compile().Invoke();
+        }
+
+        /// <summary>
+        /// Форматирует значение для SQL-запроса.
         /// </summary>
         private string FormatConstant(object? value)
         {
-            if (value == null)
-                return "NULL";
-
-            if (value is string str)
-                return $"'{str.Replace("'", "''")}'"; // Экранирование одинарных кавычек
-
-            if (value is bool b)
-                return b ? "TRUE" : "FALSE";
-
-            if (value is DateTime dt)
-                return $"'{dt:yyyy-MM-dd HH:mm:ss}'";
-
-            return value.ToString() ?? "NULL";
+            if (value == null) return "NULL";
+            return value switch
+            {
+                string s => $"'{s.Replace("'", "''")}'",
+                bool b => b ? "TRUE" : "FALSE",
+                DateTime dt => $"'{dt:yyyy-MM-dd HH:mm:ss}'",
+                _ => value.ToString() ?? "NULL"
+            };
         }
 
         /// <summary>
-        /// Выполняет SQL-запрос и возвращает одну запись
+        /// Преобразует тип узла выражения в SQL-оператор.
         /// </summary>
-        private T? ExecuteQuerySingle<T>(string query) where T : class, new()
+        private string GetSqlOperator(ExpressionType nodeType) => nodeType switch
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (var command = new NpgsqlCommand(query, connection))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return MapReaderToObject<T>(reader);
-                        }
-                    }
-                }
-            }
+            ExpressionType.Equal => "=",
+            ExpressionType.NotEqual => "<>",
+            ExpressionType.GreaterThan => ">",
+            ExpressionType.LessThan => "<",
+            ExpressionType.GreaterThanOrEqual => ">=",
+            ExpressionType.LessThanOrEqual => "<=",
+            ExpressionType.AndAlso => "AND",
+            ExpressionType.OrElse => "OR",
+            _ => throw new NotSupportedException($"Unsupported operator: {nodeType}")
+        };
 
+        // =====================================================
+        //                Исполнение SQL
+        // =====================================================
+
+        /// <summary>
+        /// Выполняет SQL-запрос и возвращает один результат.
+        /// </summary>
+        private T? ExecuteQuerySingle<T>(string sql) where T : class, new()
+        {
+            using var conn = new NpgsqlConnection(_connectionString);
+            conn.Open();
+            using var cmd = new NpgsqlCommand(sql, conn);
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
+                return MapReaderToObject<T>(reader);
             return null;
         }
 
         /// <summary>
-        /// Выполняет SQL-запрос и возвращает коллекцию записей
+        /// Выполняет SQL-запрос и возвращает коллекцию результатов.
         /// </summary>
-        private IEnumerable<T> ExecuteQueryMultiple<T>(string query) where T : class, new()
+        private IEnumerable<T> ExecuteQueryMultiple<T>(string sql) where T : class, new()
         {
-            var results = new List<T>();
-
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (var command = new NpgsqlCommand(query, connection))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            results.Add(MapReaderToObject<T>(reader));
-                        }
-                    }
-                }
-            }
-
-            return results;
+            var list = new List<T>();
+            using var conn = new NpgsqlConnection(_connectionString);
+            conn.Open();
+            using var cmd = new NpgsqlCommand(sql, conn);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+                list.Add(MapReaderToObject<T>(reader));
+            return list;
         }
 
         /// <summary>
-        /// Создает новую запись в таблице
-        /// </summary>
-        public T Create<T>(T entity, string tableName) where T : class
-        {
-            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                PropertyInfo[] properties = typeof(T).GetProperties();
-                List<string> columns = new List<string>();
-                List<string> parameters = new List<string>();
-
-                foreach (var prop in properties)
-                {
-                    if (prop.Name.ToLower() != "id")
-                    {
-                        columns.Add(prop.Name);
-                        parameters.Add($"@{prop.Name}");
-                    }
-                }
-
-                string sql = $"INSERT INTO {tableName} ({string.Join(", ", columns)}) " +
-                             $"VALUES ({string.Join(", ", parameters)}) RETURNING Id";
-
-                using (NpgsqlCommand command = new NpgsqlCommand(sql, connection))
-                {
-                    foreach (var prop in properties)
-                    {
-                        if (prop.Name.ToLower() != "id")
-                        {
-                            command.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
-                        }
-                    }
-
-                    var newId = command.ExecuteScalar();
-
-                    PropertyInfo? idProperty = typeof(T).GetProperty("Id");
-                    if (idProperty != null && newId != null)
-                    {
-                        idProperty.SetValue(entity, Convert.ToInt32(newId));
-                    }
-
-                    return entity;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Читает запись по Id
-        /// </summary>
-        public T? ReadById<T>(int id, string tableName) where T : class, new()
-        {
-            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
-            {
-                connection.Open();
-                string sql = $"SELECT * FROM {tableName} WHERE Id = @id";
-                using (NpgsqlCommand command = new NpgsqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-
-                    using (NpgsqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return MapReaderToObject<T>(reader);
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Читает все записи из таблицы
-        /// </summary>
-        public List<T> ReadByAll<T>(string tableName) where T : class, new()
-        {
-            List<T> results = new List<T>();
-
-            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
-            {
-                connection.Open();
-                string sql = $"SELECT * FROM {tableName}";
-
-                NpgsqlCommand command = new NpgsqlCommand(sql, connection);
-
-                using (NpgsqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        results.Add(MapReaderToObject<T>(reader));
-                    }
-                }
-            }
-            return results;
-        }
-
-        /// <summary>
-        /// Обновляет запись в таблице
-        /// </summary>
-        public void Update<T>(int id, T entity, string tableName) where T : class
-        {
-            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                PropertyInfo[] properties = typeof(T).GetProperties();
-                List<string> setStatements = new List<string>();
-
-                foreach (var prop in properties)
-                {
-                    if (prop.Name.ToLower() != "id")
-                    {
-                        setStatements.Add($"{prop.Name} = @{prop.Name}");
-                    }
-                }
-
-                string sql = $"UPDATE {tableName} SET {string.Join(", ", setStatements)} WHERE Id = @id";
-
-                NpgsqlCommand command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("@id", id);
-
-                foreach (var prop in properties)
-                {
-                    if (prop.Name.ToLower() != "id")
-                    {
-                        command.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
-                    }
-                }
-
-                command.ExecuteNonQuery();
-            }
-        }
-
-        /// <summary>
-        /// Удаляет запись из таблицы
-        /// </summary>
-        public void Delete(int id, string tableName)
-        {
-            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
-            {
-                connection.Open();
-                string sql = $"DELETE FROM {tableName} WHERE Id = @id";
-                NpgsqlCommand command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("@id", id);
-
-                command.ExecuteNonQuery();
-            }
-        }
-
-        /// <summary>
-        /// Маппер: преобразует строку из DataReader в объект типа T
+        /// Отображает результат запроса на объект типа T.
         /// </summary>
         private T MapReaderToObject<T>(NpgsqlDataReader reader) where T : class, new()
         {
-            T obj = new T();
-            PropertyInfo[] properties = typeof(T).GetProperties();
-
-            foreach (var prop in properties)
+            T obj = new();
+            foreach (var prop in typeof(T).GetProperties())
             {
                 try
                 {
-                    int ordinal = reader.GetOrdinal(prop.Name);
-
-                    if (!reader.IsDBNull(ordinal))
+                    int index = reader.GetOrdinal(prop.Name);
+                    if (!reader.IsDBNull(index))
                     {
-                        object value = reader.GetValue(ordinal);
-
-                        if (value != null && prop.PropertyType != value.GetType())
-                        {
-                            value = Convert.ChangeType(value, prop.PropertyType);
-                        }
-
-                        prop.SetValue(obj, value);
+                        object value = reader.GetValue(index);
+                        prop.SetValue(obj, Convert.ChangeType(value, prop.PropertyType));
                     }
                 }
                 catch (IndexOutOfRangeException)
@@ -344,7 +333,6 @@ namespace MyORMLibrary
                     continue;
                 }
             }
-
             return obj;
         }
     }

@@ -53,6 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MiniHttpServer.Data\MiniHttpServer.Repository.csproj" />
     <ProjectReference Include="..\MiniHttpServer.Frimework\MiniHttpServer.Frimework.csproj" />
     <ProjectReference Include="..\MyORMContext\MyORMLibrary.csproj" />
   </ItemGroup>
