@@ -17,16 +17,16 @@
     position: relative;
 }
 
-.searchTabs__nav::after {
-    content: '';
-    position: absolute;
-    bottom: -16px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: #ebdbdb;
-    z-index: 0;
-}
+    .searchTabs__nav::after {
+        content: '';
+        position: absolute;
+        bottom: -16px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #ebdbdb;
+        z-index: 0;
+    }
 
 .searchTabs__nav-item {
     padding: 8px 16px;
@@ -40,10 +40,10 @@
     white-space: nowrap;
 }
 
-.searchTabs__nav-item:hover,
-.searchTabs__nav-item:focus {
-    color: #2e7d32;
-}
+    .searchTabs__nav-item:hover,
+    .searchTabs__nav-item:focus {
+        color: #2e7d32;
+    }
 
 .searchTabs__nav-item_active {
     border: 1px solid #429410;
@@ -71,9 +71,9 @@
     border-bottom: 1px solid #429410;
 }
 
-.searchTabs__nav-item a:hover {
-    color: #2e7d32;
-}
+    .searchTabs__nav-item a:hover {
+        color: #2e7d32;
+    }
 
 /* Контент вкладок */
 .searchTabs__content {
@@ -84,106 +84,106 @@
     margin-top: 16px;
 }
 
-/* ======================================================
+    /* ======================================================
    Форма поиска — единый, чистый и предсказуемый набор правил
    ====================================================== */
 
-/* общий контейнер формы (внутри .searchTabs__content) */
-.searchTabs__content .ot-msf-form,
-.ot-msf-form {
-    display: flex;
-    align-items: center;      /* все элементы строго по одной горизонтали */              /* визуальный интервал между ячейками */
-    width: 100%;
-    background-color: #fff;
-    overflow-x: auto;         /* fallback: если не помещается */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    box-sizing: border-box;
-}
+    /* общий контейнер формы (внутри .searchTabs__content) */
+    .searchTabs__content .ot-msf-form,
+    .ot-msf-form {
+        display: flex;
+        align-items: center; /* все элементы строго по одной горизонтали */ /* визуальный интервал между ячейками */
+        width: 100%;
+        background-color: #fff;
+        overflow-x: auto; /* fallback: если не помещается */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        box-sizing: border-box;
+    }
 
-.ot-msf-form::-webkit-scrollbar {
-    display: none;
-}
+        .ot-msf-form::-webkit-scrollbar {
+            display: none;
+        }
 
-/* каждый элемент формы — метка сверху, значение снизу; ширина по содержимому */
-.searchTabs__content .ot-msf-form__item,
-.ot-msf-form__item {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 6px 12px;             /* комфортные внутренние отступы */
-    background: #fff;
-    border-right: 1px solid #ebdbdb; /* старая окантовка-разделитель */
-    flex: 0 1 auto;                /* не растёт бесконтрольно, но может сжиматься */
-    width: auto;
-    min-width: 80px;               /* чтобы совсем короткие не разваливались */
-    max-width: 360px;              /* защитный максимум для очень длинных полей */
-    box-sizing: border-box;
-    white-space: nowrap;
-    min-height: 56px;              /* единая высота строки */
-}
+    /* каждый элемент формы — метка сверху, значение снизу; ширина по содержимому */
+    .searchTabs__content .ot-msf-form__item,
+    .ot-msf-form__item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 6px 12px; /* комфортные внутренние отступы */
+        background: #fff;
+        border-right: 1px solid #ebdbdb; /* старая окантовка-разделитель */
+        flex: 0 1 auto; /* не растёт бесконтрольно, но может сжиматься */
+        width: auto;
+        min-width: 80px; /* чтобы совсем короткие не разваливались */
+        max-width: 360px; /* защитный максимум для очень длинных полей */
+        box-sizing: border-box;
+        white-space: nowrap;
+        min-height: 56px; /* единая высота строки */
+    }
 
-/* При желании убрать правую границу у последнего элемента: */
-.searchTabs__content .ot-msf-form__item:last-child {
-    border-right: 1px solid #ebdbdb; /* можно оставить или убрать по вкусу */
-}
+        /* При желании убрать правую границу у последнего элемента: */
+        .searchTabs__content .ot-msf-form__item:last-child {
+            border-right: 1px solid #ebdbdb; /* можно оставить или убрать по вкусу */
+        }
 
-/* подпись/метка */
-.searchTabs__content .ot-msf-form__item-label,
-.ot-msf-form__item-label {
-    font-size: 12px;
-    color: #888;
-    margin-bottom: 6px;
-    font-weight: 400;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+    /* подпись/метка */
+    .searchTabs__content .ot-msf-form__item-label,
+    .ot-msf-form__item-label {
+        font-size: 12px;
+        color: #888;
+        margin-bottom: 6px;
+        font-weight: 400;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-/* блок значения (текст / иконка / кнопка внутри ячейки) */
-.searchTabs__content .ot-msf-form__item-value,
-.ot-msf-form__item-value {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 15px;
-    font-weight: 500;
-    color: #333;
-    white-space: nowrap;
-    overflow: visible;      /* важное: дата и иконки не обрезаются */
-    text-overflow: clip;
-    min-height: 36px;
-}
+    /* блок значения (текст / иконка / кнопка внутри ячейки) */
+    .searchTabs__content .ot-msf-form__item-value,
+    .ot-msf-form__item-value {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #333;
+        white-space: nowrap;
+        overflow: visible; /* важное: дата и иконки не обрезаются */
+        text-overflow: clip;
+        min-height: 36px;
+    }
 
-/* стрелка: находится в потоке, не абсолютная, не перекрывает текст */
-.searchTabs__content .ot-msf-form__item-value::after,
-.ot-msf-form__item-value::after {
-    content: '▼';
-    font-size: 10px;
-    color: #888;
-    margin-left: 6px;
-    flex-shrink: 0;
-    position: static;
-}
+        /* стрелка: находится в потоке, не абсолютная, не перекрывает текст */
+        .searchTabs__content .ot-msf-form__item-value::after,
+        .ot-msf-form__item-value::after {
+            content: '▼';
+            font-size: 10px;
+            color: #888;
+            margin-left: 6px;
+            flex-shrink: 0;
+            position: static;
+        }
 
-/* инпуты и кнопки внутри поля */
-.searchTabs__content .ot-msf-form__item-value input[type="text"],
-.searchTabs__content .ot-msf-form__item-value button,
-.ot-msf-form__item-value input[type="text"],
-.ot-msf-form__item-value button {
-    border: none;
-    background: transparent;
-    outline: none;
-    font: inherit;
-    color: inherit;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    text-align: left;
-    min-width: 0;           /* позволяет флекс-контейнеру сжимать элемент при необходимости */
-    overflow: visible;
-    white-space: nowrap;
-}
+        /* инпуты и кнопки внутри поля */
+        .searchTabs__content .ot-msf-form__item-value input[type="text"],
+        .searchTabs__content .ot-msf-form__item-value button,
+        .ot-msf-form__item-value input[type="text"],
+        .ot-msf-form__item-value button {
+            border: none;
+            background: transparent;
+            outline: none;
+            font: inherit;
+            color: inherit;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+            min-width: 0; /* позволяет флекс-контейнеру сжимать элемент при необходимости */
+            overflow: visible;
+            white-space: nowrap;
+        }
 
 /* Контейнер кнопки "Найти" — займет всё оставшееся пространство */
 .ot-msf-form__submit {
@@ -209,30 +209,34 @@
 
 /* подпись "Показать дополнительные поля" */
 .ot-msf-form__additional-fields {
-    display: inline-block; 
+    display: inline-block;
     float: right;
     clear: both;
-    padding: 8px 0; 
+    padding: 8px 0;
     margin-top: 8px;
-    margin-right: 16px; 
+    margin-right: 16px;
     font-size: 12px;
     color: #429410;
-    border-bottom: 1px dotted #429410; 
-    text-decoration: none; 
+    border-bottom: 1px dotted #429410;
+    text-decoration: none;
     cursor: pointer;
     white-space: nowrap;
 }
-.ot-msf-form__additional-fields:hover { color: #2e7d32; border-bottom-color: #2e7d32; }
+
+    .ot-msf-form__additional-fields:hover {
+        color: #2e7d32;
+        border-bottom-color: #2e7d32;
+    }
 
 /* Общий ресет для кнопок */
 button {
-  background: transparent;   
-  border: none;             
-  padding: 0;                  
-  cursor: pointer;             
-  font: inherit;             
-  color: inherit;                
-  outline: none;                 
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    outline: none;
 }
 
 /* =========================
@@ -244,8 +248,15 @@ button {
         min-width: 70px;
         padding: 6px 10px;
     }
-    .searchTabs__content .ot-msf-form__submit { min-height: 52px; }
-    .searchTabs__content .ot-msf-form__submit-button { padding: 0 16px; font-size: 15px; }
+
+    .searchTabs__content .ot-msf-form__submit {
+        min-height: 52px;
+    }
+
+    .searchTabs__content .ot-msf-form__submit-button {
+        padding: 0 16px;
+        font-size: 15px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -254,6 +265,7 @@ button {
         flex-wrap: wrap;
         gap: 0;
     }
+
     .searchTabs__content .ot-msf-form__item,
     .ot-msf-form__item {
         width: 100%;
@@ -264,11 +276,13 @@ button {
         border-bottom: 1px solid #ebdbdb;
         padding: 10px 12px;
     }
+
     .searchTabs__content .ot-msf-form__submit,
     .ot-msf-form__submit {
         width: 100%;
         min-width: 0;
     }
+
     .searchTabs__content .ot-msf-form__submit-button,
     .ot-msf-form__submit-button {
         width: 100%;
@@ -276,6 +290,7 @@ button {
         padding: 10px 16px;
         min-height: 56px;
     }
+
     .searchTabs__content .ot-msf-form__item-value::after,
     .ot-msf-form__item-value::after {
         font-size: 9px;
@@ -283,4 +298,438 @@ button {
     }
 }
 
-/* Конец файла */
+.ot-msf-form {
+    border: 1px solid #e5e5e5;
+    border-top: none;
+    border-radius: 4px;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.ot-msf-modal {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 260px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.15);
+    padding: 10px;
+    display: none;
+    z-index: 999;
+}
+
+    .ot-msf-modal.open {
+        display: block;
+    }
+
+    .ot-msf-modal input {
+        width: 100%;
+        padding: 6px 10px;
+        margin-bottom: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+.ot-msf-modal-list {
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.ot-msf-modal-item {
+    padding: 8px 10px;
+    cursor: pointer;
+}
+
+    .ot-msf-modal-item:hover,
+    .ot-msf-modal-item.active {
+        background: #31b57c;
+        color: #fff;
+    }
+.dropdown-list {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+    display: none;
+    z-index: 9999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.dropdown-item {
+    padding: 8px 10px;
+    cursor: pointer;
+}
+.dropdown-item--empty {
+    color: #999;
+    cursor: default;
+    pointer-events: none;
+}
+
+    .dropdown-item:hover {
+        background: #f0f0f0;
+    }
+.ot-msf-input,
+.ot-msf-form__item-value button {
+    outline: none !important;
+    box-shadow: none !important;
+}
+/* === 1. Все поля формы .ot-msf без обводки и рамки === */
+.ot-msf-form .ot-msf-input {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: #000; /* текст видимый, чёрный */
+}
+
+    /* Убираем обводку при фокусе */
+    .ot-msf-form .ot-msf-input:focus,
+    .ot-msf-form .ot-msf-input:active {
+        outline: none !important;
+        box-shadow: none !important;
+        border-color: transparent !important;
+    }
+
+    /* Системный стиль кнопок (type="button") убираем полностью */
+    .ot-msf-form .ot-msf-input[type="button"] {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: transparent !important;
+        border: none !important;
+    }
+
+/* === 2. Кнопка с датой — тоже прозрачная, без рамки === */
+.ot-msf-form .ot-date-button {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: #000;
+    cursor: pointer;
+}
+
+/* На всякий пожарный — убираем outline у любых кнопок внутри формы */
+.ot-msf-form button:focus,
+.ot-msf-form button:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+/* === Стрелки для "Ночей", "Туристы", "Период вылета" === */
+.ot-msf-form__item-value {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .ot-msf-form__item-value::after {
+        content: '▼';
+        font-size: 10px;
+        color: #888;
+        margin-left: 6px;
+        flex-shrink: 0;
+    }
+
+/* === Стрелки для автокомплитов "Вылет из" и "Куда?" === */
+.autocomplete-box {
+    position: relative;
+    padding-right: 14px; /* место под стрелку справа */
+}
+
+    .autocomplete-box::after {
+        content: '▼';
+        font-size: 10px;
+        color: #888;
+        position: absolute;
+        right: 2px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+/* ==== Общий размер для маленьких модалок "Ночей" и "Туристы" ==== */
+#modal-nights,
+#modal-tourists {
+    width: auto;
+    min-width: 220px;
+    padding: 10px 14px;
+}
+
+/* ==== Ряды в модалке Ночей ==== */
+.ot-msf-modal-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+    .ot-msf-modal-row:last-child {
+        margin-bottom: 0;
+    }
+
+.ot-msf-modal-label {
+    color: #777;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.ot-msf-modal-spinner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ot-msf-modal-value {
+    font-size: 16px;
+    font-weight: 500;
+    min-width: 24px;
+    text-align: center;
+}
+
+.ot-msf-modal-arrows {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Кастомные стрелки ▲ ▼ */
+.ot-arrow {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+}
+
+    .ot-arrow:hover {
+        border-color: #429410;
+    }
+
+/* ==== Модалка "Туристы" ==== */
+.ot-msf-tourists-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+    .ot-msf-tourists-row:last-child {
+        margin-bottom: 0;
+    }
+
+.ot-msf-tourists-label {
+    color: #777;
+}
+
+.ot-msf-tourists-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ot-msf-count {
+    min-width: 22px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Зелёные круглые + / - */
+.ot-circle-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #429410;
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+}
+
+    .ot-circle-btn:hover {
+        background: #2e7d32;
+    }
+/* ===== КОНТЕЙНЕР РЕЗУЛЬТАТОВ ===== */
+
+#search-results {
+    max-width: 1200px;
+    margin: 40px auto 60px;
+}
+
+.search-results__title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.search-results__empty {
+    font-size: 16px;
+    color: #777;
+}
+
+
+/* ===== КАРТОЧКИ ТУРОВ ===== */
+
+.tour-card {
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px #e6e6e6;
+}
+
+/* Внутренняя обертка */
+
+.tour-card__inner {
+    display: flex;
+    align-items: stretch;
+    padding: 20px 25px;
+}
+
+/* Левая колонка — картинка */
+
+.tour-card__left {
+    flex: 0 0 260px;
+    margin-right: 25px;
+}
+
+.tour-card__image-link {
+    display: block;
+}
+
+.tour-card__image {
+    display: block;
+    width: 260px;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Центральная колонка с текстом */
+
+.tour-card__center {
+    flex: 1 1 auto;
+    padding-right: 30px;
+    font-size: 14px;
+}
+
+.tour-card__top-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.tour-card__stars {
+    color: #f2a200;
+    font-size: 14px;
+}
+
+.tour-card__name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #008000;
+    text-decoration: none;
+}
+
+    .tour-card__name:hover {
+        text-decoration: underline;
+    }
+
+.tour-card__location {
+    margin-bottom: 8px;
+    color: #777;
+}
+
+.tour-card__info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 4px;
+}
+
+.tour-card__info-item span {
+    font-weight: 600;
+}
+
+/* Правая колонка — цена и кнопки */
+
+.tour-card__right {
+    flex: 0 0 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.tour-card__price {
+    padding: 12px 28px;
+    background: #4ea327;
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+.tour-card__more {
+    border: none;
+    background: none;
+    padding: 0;
+    color: #008000;
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* ===== АДАПТИВ ПОД УЗКИЕ ЭКРАНЫ ===== */
+
+@media (max-width: 900px) {
+    .tour-card__inner {
+        flex-direction: column;
+        padding: 15px 18px;
+    }
+
+    .tour-card__left {
+        flex: 0 0 auto;
+        margin: 0 0 12px 0;
+    }
+
+    .tour-card__image {
+        width: 100%;
+        height: auto;
+        max-height: 220px;
+    }
+
+    .tour-card__center {
+        padding-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .tour-card__right {
+        align-items: flex-start;
+    }
+}

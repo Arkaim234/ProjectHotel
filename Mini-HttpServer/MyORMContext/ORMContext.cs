@@ -1,11 +1,12 @@
-﻿using Npgsql;
+﻿using MiniHttpServer.Frimework.Core.Abstracts;
+using Npgsql;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using MiniHttpServer.Frimework.Core.Abstracts;
 
 namespace MyORMLibrary
 {
@@ -205,16 +206,72 @@ namespace MyORMLibrary
         /// </summary>
         private string ParseExpression(Expression expr)
         {
+            // ---- 0. Раскрытие Invocation (Invoke) ----
+            if (expr is InvocationExpression invoke && invoke.Expression is LambdaExpression lambda)
+            {
+                var map = new Dictionary<ParameterExpression, Expression>();
+
+                for (int i = 0; i < lambda.Parameters.Count; i++)
+                    map[lambda.Parameters[i]] = invoke.Arguments[i];
+
+                var replacer = new ParameterReplacer(map);
+                var inlinedBody = replacer.Visit(lambda.Body);
+
+                return ParseExpression(inlinedBody);
+            }
+
+            // ---- 0.1. Игнорируем приведения типов (Convert) ----
+            if (expr is UnaryExpression conv &&
+                (conv.NodeType == ExpressionType.Convert ||
+                 conv.NodeType == ExpressionType.ConvertChecked))
+            {
+                // просто парсим то, к чему приводили
+                return ParseExpression(conv.Operand);
+            }
+
+            // ---- 1. Остальной разбор как у тебя был ----
             return expr switch
             {
-                BinaryExpression binary => $"({ParseExpression(binary.Left)} {GetSqlOperator(binary.NodeType)} {ParseExpression(binary.Right)})",
-                MemberExpression member when member.Expression is ParameterExpression => member.Member.Name,
-                MemberExpression member => FormatConstant(EvaluateExpression(member)),
-                ConstantExpression constant => FormatConstant(constant.Value),
-                UnaryExpression unary when unary.NodeType == ExpressionType.Not => $"NOT {ParseExpression(unary.Operand)}",
-                MethodCallExpression call => ParseMethodCall(call),
+                BinaryExpression binary =>
+                    $"{ParseExpression(binary.Left)} {GetSqlOperator(binary.NodeType)} {ParseExpression(binary.Right)}",
+
+                MemberExpression member when member.Expression is ParameterExpression =>
+                    member.Member.Name,
+
+                MemberExpression member =>
+                    FormatConstant(EvaluateExpression(member)),
+
+                ConstantExpression constant =>
+                    FormatConstant(constant.Value),
+
+                UnaryExpression unary when unary.NodeType == ExpressionType.Not =>
+                    $"NOT {ParseExpression(unary.Operand)}",
+
+                MethodCallExpression call =>
+                    ParseMethodCall(call),
+
                 _ => throw new NotSupportedException($"Unsupported expression: {expr.NodeType}")
             };
+        }
+        /// <summary>
+        /// Заменяет параметры лямбды на реальные аргументы при разворачивании Invocation.
+        /// </summary>
+        private sealed class ParameterReplacer : ExpressionVisitor
+        {
+            private readonly Dictionary<ParameterExpression, Expression> _map;
+
+            public ParameterReplacer(Dictionary<ParameterExpression, Expression> map)
+            {
+                _map = map;
+            }
+
+            protected override Expression VisitParameter(ParameterExpression node)
+            {
+                if (_map.TryGetValue(node, out var replacement))
+                    return replacement;
+
+                return base.VisitParameter(node);
+            }
         }
 
         /// <summary>
@@ -222,19 +279,52 @@ namespace MyORMLibrary
         /// </summary>
         private string ParseMethodCall(MethodCallExpression method)
         {
+            // ---- 1. string.Contains / StartsWith / EndsWith ----
             if (method.Method.DeclaringType == typeof(string))
             {
-                string member = ParseExpression(method.Object!);
+                string member = ParseExpression(method.Object);
                 string argument = ParseExpression(method.Arguments[0]);
+
                 return method.Method.Name switch
                 {
-                    nameof(string.Contains) => $"({member} ILIKE '%' || {argument} || '%')",
-                    nameof(string.StartsWith) => $"({member} ILIKE {argument} || '%')",
-                    nameof(string.EndsWith) => $"({member} ILIKE '%' || {argument})",
-                    _ => throw new NotSupportedException($"Unsupported string method: {method.Method.Name}")
+                    nameof(string.Contains) => $"{member} ILIKE '%' || {argument} || '%'",
+                    nameof(string.StartsWith) => $"{member} ILIKE {argument} || '%'",
+                    nameof(string.EndsWith) => $"{member} ILIKE '%' || {argument}",
+                    _ => throw new NotSupportedException(
+                            $"Unsupported string method: {method.Method.Name}")
                 };
             }
 
+            // ---- 2. list.Contains(x.Property)  ->  Property IN ( ... ) ----
+            if (method.Method.Name == "Contains" &&
+                typeof(IEnumerable).IsAssignableFrom(method.Method.DeclaringType))
+            {
+                // list в выражении: list.Contains(x.Id)
+                var collectionObj = EvaluateExpression(method.Object) as IEnumerable;
+                if (collectionObj == null)
+                {
+                    throw new NotSupportedException(
+                        "Contains on non-constant collection is not supported");
+                }
+
+                // Аргумент Contains — это колонка (x.Id / x.CategoryId)
+                string columnSql = ParseExpression(method.Arguments[0]);
+
+                var sqlValues = new List<string>();
+                foreach (var item in collectionObj)
+                {
+                    // заворачиваем каждый элемент как константу и прогоняем через общий парсер
+                    sqlValues.Add(ParseExpression(Expression.Constant(item)));
+                }
+
+                // Если список пустой — заведомо ложное условие
+                if (sqlValues.Count == 0)
+                    return "1 = 0";
+
+                return $"{columnSql} IN ({string.Join(", ", sqlValues)})";
+            }
+
+            // Все прочие методы пока не поддерживаем
             throw new NotSupportedException($"Unsupported method call: {method.Method.Name}");
         }
 

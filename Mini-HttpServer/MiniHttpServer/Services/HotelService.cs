@@ -1,6 +1,9 @@
-﻿using MiniHttpServer.DTOs;
+﻿using System.Collections.Generic;
+using System.Linq;
+using MiniHttpServer.DTOs;
 using MiniHttpServer.DTOs.HelperDTOs;
 using MiniHttpServer.Model;
+using MiniHttpServer.Model.Filters;
 using MiniHttpServer.Repositories;
 
 namespace MiniHttpServer.Services
@@ -30,23 +33,27 @@ namespace MiniHttpServer.Services
             _serviceRepo = serviceRepo;
         }
 
-        // Детальная страница отеля
+        // ---------- Детальная страница ----------
         public HotelDetailsDto? GetHotelDetails(string slug)
         {
             var hotel = _hotelRepo.GetBySlug(slug);
             if (hotel == null) return null;
 
-            // Конвертация в DTO
             var hotelDto = new HotelDetailsDto
             {
                 Hotel = hotel,
+
                 Description = ConvertDescription(_descRepo.GetByHotelId(hotel.Id)),
                 PlaceInfo = ConvertPlace(_placeRepo.GetByHotelId(hotel.Id)),
                 RoomTypes = ConvertRooms(_roomRepo.GetByHotel(hotel.Id)),
-                AvailableMealPlans = ConvertMeals(_mealRepo.GetByHotel(hotel.Id))
+
+                // ВОТ ТУТ ПРАВИЛЬНО:
+                AvailableMealPlans = hotel.MealPlans
+                    .Select(code => new MealPlanDto { Code = code })
+                    .ToList()
             };
 
-            // Услуги
+            // Сервисы
             var services = _serviceRepo.GetByHotelId(hotel.Id).ToList();
 
             hotelDto.ChildServices = services
@@ -123,13 +130,18 @@ namespace MiniHttpServer.Services
             }).ToList();
         }
 
-
-        // ---------- Поиск ----------
-        public IEnumerable<Hotel> SearchHotels(int cityId, string? mealPlan)
+        // ---------- Поиск для фильтров ----------
+        public IEnumerable<Hotel> SearchHotels(int cityId, string? mealPlanCode)
         {
-            return _hotelRepo.Search(cityId, mealPlan);
+            var filter = new HotelFilter
+            {
+                CityId = cityId,
+                MealPlanCode = mealPlanCode
+            };
+
+            return _hotelRepo.Search(filter);
         }
 
-        public IEnumerable<Hotel> GetAll() => _hotelRepo.GetAll();
+        public IEnumerable<Hotel> GetAll() => _hotelRepo.GetAllWithMealPlans();
     }
 }

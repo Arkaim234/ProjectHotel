@@ -15,5 +15,6 @@ namespace MiniHttpServer.Model.Filters
         public int? CityId { get; set; }    
         public string? Name { get; set; }    
         public string? MealPlanCode { get; set; }
+        public List<int>? CategoryIds { get; set; }
     }
 }

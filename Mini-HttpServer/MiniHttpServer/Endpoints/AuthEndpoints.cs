@@ -13,23 +13,18 @@ namespace MiniHttpServer.Endpoints
     internal class AuthEndpoint : EndpointBase
     {
         private readonly UserRepository _userRepository;
-        private readonly UserService _userService;
+        private readonly AuthService _authService;
         private readonly SecurityService _securityService = new SecurityService();
 
         public AuthEndpoint()
         {
-            // Создаём ORM-контекст вручную (поскольку DI нет)
             var settings = Singleton.GetInstance().Settings;
             var context = new ORMContext(settings.ConectionString);
 
             _userRepository = new UserRepository(context);
-            _userService = new UserService(_userRepository, _securityService);
+            _authService = new AuthService(_userRepository);
         }
 
-        /// <summary>
-        /// GET /auth/login
-        /// Возвращает HTML-страницу авторизации.
-        /// </summary>
         [HttpGet("login")]
         public IActionResult LoginPage()
         {
@@ -37,10 +32,6 @@ namespace MiniHttpServer.Endpoints
             return new PageResult("Template/Page/login.thtml", model);
         }
 
-        /// <summary>
-        /// GET /auth/json
-        /// Тестовый JSON-эндпоинт, не используется в основной системе.
-        /// </summary>
         [HttpGet("json")]
         public IActionResult GetJson()
         {
@@ -48,23 +39,22 @@ namespace MiniHttpServer.Endpoints
             return new JsonResult(user);
         }
 
-        /// <summary>
-        /// POST /auth/login
-        /// Принимает JSON с логином и паролем.
-        /// Пример: { "Login": "...", "Password": "..." }
-        /// Возвращает данные пользователя при успешной аутентификации,
-        /// либо ошибку 401 при неверных данных.
-        /// </summary>
+        // POST /auth/login
         [HttpPost("login")]
         public IActionResult Login(LoginDto dto)
         {
-            if (dto == null || string.IsNullOrWhiteSpace(dto.Login) || string.IsNullOrWhiteSpace(dto.Password))
+            if (dto == null ||
+                string.IsNullOrWhiteSpace(dto.Login) ||
+                string.IsNullOrWhiteSpace(dto.Password))
             {
                 Context.Response.StatusCode = 400;
                 return Json(new { message = "Login и Password обязательны" });
             }
 
-            if (_userService.Authenticate(dto.Login, dto.Password, out var user))
+            var hashed = _securityService.HashPassword(dto.Password);
+            var user = _authService.Login(dto.Login, hashed);
+
+            if (user != null)
             {
                 return Json(new
                 {
@@ -77,28 +67,31 @@ namespace MiniHttpServer.Endpoints
             return Json(new { message = "Неверный логин или пароль" });
         }
 
-        /// <summary>
-        /// POST /auth/register
-        /// Регистрирует нового пользователя.
-        /// Принимает JSON:
-        /// { "Name": "логин", "Email": "почта", "Password": "пароль" }
-        /// Возвращает успех или 400 с текстом ошибки.
-        /// </summary>
+        // POST /auth/register
         [HttpPost("register")]
         public IActionResult Register(UserRegistrationDto dto)
         {
-            if (dto == null || string.IsNullOrWhiteSpace(dto.Name) ||
-                string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
+            if (dto == null ||
+                string.IsNullOrWhiteSpace(dto.Name) ||
+                string.IsNullOrWhiteSpace(dto.Email) ||
+                string.IsNullOrWhiteSpace(dto.Password))
             {
                 Context.Response.StatusCode = 400;
                 return Json(new { message = "Name, Email и Password обязательны" });
             }
 
-            var error = _userService.Register(dto);
-            if (!string.IsNullOrEmpty(error))
+            var newUser = new Model.User
+            {
+                Login = dto.Name,
+                Email = dto.Email,
+                PasswordHash = _securityService.HashPassword(dto.Password),
+                Role = "user"
+            };
+
+            if (!_authService.Register(newUser))
             {
                 Context.Response.StatusCode = 400;
-                return Json(new { message = error });
+                return Json(new { message = "Пользователь с такой почтой уже существует" });
             }
 
             return Json(new { message = "Регистрация успешна" });

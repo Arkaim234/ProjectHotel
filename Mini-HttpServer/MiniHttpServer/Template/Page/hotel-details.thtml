@@ -1,0 +1,440 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>$HotelName — описание, номера, инфраструктура | OneTouch & Travel</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="$HotelName — $City, $CountryName. Описание отеля, номера, инфраструктура, пляж, контакты. Туроператор OneTouch & Travel.">
+
+    <!-- Стили из папки Public/css -->
+    <link type="text/css" rel="stylesheet" href="/css/main.css">
+    <link type="text/css" rel="stylesheet" href="/css/gallery.css">
+    <link type="text/css" rel="stylesheet" href="/css/searcher.css">
+    <link type="text/css" rel="stylesheet" href="/css/filters.css">
+
+    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="icon" type="image/png" href="/images/onetouch_travel_favicon_96x96.png">
+    <link rel="apple-touch-icon" href="/images/onetouch_travel_favicon_180x180.png">
+</head>
+
+<body>
+<div id="appmain" class="appmain">
+
+    <!-- ====== ШАПКА ====== -->
+    <header class="topcontent-header-wrap">
+        <div class="topcontent-header-inner">
+            <div class="topcontent-header js-topcontent-menu-state">
+
+                <div class="topcontent-header__top-row">
+                    <!-- Логотип -->
+                    <a href="/" class="topcontent-header__logo">
+                        <img src="/images/onetouch_travel_logo.svg" width="68" height="58" alt="onetouch travel logo">
+                    </a>
+
+                    <div class="topcontent-header-menu">
+                        <!-- Страны -->
+                        <a href="/countries/" class="topcontent-header__nav-menu-link">
+                            <img class="topcontent-header__location-img" src="/images/geo-pin.svg"
+                                 width="15" height="15" alt="Выбор страны">
+                            Страны
+                        </a>
+
+                        <!-- Главное меню -->
+                        <nav class="topcontent-header__nav-center">
+                            <ul class="topcontent-header__nav-menu">
+                                <li class="topcontent-header__nav-menu-item">
+                                    <div class="topcontent-header__nav-menu-link topcontent-header__nav-menu-link_icon">
+                                        Агентствам
+                                    </div>
+                                    <ul class="topcontent-header__nav-submenu">
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/articles/o-kompanii/">О компании</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/articles/sotrudnichestvo">Сотрудничество</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/articles/sposoby-i-usloviya-oplaty/">Способы и условия оплаты</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/articles/strakhovanie-turistov/">Страхование туристов</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/events">Мероприятия</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/excursion-tours/">Экскурсионные туры</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/visas/">Визы</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/articles/voprosy-i-otvety">Вопросы-ответы</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/mailing-list">Подписаться на рассылку</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/articles/sluzhba-podderzhki">Служба поддержки</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/articles/bonusnaya-programma-leto-osen-2025">Бонусная программа</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/articles/informatsiya-po-usloviyam-finansovogo-obespecheniya-ooo-vantach-trevel">
+                                                Финансовые гарантии
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="topcontent-header__nav-menu-item">
+                                    <div class="topcontent-header__nav-menu-link topcontent-header__nav-menu-link_icon">
+                                        Туристам
+                                    </div>
+                                    <ul class="topcontent-header__nav-submenu">
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/articles/o-kompanii">О компании</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/news">Новости</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="https://tourism.gov.ru/reestry/reestr-turoperatorov/show.php?id=101340">
+                                                Фин.гарантии туроператора
+                                            </a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <span class="topcontent-header__nav-submenu-item-link
+                                                         topcontent-header__nav-submenu-item-link_disabled">
+                                                Отзывы
+                                            </span>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/useful-documents/tourists">Полезные документы</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="/excursion-tours/">Экскурсионные туры</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <span class="topcontent-header__nav-submenu-item-link
+                                                         topcontent-header__nav-submenu-item-link_disabled">
+                                                Награды
+                                            </span>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link" href="#">Помощь</a>
+                                        </li>
+                                        <li class="topcontent-header__nav-submenu-item">
+                                            <a class="topcontent-header__nav-submenu-item-link"
+                                               href="https://online.onetouch.travel/cl_refer_person">
+                                                Личный кабинет
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="topcontent-header__nav-menu-item">
+                                    <a class="topcontent-header__nav-menu-link"
+                                       href="/contacts/">Контакты</a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <!-- Телефон -->
+                        <a href="tel:+74951202299" class="topcontent-header__nav-menu-link">
+                            <span>+7 495 120-22-99</span>
+                        </a>
+
+                        <!-- Курс валют (можно захардкодить) -->
+                        <div class="topcontent-header__currencies">
+                            <span class="topcontent-header__currencies-names">USD / EUR</span>
+                            <div class="topcontent-header__nav-submenu topcontent-header__nav-submenu_currencies">
+                                <div class="topcontent-header__currencies-inner">
+                                    <div class="topcontent-header__currencies-inner-header">USD</div>
+                                    <div class="topcontent-header__currencies-inner-header">EUR</div>
+                                    <div class="topcontent-header__currencies-inner-rate">84.44 ₽</div>
+                                    <div class="topcontent-header__currencies-inner-rate">97.25 ₽</div>
+                                </div>
+                                <div class="topcontent-header__currencies-date">06.11.2025</div>
+                                <div class="topcontent-header__currencies-date">
+                                    <a href="/exchange-rates">Архив курсов</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ЛК -->
+                        <a target="_blank"
+                           href="https://online.onetouch.travel/cl_refer_person"
+                           class="topcontent-header__cabinet-link">
+                            <img class="topcontent-header__cabinet-img"
+                                 src="/images/lk-user.svg" width="15" height="16" alt="">
+                            Личный кабинет
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- ====== КОНТЕНТ СТРАНИЦЫ ОТЕЛЯ ====== -->
+    <div class="cmn-l-content cmn-l-content_main">
+
+        <!-- Хлебные крошки -->
+        <div class="cmn-l-breadcrumbs">
+            <div class="cmn-l-breadcrumbs__items">
+                <a class="cmn-l-breadcrumbs__item" href="/">Главная</a> »
+                <a class="cmn-l-breadcrumbs__item" href="/countries/">Страны</a> »
+                <a class="cmn-l-breadcrumbs__item" href="/country/$CountrySlug">$CountryName</a> »
+                <a class="cmn-l-breadcrumbs__item" href="/country/$CountrySlug/hotels/">Список отелей</a> »
+                <span class="cmn-l-breadcrumbs__item">$HotelName</span>
+            </div>
+        </div>
+
+        <div class="cmn-l-block-wrap">
+
+            <!-- Заголовок: Название + звезды -->
+            <h2 class="cmn-l-block-title">
+                ${HotelName} <span class="hotel-stars">$StarsHtml</span>
+            </h2>
+
+            <!-- Локация под заголовком -->
+            <div class="hotel-location-line">
+                <a href="/country/$CountrySlug/" class="hotel-location-country">$CountryName</a>,
+                <span class="hotel-location-city">$City</span>
+                <span class="hotel-location-district">$District</span>
+            </div>
+
+            <!-- Табы (Описание / Номера / Инфраструктура / Акции) -->
+            <div class="pages-main-nav">
+                <a class="pages-main-nav__item pages-main-nav__item_active">Описание</a>
+                <a class="pages-main-nav__item">Номера</a>
+                <a class="pages-main-nav__item">Инфраструктура</a>
+                <a class="pages-main-nav__item">Акции и новости</a>
+            </div>
+
+            <!-- Верхняя часть: большое фото + правая колонка с фотографиями -->
+            <div class="hotel-top-block">
+
+                <!-- Большое фото слева -->
+                <div class="hotel-top-block__main-photo">
+                    <img src="$MainPhotoUrl" alt="$HotelName" class="hotel-main-image">
+                </div>
+
+                <!-- Правая колонка: маленькие фото -->
+                <div class="hotel-top-block__side-photos">
+                    $SidePhotosHtml
+                    <!--
+                        Ожидаемый формат SidePhotosHtml:
+                        <div class="hotel-thumb">
+                            <img src="/images/hotels/xxx1.jpg" alt="">
+                        </div>
+                        <div class="hotel-thumb">
+                            <img src="/images/hotels/xxx2.jpg" alt="">
+                        </div>
+                        ...
+                    -->
+                </div>
+            </div>
+
+            <!-- Можно добавить ссылку "На карте" где-нибудь справа -->
+            <div class="hotel-map-link-row">
+                <a href="$MapUrl" class="hotel-map-link">На карте</a>
+            </div>
+
+            <!-- Основной текстовой блок с описанием -->
+            <div class="hotel-info-grid">
+
+                <div class="hotel-info-row">
+                    <div class="hotel-info-label">Расположение</div>
+                    <div class="hotel-info-value">
+                        $LocationHtml$
+                    </div>
+                </div>
+
+                <div class="hotel-info-row">
+                    <div class="hotel-info-label">Пляж</div>
+                    <div class="hotel-info-value">
+                        $BeachHtml
+                    </div>
+                </div>
+
+                <div class="hotel-info-row">
+                    <div class="hotel-info-label">Основная информация</div>
+                    <div class="hotel-info-value">
+                        $MainInfoHtml
+                    </div>
+                </div>
+
+                <div class="hotel-info-row">
+                    <div class="hotel-info-label">Контакты</div>
+                    <div class="hotel-info-value">
+                        $ContactsHtml
+                        <!-- Пример:
+                             Сайт: <a href="https://forshotel.com" target="_blank">forshotel.com</a><br>
+                             Тел.: +90 (212) 517-09-61
+                        -->
+                    </div>
+                </div>
+
+                <div class="hotel-info-row">
+                    <div class="hotel-info-label">Примечание</div>
+                    <div class="hotel-info-value">
+                        $NotesHtml
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопка бронирования -->
+            <div class="hotel-booking-row">
+                <a href="/search/?hotelId=$HotelId"
+                   class="hotel-booking-btn">
+                    Забронировать от $MinPrice ₽
+                </a>
+            </div>
+
+        </div> <!-- /cmn-l-block-wrap -->
+    </div> <!-- /cmn-l-content_main -->
+
+    <!-- ====== ФУТЕР ====== -->
+    <footer class="footer-all-wrap">
+        <div class="cmn-l-block-wrap cmn-l-block-wrap_nobg">
+            <div class="footer-block-grid">
+                <div class="footer-block__item">
+                    <div class="footer-block__item-title">О нас</div>
+                    <div class="footer-block__item-inner">
+                        <a href="/articles/o-kompanii/" class="footer-block__item-link">О компании</a>
+                        <a href="/articles/sotrudnichestvo" class="footer-block__item-link">Сотрудничество</a>
+                        <span class="footer-block__item-link footer-block__item-link_disabled">
+                            Пресса и партнеры о нас
+                        </span>
+                        <a href="/articles/politika-konfidentsialnosti"
+                           class="footer-block__item-link">Политика конфиденциальности</a>
+                    </div>
+                </div>
+
+                <div class="footer-block__item">
+                    <div class="footer-block__item-title">Сайт</div>
+                    <div class="footer-block__item-inner">
+                        <a href="/countries" class="footer-block__item-link">Страны</a>
+                        <a href="/search/" class="footer-block__item-link">Туры</a>
+                        <a href="/excursion-tours/" class="footer-block__item-link">Экскурсионные туры</a>
+                        <a href="/search/#avia" class="footer-block__item-link">Авиабилеты</a>
+                    </div>
+                </div>
+
+                <div class="footer-block__item">
+                    <div class="footer-block__item-title">Информация</div>
+                    <div class="footer-block__item-inner">
+                        <a href="/news" class="footer-block__item-link">Новости</a>
+                        <a href="/articles/gde-kupit" class="footer-block__item-link">Где купить</a>
+                        <a href="/mailing-list" class="footer-block__item-link">Подписаться на рассылку</a>
+                        <a href="https://tourism.gov.ru/agents/"
+                           class="footer-block__item-link">Реестр турагентств</a>
+                    </div>
+                </div>
+
+                <div class="footer-block__item">
+                    <div class="footer-block__item-title">Связаться с нами</div>
+                    <div class="footer-block__item-inner">
+                        <a href="/contacts" class="footer-block__item-link">Контакты</a>
+                        <a href="tel:+74951202299"
+                           class="footer-block__item-link footer-contact__contact-phone">
+                            +7 495 120-22-99
+                        </a>
+                        <a href="mailto:agency@onetouch.travel"
+                           class="footer-block__item-link footer-contact__contact-mail">
+                            agency@onetouch.travel
+                        </a>
+                        <div class="footer-contact__social">
+                            <a class="footer-contact__social-link" target="_blank"
+                               href="https://t.me/onetouchtravel">
+                                <img class="footer-contact__social-icon"
+                                     src="/images/ficon_tg.svg" width="26" height="26" alt="">
+                            </a>
+                            <a class="footer-contact__social-link" target="_blank"
+                               href="https://vk.com/onetouchtravel">
+                                <img class="footer-contact__social-icon"
+                                     src="/images/icon_vk.svg" width="26" height="26" alt="">
+                            </a>
+                            <a class="footer-contact__social-link" target="_blank"
+                               href="https://www.youtube.com/@onetouchtravel3467">
+                                <img class="footer-contact__social-icon"
+                                     src="/images/ficon_yt.svg" width="26" height="26" alt="">
+                            </a>
+                            <a class="footer-contact__social-link" target="_blank"
+                               href="https://rutube.ru/channel/25126845/">
+                                <img class="footer-contact__social-icon"
+                                     src="/images/icon_rutube.svg" width="26" height="26" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="footer-divider">
+
+            <div class="footer-subfooter">
+                <div class="footer-subfooter-row">
+                    <div class="footer-reestr-item">
+                        <img class="footer-reestr-logo" src="/images/coat_of_arms.svg"
+                             width="32" height="32" alt="Герб России">
+                        <div class="footer-reestr-content">
+                            <div class="footer-reestr-title">Мы в реестре туроператоров!</div>
+                            <div class="footer-reestr-text">ООО «Вантач Трэвел»</div>
+                            <div class="footer-reestr-id">РТО 017160</div>
+                        </div>
+                    </div>
+                    <div class="footer-offer-text">
+                        Все материалы и цены, размещенные на сайте, носят справочный характер и
+                        не являются публичной офертой, определяемой положениями Статьи 437 (2)
+                        Гражданского кодекса Российской Федерации.
+                    </div>
+                </div>
+
+                <hr class="footer-subdivider">
+
+                <div class="footer-subfooter-row">
+                    <div class="footer-reestr-item">
+                        <img class="footer-reestr-logo" src="/images/rst.svg"
+                             width="32" height="32" alt="РСТ">
+                        <div class="footer-reestr-content">
+                            <div class="footer-reestr-title">Российский Союз Туриндустрии</div>
+                            <div class="footer-reestr-text">ООО «Вантач Трэвел»</div>
+                            <div class="footer-reestr-id">РСТ 760</div>
+                        </div>
+                    </div>
+                    <div class="footer-copyright-text">
+                        © ООО "Вантач Трэвел" Любое использование либо копирование материалов или
+                        подборки материалов сайта, элементов дизайна и оформления допускается лишь
+                        с разрешения правообладателя и только со ссылкой на источник:
+                        <a href="https://onetouch.travel/">https://onetouch.travel/</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</div> <!-- /appmain -->
+</body>
+</html>

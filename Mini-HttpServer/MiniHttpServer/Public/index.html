@@ -11,40 +11,43 @@
 	<link type="text/css" rel="stylesheet" media="all" href="css/gallery.css">
 	<link type="text/css" rel="stylesheet" media="all" href="css/searcher.css">
 	<link type="text/css" rel="stylesheet" media="all" href="css/calendare.css">
-<style>
-	[v-cloak] {
-		display: none;
-	}
-    .skl {
-        position: relative;
-        z-index:1;
-        overflow: hidden;
-        background-color: rgba(0, 0, 0, 0.12);
-        transition: all 0.5s ease;
-    }
-    .skl::after {
-        z-index:1;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        transform: translateX(-100%);
-        background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.3), rgba(37, 22, 22, 0));
-        animation: shimmer 1.5s infinite;
-        content: '';
-    }
-</style>
-<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
-<link rel="icon" type="image/png" href="images/onetouch_travel_favicon_96x96.png">
-<link rel="apple-touch-icon" href="images/onetouch_travel_favicon_180x180.png">
+	<link type="text/css" rel="stylesheet" media="all" href="css/filters.css">
+	<style>
+		[v-cloak] {
+			display: none;
+		}
+
+		.skl {
+			position: relative;
+			z-index: 1;
+			overflow: hidden;
+			background-color: rgba(0, 0, 0, 0.12);
+			transition: all 0.5s ease;
+		}
+
+			.skl::after {
+				z-index: 1;
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				transform: translateX(-100%);
+				background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.3), rgba(37, 22, 22, 0));
+				animation: shimmer 1.5s infinite;
+				content: '';
+			}
+	</style>
+	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+	<link rel="icon" type="image/png" href="images/onetouch_travel_favicon_96x96.png">
+	<link rel="apple-touch-icon" href="images/onetouch_travel_favicon_180x180.png">
 </head>
 <body>
 	<div id="appmain" class="appmain">
 		<header class="topcontent-header-wrap">
 			<div class="topcontent-header-inner">
 				<div class="topcontent-header js-topcontent-menu-state">
-				
+
 					<!-- Верхняя строка -->
 					<div class="topcontent-header__top-row">
 						<!-- Логотип слева -->
@@ -54,96 +57,96 @@
 						<div class="topcontent-header-menu">
 							<!-- Страны -->
 							<a href="/countries/" class="topcontent-header__nav-menu-link">
-							<img class="topcontent-header__location-img" src="images/geo-pin.svg" width="15" height="15" alt="Выбор страны">
-							Страны
+								<img class="topcontent-header__location-img" src="images/geo-pin.svg" width="15" height="15" alt="Выбор страны">
+								Страны
 							</a>
-							
-										
+
+
 							<!-- Нижняя строка -->
 							<!-- Меню -->
 							<nav class="topcontent-header__nav-center">
-							<ul class="topcontent-header__nav-menu">
-								<li class="topcontent-header__nav-menu-item">
-								<div class="topcontent-header__nav-menu-link topcontent-header__nav-menu-link_icon">
-									Агентствам
-								</div>
-								<ul class="topcontent-header__nav-submenu">
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/articles/o-kompanii/">О компании</a>
+								<ul class="topcontent-header__nav-menu">
+									<li class="topcontent-header__nav-menu-item">
+										<div class="topcontent-header__nav-menu-link topcontent-header__nav-menu-link_icon">
+											Агентствам
+										</div>
+										<ul class="topcontent-header__nav-submenu">
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/articles/o-kompanii/">О компании</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/articles/sotrudnichestvo">Сотрудничество</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/articles/sposoby-i-usloviya-oplaty/">Способы и условия оплаты</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/articles/strakhovanie-turistov/">Страхование туристов</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/events">Мероприятия</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/excursion-tours/">Экскурсионные туры</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/visas/">Визы</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/articles/voprosy-i-otvety">Вопросы-ответы</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/mailing-list">Подписаться на рассылку</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/articles/sluzhba-podderzhki">Служба поддержки</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/articles/bonusnaya-programma-leto-osen-2025">Бонусная программа</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/articles/informatsiya-po-usloviyam-finansovogo-obespecheniya-ooo-vantach-trevel">Финансовые гарантии</a>
+											</li>
+										</ul>
 									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/articles/sotrudnichestvo">Сотрудничество</a>
+									<li class="topcontent-header__nav-menu-item">
+										<div class="topcontent-header__nav-menu-link topcontent-header__nav-menu-link_icon">
+											Туристам
+										</div>
+										<ul class="topcontent-header__nav-submenu">
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/articles/o-kompanii">О компании</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/news">Новости</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="https://tourism.gov.ru/reestry/reestr-turoperatorov/show.php?id=101340">Фин.гарантии туроператора</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<span class="topcontent-header__nav-submenu-item-link topcontent-header__nav-submenu-item-link_disabled">Отзывы</span>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/useful-documents/tourists">Полезные документы</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="/excursion-tours/">Экскурсионные туры</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<span class="topcontent-header__nav-submenu-item-link topcontent-header__nav-submenu-item-link_disabled">Награды</span>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="#">Помощь</a>
+											</li>
+											<li class="topcontent-header__nav-submenu-item">
+												<a class="topcontent-header__nav-submenu-item-link" href="https://online.onetouch.travel/cl_refer_person">Личный кабинет</a>
+											</li>
+										</ul>
 									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/articles/sposoby-i-usloviya-oplaty/">Способы и условия оплаты</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/articles/strakhovanie-turistov/">Страхование туристов</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/events">Мероприятия</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/excursion-tours/">Экскурсионные туры</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/visas/">Визы</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/articles/voprosy-i-otvety">Вопросы-ответы</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/mailing-list">Подписаться на рассылку</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/articles/sluzhba-podderzhki">Служба поддержки</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/articles/bonusnaya-programma-leto-osen-2025">Бонусная программа</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/articles/informatsiya-po-usloviyam-finansovogo-obespecheniya-ooo-vantach-trevel">Финансовые гарантии</a>
+									<li class="topcontent-header__nav-menu-item">
+										<a class="topcontent-header__nav-menu-link" href="/contacts/">Контакты</a>
 									</li>
 								</ul>
-								</li>
-								<li class="topcontent-header__nav-menu-item">
-								<div class="topcontent-header__nav-menu-link topcontent-header__nav-menu-link_icon">
-									Туристам
-								</div>
-								<ul class="topcontent-header__nav-submenu">
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/articles/o-kompanii">О компании</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/news">Новости</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="https://tourism.gov.ru/reestry/reestr-turoperatorov/show.php?id=101340">Фин.гарантии туроператора</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<span class="topcontent-header__nav-submenu-item-link topcontent-header__nav-submenu-item-link_disabled">Отзывы</span>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/useful-documents/tourists">Полезные документы</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="/excursion-tours/">Экскурсионные туры</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<span class="topcontent-header__nav-submenu-item-link topcontent-header__nav-submenu-item-link_disabled">Награды</span>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="#">Помощь</a>
-									</li>
-									<li class="topcontent-header__nav-submenu-item">
-									<a class="topcontent-header__nav-submenu-item-link" href="autorization.html">Личный кабинет</a>
-									</li>
-								</ul>
-								</li>
-								<li class="topcontent-header__nav-menu-item">
-								<a class="topcontent-header__nav-menu-link" href="/contacts/">Контакты</a>
-								</li>
-							</ul>
 							</nav>
 							<a href="tel:+74951202299" class="topcontent-header__nav-menu-link">
 								<span>+7 495 120-22-99</span>
@@ -159,396 +162,460 @@
 										<div class="topcontent-header__currencies-inner-rate">97.25 ₽</div>
 									</div>
 									<div class="topcontent-header__currencies-date">06.11.2025</div>
-										<div class="topcontent-header__currencies-date">
-											<a href="/exchange-rates">Архив курсов</a>
-										</div>
+									<div class="topcontent-header__currencies-date">
+										<a href="/exchange-rates">Архив курсов</a>
 									</div>
 								</div>
-								<!-- Личный кабинет -->
-								<a target="_blank" href="autorization.html" class="topcontent-header__cabinet-link">
-									<img class="topcontent-header__cabinet-img" src="images/lk-user.svg" width="15" height="16">
-									Личный кабинет
-								</a>	
-							</div>	
+							</div>
+							<!-- Личный кабинет -->
+							<a target="_blank" href="https://online.onetouch.travel/cl_refer_person" class="topcontent-header__cabinet-link">
+								<img class="topcontent-header__cabinet-img" src="images/lk-user.svg" width="15" height="16">
+								Личный кабинет
+							</a>
 						</div>
 					</div>
 				</div>
 			</div>
-		</header>
+	</div>
+	</header>
 
-		<div class="cmn-l-content cmn-l-content_main">
-			<div class="cmn-l-breadcrumbs">
-				<div class="cmn-l-breadcrumbs__items">
-					<a class="cmn-l-breadcrumbs__item" href="/">Главная</a> »
-					<a class="cmn-l-breadcrumbs__item" href="/countries/">Страны</a> »
-					<span class="cmn-l-breadcrumbs__item">Турция</span>
-				</div>
+	<div class="cmn-l-content cmn-l-content_main">
+		<div class="cmn-l-breadcrumbs">
+			<div class="cmn-l-breadcrumbs__items">
+				<a class="cmn-l-breadcrumbs__item" href="/">Главная</a> »
+				<a class="cmn-l-breadcrumbs__item" href="/countries/">Страны</a> »
+				<span class="cmn-l-breadcrumbs__item">Турция</span>
+			</div>
+		</div>
+
+		<div class="cmn-l-block-wrap">
+			<div class="countries-top-nav">
+				<a href="/search/" class="countries-top-nav__item">Поиск тура</a>
+				<span class="countries-top-nav__item">Страны</span>
+				<a href="/turkey/promotions/" class="countries-top-nav__item">Акции</a>
+				<a href="/turkey/events/" class="countries-top-nav__item">Мероприятия</a>
+				<a href="/turkey/" class="countries-top-nav__item countries-top-nav__item_active">Информация</a>
+				<a href="/turkey/documents/" class="countries-top-nav__item">Документы</a>
+			</div>
+		</div>
+
+		<div class="cmn-l-block-wrap">
+			<h2 class="cmn-l-block-title">Турция</h2>
+			<div class="pages-main-nav">
+				<a href="/turkey/" class="pages-main-nav__item pages-main-nav__item_active">О стране</a>
+				<a href="/turkey/excursions/" class="pages-main-nav__item">Экскурсионные туры</a>
+				<a href="/turkey/important_info/" class="pages-main-nav__item">Важная информация</a>
+				<a href="/turkey/hotels/" class="pages-main-nav__item">Отели</a>
 			</div>
 
-			<div class="cmn-l-block-wrap">
-				<div class="countries-top-nav">
-					<a href="/search/" class="countries-top-nav__item">Поиск тура</a>
-					<span class="countries-top-nav__item">Страны</span>
-					<a href="/turkey/promotions/" class="countries-top-nav__item">Акции</a>
-					<a href="/turkey/events/" class="countries-top-nav__item">Мероприятия</a>
-					<a href="/turkey/" class="countries-top-nav__item countries-top-nav__item_active">Информация</a>
-					<a href="/turkey/documents/" class="countries-top-nav__item">Документы</a>
-				</div>
-			</div>
-
-			<div class="cmn-l-block-wrap">
-				<h2 class="cmn-l-block-title">Турция</h2>
-				<div class="pages-main-nav">
-					<a href="/turkey/" class="pages-main-nav__item pages-main-nav__item_active">О стране</a>
-					<a href="/turkey/excursions/" class="pages-main-nav__item">Экскурсионные туры</a>
-					<a href="/turkey/important_info/" class="pages-main-nav__item">Важная информация</a>
-					<a href="/turkey/hotels/" class="pages-main-nav__item">Отели</a>
-				</div>
-
-				<div class="photo-block-wrap">
-					<div class="cmn-l-block-wrap_OFF photo-block-wrap__yamap photo-block-wrap__yamap_got-img">
-						<div class="photo-block">
-						<div class="photo-block__main">						
+			<div class="photo-block-wrap">
+				<div class="cmn-l-block-wrap_OFF photo-block-wrap__yamap photo-block-wrap__yamap_got-img">
+					<div class="photo-block">
+						<div class="photo-block__main">
 							<!-- Новые изображения из папки images/turkey -->
 							<div class="photoslider-block__slide">
-							<div class="photoslider-block__item">
-								<a class="photoslider-block__img-link">
-								<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_94391727777056.jpg">
-								</a>
-							</div>
-							</div>
-							<div class="photoslider-block__slide">
-							<div class="photoslider-block__item">
-								<a class="photoslider-block__img-link">
-								<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_32031707731074.jpg">
-								</a>
-							</div>
+								<div class="photoslider-block__item">
+									<a class="photoslider-block__img-link">
+										<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_94391727777056.jpg">
+									</a>
+								</div>
 							</div>
 							<div class="photoslider-block__slide">
-							<div class="photoslider-block__item">
-								<a class="photoslider-block__img-link">
-								<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_37331727776642.jpg">
-								</a>
-							</div>
-							</div>
-							<div class="photoslider-block__slide">
-							<div class="photoslider-block__item">
-								<a class="photoslider-block__img-link">
-								<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_41761727777259.jpg">
-								</a>
-							</div>
+								<div class="photoslider-block__item">
+									<a class="photoslider-block__img-link">
+										<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_32031707731074.jpg">
+									</a>
+								</div>
 							</div>
 							<div class="photoslider-block__slide">
-							<div class="photoslider-block__item">
-								<a class="photoslider-block__img-link">
-								<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_54681727777547.jpg">
-								</a>
-							</div>
-							</div>
-							<div class="photoslider-block__slide">
-							<div class="photoslider-block__item">
-								<a class="photoslider-block__img-link">
-								<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_61191727776533.jpg">
-								</a>
-							</div>
+								<div class="photoslider-block__item">
+									<a class="photoslider-block__img-link">
+										<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_37331727776642.jpg">
+									</a>
+								</div>
 							</div>
 							<div class="photoslider-block__slide">
-							<div class="photoslider-block__item">
-								<a class="photoslider-block__img-link">
-								<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_69901727776217.jpg">
-								</a>
-							</div>
-							</div>
-							<div class="photoslider-block__slide">
-							<div class="photoslider-block__item">
-								<a class="photoslider-block__img-link">
-								<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_71391727776800.jpg">
-								</a>
-							</div>
+								<div class="photoslider-block__item">
+									<a class="photoslider-block__img-link">
+										<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_41761727777259.jpg">
+									</a>
+								</div>
 							</div>
 							<div class="photoslider-block__slide">
-							<div class="photoslider-block__item">
-								<a class="photoslider-block__img-link">
-								<img class="photoslider-block__img" src="images/turkey/220-140_40921727777329.jpg">
-								</a>
+								<div class="photoslider-block__item">
+									<a class="photoslider-block__img-link">
+										<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_54681727777547.jpg">
+									</a>
+								</div>
 							</div>
+							<div class="photoslider-block__slide">
+								<div class="photoslider-block__item">
+									<a class="photoslider-block__img-link">
+										<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_61191727776533.jpg">
+									</a>
+								</div>
+							</div>
+							<div class="photoslider-block__slide">
+								<div class="photoslider-block__item">
+									<a class="photoslider-block__img-link">
+										<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_69901727776217.jpg">
+									</a>
+								</div>
+							</div>
+							<div class="photoslider-block__slide">
+								<div class="photoslider-block__item">
+									<a class="photoslider-block__img-link">
+										<img class="photoslider-block__img" src="images/turkey/1200-0__use_origin_data_71391727776800.jpg">
+									</a>
+								</div>
+							</div>
+							<div class="photoslider-block__slide">
+								<div class="photoslider-block__item">
+									<a class="photoslider-block__img-link">
+										<img class="photoslider-block__img" src="images/turkey/220-140_40921727777329.jpg">
+									</a>
+								</div>
 							</div>
 						</div>
-						</div>
-						<div id="teleportYaMap"></div>
+					</div>
+					<div id="teleportYaMap"></div>
+				</div>
+			</div>
+
+			<div class="cmn-l-block-wrap_OFF-2">
+				<div class="photo-block-map-toggler-wrap">
+					<span class="photo-block-map-toggler-img-wrap">
+						<img class="photo-block-map-toggler-img" src="images/geo-pin2.svg">
+					</span>
+					<span class="photo-block-map-toggler">На карте</span>
+				</div>
+			</div>
+
+			<div class="country-info-block">
+				<div class="info-section">
+					<h2 class="info-title">Турция, коротко о главном</h2>
+					<div class="info-item">
+						<span class="info-label"><strong>Полное название государства:</strong></span>
+						<span class="info-value">Турецкая Республика</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label"><strong>Население страны:</strong></span>
+						<span class="info-value">83,6 млн человек</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label"><strong>Религия:</strong></span>
+						<span class="info-value">Ислам</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label"><strong>Официальный язык:</strong></span>
+						<span class="info-value">Турецкий</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label"><strong>Столица:</strong></span>
+						<span class="info-value">Анкара</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label"><strong>Часовой пояс:</strong></span>
+						<span class="info-value">Разницы во времени с Москвой нет</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label"><strong>Время перелета:</strong></span>
+						<span class="info-value">Москва — Турция составляет около 5 часов</span>
+					</div>
+					<div class="info-item">
+						<span class="info-label"><strong>Денежная единица:</strong></span>
+						<span class="info-value">Турецкая лира</span>
+					</div>
+					<div class="info-item info-item--full">
+						<span class="info-label"><strong>Виза:</strong></span>
+						<span class="info-value">граждане РФ могут въезжать на территорию Турции без визы сроком пребывания до 60 дней. При пересечении границы Турции с туристической целью в рамках безвизового режима достаточно иметь действительный заграничный паспорт с минимальным сроком действия 4 месяца.</span>
 					</div>
 				</div>
 
-				<div class="cmn-l-block-wrap_OFF-2">
-					<div class="photo-block-map-toggler-wrap">
-						<span class="photo-block-map-toggler-img-wrap">
-							<img class="photo-block-map-toggler-img" src="images/geo-pin2.svg">
-						</span>
-						<span class="photo-block-map-toggler">На карте</span>
-					</div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Географическое положение</h3>
+					<p class="info-text">Государство, расположенное на западе Азии и на юго-востоке Европы. Омывается водами четырех морей: Черного, Средиземного, Эгейского и Мраморного. Страна граничит с Арменией, Болгарией, Грецией, Грузией, Ираном, Ираком и Сирией. Длина береговой линии Турции составляет 8 500 км, а площадь территории — 780 577 км<sup>2</sup>.</p>
 				</div>
 
-				<div class="country-info-block">
-  <div class="info-section">
-    <h2 class="info-title">Турция, коротко о главном</h2>
-    <div class="info-item">
-      <span class="info-label"><strong>Полное название государства:</strong></span>
-      <span class="info-value">Турецкая Республика</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label"><strong>Население страны:</strong></span>
-      <span class="info-value">83,6 млн человек</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label"><strong>Религия:</strong></span>
-      <span class="info-value">Ислам</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label"><strong>Официальный язык:</strong></span>
-      <span class="info-value">Турецкий</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label"><strong>Столица:</strong></span>
-      <span class="info-value">Анкара</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label"><strong>Часовой пояс:</strong></span>
-      <span class="info-value">Разницы во времени с Москвой нет</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label"><strong>Время перелета:</strong></span>
-      <span class="info-value">Москва — Турция составляет около 5 часов</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label"><strong>Денежная единица:</strong></span>
-      <span class="info-value">Турецкая лира</span>
-    </div>
-    <div class="info-item info-item--full">
-      <span class="info-label"><strong>Виза:</strong></span>
-      <span class="info-value">граждане РФ могут въезжать на территорию Турции без визы сроком пребывания до 60 дней. При пересечении границы Турции с туристической целью в рамках безвизового режима достаточно иметь действительный заграничный паспорт с минимальным сроком действия 4 месяца.</span>
-    </div>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Климат</h3>
+					<p class="info-text">Климат по большей части горный континентальный. Лето жаркое и сухое, зима снежная и холодная. Средняя температура летом +30°C, а зимой +5°C.</p>
+					<p class="info-text">На Эгейском и Средиземном море климат средиземноморский с мягкой зимой. На Чёрном море климат умеренно-морской с тёплым летом и прохладной зимой.</p>
+					<p class="info-text">Лучшее время для посещения пляжных курортов — с середины апреля по конец октября. Купаться лучше всего на курортах Черного моря — с июня по начало сентября, в Мраморном и Средиземном морях — с апреля по октябрь.</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Географическое положение</h3>
-    <p class="info-text">Государство, расположенное на западе Азии и на юго-востоке Европы. Омывается водами четырех морей: Черного, Средиземного, Эгейского и Мраморного. Страна граничит с Арменией, Болгарией, Грецией, Грузией, Ираном, Ираком и Сирией. Длина береговой линии Турции составляет 8 500 км, а площадь территории — 780 577 км<sup>2</sup>.</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Транспорт</h3>
+					<p class="info-text">Автобус — наиболее распространенный вид транспорта в Турции. В дневное время работают долмуши — маршрутные такси с фиксированной стоимостью проезда. Прибрежные зоны часто имеют паромные станции, позволяющие быстро перемещаться из одной точки города в другую по воде.</p>
+					<p class="info-text">Самый удобный и оптимальный способ передвижения по стране — это такси. Оплата проезда состоит из двух частей: стоимость посадки плюс показания счетчика.</p>
+					<p class="info-text">Также в Стамбуле есть метро, которое состоит из 10 линий. Туристы могут приобрести Istanbul Welcome Card, которая действительна 5 или 7 дней и включает в себя 10 или 20 поездок на местном общественном транспорте (метро, трамвай, паром, фуникулер, автобус).</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Климат</h3>
-    <p class="info-text">Климат по большей части горный континентальный. Лето жаркое и сухое, зима снежная и холодная. Средняя температура летом +30°C, а зимой +5°C.</p>
-    <p class="info-text">На Эгейском и Средиземном море климат средиземноморский с мягкой зимой. На Чёрном море климат умеренно-морской с тёплым летом и прохладной зимой.</p>
-    <p class="info-text">Лучшее время для посещения пляжных курортов — с середины апреля по конец октября. Купаться лучше всего на курортах Черного моря — с июня по начало сентября, в Мраморном и Средиземном морях — с апреля по октябрь.</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Аренда</h3>
+					<p class="info-text">Автомобиль выдается напрокат только при наличии международного водительского удостоверения.</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Транспорт</h3>
-    <p class="info-text">Автобус — наиболее распространенный вид транспорта в Турции. В дневное время работают долмуши — маршрутные такси с фиксированной стоимостью проезда. Прибрежные зоны часто имеют паромные станции, позволяющие быстро перемещаться из одной точки города в другую по воде.</p>
-    <p class="info-text">Самый удобный и оптимальный способ передвижения по стране — это такси. Оплата проезда состоит из двух частей: стоимость посадки плюс показания счетчика.</p>
-    <p class="info-text">Также в Стамбуле есть метро, которое состоит из 10 линий. Туристы могут приобрести Istanbul Welcome Card, которая действительна 5 или 7 дней и включает в себя 10 или 20 поездок на местном общественном транспорте (метро, трамвай, паром, фуникулер, автобус).</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Кухня</h3>
+					<p class="info-text">Турецкая кухня привлекательна тем, что в ней переплелись средиземноморские, арабские, индийские, кавказские и ближневосточные кулинарные традиции. Она богата разнообразными блюдами с уникальными вкусами. Многие турецкие кушанья достаточно калорийны, т.к. для их приготовления используется мясо, оливковое и сливочное масло, мука и рис. Еду в Турции любят жарить и запекать в печи, а многие десерты готовятся во фритюре. Конечно, турецкой кухне найдутся национальные блюда и для приверженцев здорового питания, которые готовятся на основе овощей, бобовых культур и диетического мяса.</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Аренда</h3>
-    <p class="info-text">Автомобиль выдается напрокат только при наличии международного водительского удостоверения.</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Магазины</h3>
+					<p class="info-text">Большинство магазинов в Стамбуле работают с 9:00 до 21:00, некоторые из них (как правило, небольшие частные лавочки) закрываются на обед с 13:00 до 14:00. В супермаркетах и крупных ТЦ перерывов не бывает, а в туристическом центре города есть магазины, работающие до последнего клиента. По воскресеньям большинство магазинов не работает, но крупных торговых комплексов и магазинов в центре города это обычно не касается.</p>
+					<p class="info-text">Сувениры: Турецкие сладости (лукум), ковры, глиняная посуда и керамика, текстиль, специи, рыба, оливковое масло.</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Кухня</h3>
-    <p class="info-text">Турецкая кухня привлекательна тем, что в ней переплелись средиземноморские, арабские, индийские, кавказские и ближневосточные кулинарные традиции. Она богата разнообразными блюдами с уникальными вкусами. Многие турецкие кушанья достаточно калорийны, т.к. для их приготовления используется мясо, оливковое и сливочное масло, мука и рис. Еду в Турции любят жарить и запекать в печи, а многие десерты готовятся во фритюре. Конечно, турецкой кухне найдутся национальные блюда и для приверженцев здорового питания, которые готовятся на основе овощей, бобовых культур и диетического мяса.</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Места и экскурсии</h3>
+					<p class="info-text">Турция — страна с богатейшей историей, дающая своим гостям возможность совмещать комфортный пляжный отдых с познавательным экскурсионным туризмом. Несмотря на то, что Стамбул по концентрации достопримечательностей занимает ведущие позиции, и остальные регионы могут похвастаться уникальными природными и рукотворными памятниками. Популярные локации для посещения в Турции:</p>
+					<p class="info-text">Термальные бассейны Памуккале – термальными источниками на ступенях белоснежного травертинового плато. В 1988 году исторический город Иераполис и террасы Памуккале внесены в список Всемирного наследия ЮНЕСКО.</p>
+					<p class="info-text">Каппадокия – это регион в центре страны, известный своими сюрреалистическими и даже космическими долинами вулканического происхождения.</p>
+					<p class="info-text">Фазелис – город древней Ликии на территории современной Турции, провинция Анталья.</p>
+					<p class="info-text">Эфес – самый монументальный археологический комплекс в Средиземноморье, с широкими проспектами, колонными залами и древними базиликами, скульптурами и мозаиками.</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Магазины</h3>
-    <p class="info-text">Большинство магазинов в Стамбуле работают с 9:00 до 21:00, некоторые из них (как правило, небольшие частные лавочки) закрываются на обед с 13:00 до 14:00. В супермаркетах и крупных ТЦ перерывов не бывает, а в туристическом центре города есть магазины, работающие до последнего клиента. По воскресеньям большинство магазинов не работает, но крупных торговых комплексов и магазинов в центре города это обычно не касается.</p>
-    <p class="info-text">Сувениры: Турецкие сладости (лукум), ковры, глиняная посуда и керамика, текстиль, специи, рыба, оливковое масло.</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Праздники</h3>
+					<p class="info-text">1 января — Новый год;</p>
+					<p class="info-text">23 апреля — День Национальной Независимости;</p>
+					<p class="info-text">19 мая — День молодежи и спорта;</p>
+					<p class="info-text">30 августа – День Победы;</p>
+					<p class="info-text">29 октября — День Республики, главный государственный праздник;</p>
+					<p class="info-text">10 ноября — День смерти Ататюрка.</p>
+					<p class="info-text">Религиозные исламские праздники не имеют четких дат, так как зависят от лунного календаря.</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Места и экскурсии</h3>
-    <p class="info-text">Турция — страна с богатейшей историей, дающая своим гостям возможность совмещать комфортный пляжный отдых с познавательным экскурсионным туризмом. Несмотря на то, что Стамбул по концентрации достопримечательностей занимает ведущие позиции, и остальные регионы могут похвастаться уникальными природными и рукотворными памятниками. Популярные локации для посещения в Турции:</p>
-    <p class="info-text">Термальные бассейны Памуккале – термальными источниками на ступенях белоснежного травертинового плато. В 1988 году исторический город Иераполис и террасы Памуккале внесены в список Всемирного наследия ЮНЕСКО.</p>
-    <p class="info-text">Каппадокия – это регион в центре страны, известный своими сюрреалистическими и даже космическими долинами вулканического происхождения.</p>
-    <p class="info-text">Фазелис – город древней Ликии на территории современной Турции, провинция Анталья.</p>
-    <p class="info-text">Эфес – самый монументальный археологический комплекс в Средиземноморье, с широкими проспектами, колонными залами и древними базиликами, скульптурами и мозаиками.</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Особенности пребывания, обычаи и правила</h3>
+					<p class="info-text">Коран налагает на правоверных ряд строгих запретов, которые должны неукоснительно соблюдаться. Сдержанность и уважение обязательны при посещении мечети, лучше всего осматривать ее, когда там нет богослужения. У входа в мечеть, в дом или квартиру турка полагается снимать обувь.</p>
+					<p class="info-text">Летом рекомендуется носить просторную одежду из хлопчатобумажной ткани. Шорты и майки вне туристических зон Турции нежелательны.</p>
+					<p class="info-text">Турки отличаются обходительностью и честностью. В затруднительной ситуации Вам охотно помогут. При общении с турками не следует торопиться. Как любой восточный народ, они, по западным меркам, достаточно медлительны и не очень пунктуальны.</p>
+					<p class="info-text">Большое значение турки придают этикету. Очень уважительно они относятся к людям, которые уважают их традиции или знают хотя бы пару слов по-турецки.</p>
+					<p class="info-text">Запрещается: фотографировать женщин в черных накидках, употребление алкоголя на улицах не одобряется и может привести к задержанию полицией, курить в общественных учреждениях.</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Праздники</h3>
-    <p class="info-text">1 января — Новый год;</p>
-	<p class="info-text">23 апреля — День Национальной Независимости;</p>
-	<p class="info-text">19 мая — День молодежи и спорта;</p>
-	<p class="info-text">30 августа – День Победы;</p>
-	<p class="info-text">29 октября — День Республики, главный государственный праздник;</p>
-	<p class="info-text">10 ноября — День смерти Ататюрка.</p>
-    <p class="info-text">Религиозные исламские праздники не имеют четких дат, так как зависят от лунного календаря.</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Связь</h3>
+					<p class="info-text">Звонить из автомата вам обойдется дешевле, чем из отеля. Для телефонных переговоров удобно использовать карточки, которые продаются в лавках, табачных киосках, на почте.</p>
+					<p class="info-text">Местные операторы Turkcell, Vodafon и Avea. В любой точке страны вы сможете найти официальные офисы этих компаний, аккредитованные заниматься продажей сим-карт.</p>
+					<p class="info-text">Международный код: +90</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Особенности пребывания, обычаи и правила</h3>
-    <p class="info-text">Коран налагает на правоверных ряд строгих запретов, которые должны неукоснительно соблюдаться. Сдержанность и уважение обязательны при посещении мечети, лучше всего осматривать ее, когда там нет богослужения. У входа в мечеть, в дом или квартиру турка полагается снимать обувь.</p>
-    <p class="info-text">Летом рекомендуется носить просторную одежду из хлопчатобумажной ткани. Шорты и майки вне туристических зон Турции нежелательны.</p>
-    <p class="info-text">Турки отличаются обходительностью и честностью. В затруднительной ситуации Вам охотно помогут. При общении с турками не следует торопиться. Как любой восточный народ, они, по западным меркам, достаточно медлительны и не очень пунктуальны.</p>
-    <p class="info-text">Большое значение турки придают этикету. Очень уважительно они относятся к людям, которые уважают их традиции или знают хотя бы пару слов по-турецки.</p>
-    <p class="info-text">Запрещается: фотографировать женщин в черных накидках, употребление алкоголя на улицах не одобряется и может привести к задержанию полицией, курить в общественных учреждениях.</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">В отеле</h3>
+					<p class="info-text">В день приезда расселение осуществляется в соответствии с правилами, принятыми в отеле. Обычно начиная с 14:00 по местному времени. Просим ознакомиться на месте с условиями предоставления услуг в отеле и придерживаться установленных отелем правил.</p>
+					<p class="info-text">В день выезда до наступления расчетного часа (как правило, 12:00) необходимо освободить свой номер и оплатить дополнительные услуги.</p>
+					<p class="info-text">В каждом турецком отеле концепция all inclusive («все включено») имеет свою особенность. Для посещения ресторанов системы a la carte требуется предварительное резервирование мест и дополнительная оплата.</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Связь</h3>
-    <p class="info-text">Звонить из автомата вам обойдется дешевле, чем из отеля. Для телефонных переговоров удобно использовать карточки, которые продаются в лавках, табачных киосках, на почте.</p>
-    <p class="info-text">Местные операторы Turkcell, Vodafon и Avea. В любой точке страны вы сможете найти официальные офисы этих компаний, аккредитованные заниматься продажей сим-карт.</p>
-    <p class="info-text">Международный код: +90</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Правила безопасности</h3>
+					<p class="info-text">Самую большую опасность для туристов представляют карманники. Чаще всего их можно встретить в районе улицы Истикляль в Стамбуле. Необходимо быть особенно внимательными в местах массового скопления людей. Ценные вещи лучше всего хранить в сейфе отеля.</p>
+				</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">В отеле</h3>
-    <p class="info-text">В день приезда расселение осуществляется в соответствии с правилами, принятыми в отеле. Обычно начиная с 14:00 по местному времени. Просим ознакомиться на месте с условиями предоставления услуг в отеле и придерживаться установленных отелем правил.</p>
-    <p class="info-text">В день выезда до наступления расчетного часа (как правило, 12:00) необходимо освободить свой номер и оплатить дополнительные услуги.</p>
-    <p class="info-text">В каждом турецком отеле концепция all inclusive («все включено») имеет свою особенность. Для посещения ресторанов системы a la carte требуется предварительное резервирование мест и дополнительная оплата.</p>
-  </div>
+				<div class="info-section">
+					<h3 class="info-subtitle">Место встречи</h3>
+					<p class="info-text">В аэропорту после прохождения паспортного, таможенного контроля и получения багажа пройдите в зал прилета, следуя по указателям пройдите к выходу. При выходе из зала прилета туриста встречает трансфер обслуживающей компании с табличкой, если турист приобрел полный пакетный тур. Если Вы приобрели только наземное обслуживание, от аэропорта до гостиницы Вы можете добраться, заказав индивидуальный трансфер. Вас встретят обслуживающая компания с табличкой (с указанием ФИО туриста/ наименования принимающей компании). Уточняйте после бронирование услуги.</p>
+					<p class="info-text">В случае возникновения вопросов информацию можно уточнить по телефонам: +7 963 782-58-28</p>
+					<p class="info-text"><strong>СТАМБУЛ</strong></p>
+					<p class="info-text">В городе два действующих аэропорта: новый аэропорт Стамбула (İstanbul Havalimanı, IATA код IST) и аэропорт имени Сабихи Гёкчен (Sabiha Gökçen Havalimanı, IATA код SAW).</p>
+					<p class="info-text">Информация о том, в какой аэропорт прилетает самолет, указана в маршрутной квитанции, а также в посадочном талоне, который вы получите после регистрации на рейс.</p>
+				</div>
+			</div>
 
-  <div class="info-section">
-    <h3 class="info-subtitle">Правила безопасности</h3>
-    <p class="info-text">Самую большую опасность для туристов представляют карманники. Чаще всего их можно встретить в районе улицы Истикляль в Стамбуле. Необходимо быть особенно внимательными в местах массового скопления людей. Ценные вещи лучше всего хранить в сейфе отеля.</p>
-  </div>
-
-  <div class="info-section">
-    <h3 class="info-subtitle">Место встречи</h3>
-    <p class="info-text">В аэропорту после прохождения паспортного, таможенного контроля и получения багажа пройдите в зал прилета, следуя по указателям пройдите к выходу. При выходе из зала прилета туриста встречает трансфер обслуживающей компании с табличкой, если турист приобрел полный пакетный тур. Если Вы приобрели только наземное обслуживание, от аэропорта до гостиницы Вы можете добраться, заказав индивидуальный трансфер. Вас встретят обслуживающая компания с табличкой (с указанием ФИО туриста/ наименования принимающей компании). Уточняйте после бронирование услуги.</p>
-    <p class="info-text">В случае возникновения вопросов информацию можно уточнить по телефонам: +7 963 782-58-28</p>
-    <p class="info-text"><strong>СТАМБУЛ</strong></p>
-    <p class="info-text">В городе два действующих аэропорта: новый аэропорт Стамбула (İstanbul Havalimanı, IATA код IST) и аэропорт имени Сабихи Гёкчен (Sabiha Gökçen Havalimanı, IATA код SAW).</p>
-    <p class="info-text">Информация о том, в какой аэропорт прилетает самолет, указана в маршрутной квитанции, а также в посадочном талоне, который вы получите после регистрации на рейс.</p>
-  </div>
-</div>
-
-				<div class="cmn-l-block-wrap js-ot-msf">
-					<div class="searchTabs">
-						<div class="searchTabs__nav">
-							<button type="button" class="searchTabs__nav-item searchTabs__nav-item_active">
-								<span class="searchTabs__nav-item-text">Туры</span>
-							</button>
-							<button type="button" class="searchTabs__nav-item">
-								<span class="searchTabs__nav-item-text">Туры без перелёта</span>
-							</button>
-							<button type="button" class="searchTabs__nav-item">
-								<span class="searchTabs__nav-item-text">Авиабилеты</span>
-							</button>
-							<div class="searchTabs__nav-item">
-								<a href="https" class="searchTabs__nav-item-link" target="_blank"> Поиск для турагентств </a>
-							</div>
-							<div class="searchTabs__nav-item">
-								<a href="https" class="searchTabs__nav-item-link"> Экскурсионные туры </a>
-							</div>
+			<div class="cmn-l-block-wrap js-ot-msf">
+				<div class="searchTabs">
+					<div class="searchTabs__nav">
+						<button type="button" class="searchTabs__nav-item searchTabs__nav-item_active">
+							<span class="searchTabs__nav-item-text">Туры</span>
+						</button>
+						<button type="button" class="searchTabs__nav-item">
+							<span class="searchTabs__nav-item-text">Туры без перелёта</span>
+						</button>
+						<button type="button" class="searchTabs__nav-item">
+							<span class="searchTabs__nav-item-text">Авиабилеты</span>
+						</button>
+						<div class="searchTabs__nav-item">
+							<a href="https" class="searchTabs__nav-item-link" target="_blank"> Поиск для турагентств </a>
 						</div>
-						<div class="searchTabs__content">
-							<div class="cmn-l-block-wrap_OFF">
-								<div class="ot-msf">
-									<div class="ot-msf__wrap">
-										<form class="ot-msf-form">
-											<div class="ot-msf-form__item">
-												<div class="ot-msf-form__item-label">Вылет из</div>
-												<div class="ot-msf-form__item-value">
-													<input type="text" value="Москва" class="ot-msf-input">
-												</div>
+						<div class="searchTabs__nav-item">
+							<a href="https" class="searchTabs__nav-item-link"> Экскурсионные туры </a>
+						</div>
+					</div>
+					<div class="searchTabs__content">
+						<div class="cmn-l-block-wrap_OFF">
+							<div class="ot-msf">
+								<div class="ot-msf__wrap">
+									<form class="ot-msf-form">
+										<div class="ot-msf-form__item">
+											<div class="ot-msf-form__item-label">Вылет из</div>
+											<div class="autocomplete-box">
+												<input type="text" id="fromInput" data-field="from" class="ot-msf-input" value="Москва" autocomplete="off">
 											</div>
+										</div>
 
-											<div class="ot-msf-form__item">
-												<div class="ot-msf-form__item-label">Куда?</div>
-												<div class="ot-msf-form__item-value">
-													<input type="text" value="Турция" class="ot-msf-input">
-												</div>
+
+										<div class="ot-msf-form__item">
+											<div class="ot-msf-form__item-label">Куда?</div>
+											<div class="autocomplete-box">
+												<input type="text" id="toInput" data-field="to" class="ot-msf-input" value="Турция" autocomplete="off">
 											</div>
+										</div>
 
-											<div class="ot-msf-form__item">
-												<div class="ot-msf-form__item-label">Период вылета</div>
-												<div class="ot-msf-form__item-value">
-													<button type="button" class="ot-date-button">🗓️ 11.11.25 - 14.11.25</button>
-												</div>
+										<div class="ot-msf-form__item">
+											<div class="ot-msf-form__item-label">Период вылета</div>
+											<div class="ot-msf-form__item-value">
+												<button type="button" class="ot-date-button">🗓️ 11.11.25 - 14.11.25</button>
 											</div>
+										</div>
 
-											<div class="ot-msf-form__item">
-												<div class="ot-msf-form__item-label">Ночей</div>
-												<button type="button" class="ot-msf-form__item-value">6 - 9</button>
+										<div class="ot-msf-form__item">
+											<div class="ot-msf-form__item-label">Ночей</div>
+											<div class="ot-msf-form__item-value">
+												<input type="button" data-field="nights" value="6 - 9" class="ot-msf-input">
 											</div>
+										</div>
 
-											<div class="ot-msf-form__item">
-												<div class="ot-msf-form__item-label">Туристы</div>
-												<button type="button" class="ot-msf-form__item-value">2 взр. / 0 реб.</button>
+										<div class="ot-msf-form__item">
+											<div class="ot-msf-form__item-label">Туристы</div>
+											<div class="ot-msf-form__item-value">
+												<input type="button" data-field="tourists" value="2 взр. / 0 реб." class="ot-msf-input">
 											</div>
+										</div>
 
-											<div class="ot-msf-form__submit">
-												<input type="submit" class="ot-msf-form__submit-button" value="Найти">
+										<div class="ot-msf-form__submit">
+											<input type="submit" class="ot-msf-form__submit-button" value="Найти">
+										</div>
+									</form>
+									<div id="modal-city" class="ot-msf-modal"></div>
+									<div id="modal-country" class="ot-msf-modal"></div>
+									<div id="modal-nights" class="ot-msf-modal"></div>
+									<div id="modal-tourists" class="ot-msf-modal"></div>
+
+									<div id="ot-filters-extra" style="display:none; margin-top:20px;">
+
+										<!-- ГОРОДА -->
+										<div class="ot-filter-col">
+											<div class="ot-filter-title">Город</div>
+
+											<input class="ot-filter-search"
+												   placeholder="Поиск по городам"
+												   oninput="filterLocalList('ot-city-list', this.value)">
+
+											<div class="ot-filter-list" id="ot-city-list">
+												<!-- loadCities() -->
 											</div>
-										</form>
+										</div>
 
-										<button type="button" class="ot-msf-form__additional-fields">Показать дополнительные поля</button>
+										<!-- КАТЕГОРИИ -->
+										<div class="ot-filter-col">
+											<div class="ot-filter-title">Категория</div>
+
+											<div class="ot-filter-list" id="ot-type-list">
+												<!-- loadHotelTypes() -->
+											</div>
+										</div>
+
+										<!-- ОТЕЛИ -->
+										<div class="ot-filter-col ot-filter-col-wide">
+											<div class="ot-filter-title">Отели</div>
+
+											<input class="ot-filter-search"
+												   placeholder="Поиск по отелям"
+												   oninput="filterLocalList('ot-hotels-list', this.value)">
+
+											<div class="ot-filter-list" id="ot-hotels-list">
+												<!-- loadHotelsList() -->
+											</div>
+										</div>
+
+										<!-- ПИТАНИЕ -->
+										<div class="ot-filter-col">
+											<div class="ot-filter-title">Питание</div>
+
+											<div class="ot-filter-list" id="ot-meal-list">
+												<!-- loadMealPlans() -->
+											</div>
+										</div>
+
 									</div>
+
+									<button type="button"
+											id="ot-filters-toggle-text"
+											onclick="toggleExtraFilters()"
+											class="ot-msf-form__additional-fields">
+										Показать дополнительные поля
+									</button>
+
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+			</div>
+			<div id="ot-search-results"></div>
 			<footer class="footer-all-wrap">
 				<div class="cmn-l-block-wrap cmn-l-block-wrap_nobg">
 					<!-- Верхний блок с 4 колонками -->
 					<div class="footer-block-grid">
-					<!-- О нас -->
-					<div class="footer-block__item">
-						<div class="footer-block__item-title">О нас</div>
-						<div class="footer-block__item-inner">
-						<a href="/articles/o-kompanii/" class="footer-block__item-link">О компании</a>
-						<a href="/articles/sotrudnichestvo" class="footer-block__item-link">Сотрудничество</a>
-						<span class="footer-block__item-link footer-block__item-link_disabled">Пресса и партнеры о нас</span>
-						<a href="/articles/politika-konfidentsialnosti" class="footer-block__item-link">Политика конфиденциальности</a>
+						<!-- О нас -->
+						<div class="footer-block__item">
+							<div class="footer-block__item-title">О нас</div>
+							<div class="footer-block__item-inner">
+								<a href="/articles/o-kompanii/" class="footer-block__item-link">О компании</a>
+								<a href="/articles/sotrudnichestvo" class="footer-block__item-link">Сотрудничество</a>
+								<span class="footer-block__item-link footer-block__item-link_disabled">Пресса и партнеры о нас</span>
+								<a href="/articles/politika-konfidentsialnosti" class="footer-block__item-link">Политика конфиденциальности</a>
+							</div>
 						</div>
-					</div>
 
-					<!-- Сайт -->
-					<div class="footer-block__item">
-						<div class="footer-block__item-title">Сайт</div>
-						<div class="footer-block__item-inner">
-						<a href="/countries" class="footer-block__item-link">Страны</a>
-						<a href="/search/" class="footer-block__item-link">Туры</a>
-						<a href="/excursion-tours/" class="footer-block__item-link">Экскурсионные туры</a>
-						<a href="/search/#avia" class="footer-block__item-link">Авиабилеты</a>
+						<!-- Сайт -->
+						<div class="footer-block__item">
+							<div class="footer-block__item-title">Сайт</div>
+							<div class="footer-block__item-inner">
+								<a href="/countries" class="footer-block__item-link">Страны</a>
+								<a href="/search/" class="footer-block__item-link">Туры</a>
+								<a href="/excursion-tours/" class="footer-block__item-link">Экскурсионные туры</a>
+								<a href="/search/#avia" class="footer-block__item-link">Авиабилеты</a>
+							</div>
 						</div>
-					</div>
 
-					<!-- Информация -->
-					<div class="footer-block__item">
-						<div class="footer-block__item-title">Информация</div>
-						<div class="footer-block__item-inner">
-						<a href="/news" class="footer-block__item-link">Новости</a>
-						<a href="/articles/gde-kupit" class="footer-block__item-link">Где купить</a>
-						<a href="/mailing-list" class="footer-block__item-link">Подписаться на рассылку</a>
-						<a href="https://tourism.gov.ru/agents/?ysclid=m0peqe7ev7514195847" class="footer-block__item-link">Реестр турагентств</a>
+						<!-- Информация -->
+						<div class="footer-block__item">
+							<div class="footer-block__item-title">Информация</div>
+							<div class="footer-block__item-inner">
+								<a href="/news" class="footer-block__item-link">Новости</a>
+								<a href="/articles/gde-kupit" class="footer-block__item-link">Где купить</a>
+								<a href="/mailing-list" class="footer-block__item-link">Подписаться на рассылку</a>
+								<a href="https://tourism.gov.ru/agents/?ysclid=m0peqe7ev7514195847" class="footer-block__item-link">Реестр турагентств</a>
+							</div>
 						</div>
-					</div>
 
-					<!-- Связаться с нами -->
-					<div class="footer-block__item">
-						<div class="footer-block__item-title">Связаться с нами</div>
-						<div class="footer-block__item-inner">
-						<a href="/contacts" class="footer-block__item-link">Контакты</a>
-						<a href="tel:+74951202299" class="footer-block__item-link footer-contact__contact-phone">+7 495 120-22-99</a>
-						<a href="mailto:agency@onetouch.travel" class="footer-block__item-link footer-contact__contact-mail">agency@onetouch.travel</a>
-						<div class="footer-contact__social">
-							<a class="footer-contact__social-link" target="_blank" href="https://t.me/onetouchtravel">
-							<img class="footer-contact__social-icon" src="images/ficon_tg.svg" width="26" height="26">
-							</a>
-							<a class="footer-contact__social-link" target="_blank" href="https://vk.com/onetouchtravel">
-							<img class="footer-contact__social-icon" src="images/icon_vk.svg" width="26" height="26">
-							</a>
-							<a class="footer-contact__social-link" target="_blank" href="https://www.youtube.com/@onetouchtravel3467">
-							<img class="footer-contact__social-icon" src="images/ficon_yt.svg" width="26" height="26">
-							</a>
-							<a class="footer-contact__social-link" target="_blank" href="https://rutube.ru/channel/25126845/">
-							<img class="footer-contact__social-icon" src="images/icon_rutube.svg" width="26" height="26">
-							</a>
+						<!-- Связаться с нами -->
+						<div class="footer-block__item">
+							<div class="footer-block__item-title">Связаться с нами</div>
+							<div class="footer-block__item-inner">
+								<a href="/contacts" class="footer-block__item-link">Контакты</a>
+								<a href="tel:+74951202299" class="footer-block__item-link footer-contact__contact-phone">+7 495 120-22-99</a>
+								<a href="mailto:agency@onetouch.travel" class="footer-block__item-link footer-contact__contact-mail">agency@onetouch.travel</a>
+								<div class="footer-contact__social">
+									<a class="footer-contact__social-link" target="_blank" href="https://t.me/onetouchtravel">
+										<img class="footer-contact__social-icon" src="images/ficon_tg.svg" width="26" height="26">
+									</a>
+									<a class="footer-contact__social-link" target="_blank" href="https://vk.com/onetouchtravel">
+										<img class="footer-contact__social-icon" src="images/icon_vk.svg" width="26" height="26">
+									</a>
+									<a class="footer-contact__social-link" target="_blank" href="https://www.youtube.com/@onetouchtravel3467">
+										<img class="footer-contact__social-icon" src="images/ficon_yt.svg" width="26" height="26">
+									</a>
+									<a class="footer-contact__social-link" target="_blank" href="https://rutube.ru/channel/25126845/">
+										<img class="footer-contact__social-icon" src="images/icon_rutube.svg" width="26" height="26">
+									</a>
+								</div>
+							</div>
 						</div>
-						</div>
-					</div>
 					</div>
 
 					<!-- Горизонтальная разделительная линия -->
@@ -556,54 +623,98 @@
 
 					<!-- Нижний серый блок с двумя строками -->
 					<div class="footer-subfooter">
-					<!-- Верхняя строка -->
-					<div class="footer-subfooter-row">
-						<div class="footer-reestr-item">
-						<img class="footer-reestr-logo" src="images/coat_of_arms.svg" width="32" height="32" alt="Герб России">
-						<div class="footer-reestr-content">
-							<div class="footer-reestr-title">Мы в реестре туроператоров!</div>
-							<div class="footer-reestr-text">ООО «Вантач Трэвел»</div>
-							<div class="footer-reestr-id">РТО 017160</div>
+						<!-- Верхняя строка -->
+						<div class="footer-subfooter-row">
+							<div class="footer-reestr-item">
+								<img class="footer-reestr-logo" src="images/coat_of_arms.svg" width="32" height="32" alt="Герб России">
+								<div class="footer-reestr-content">
+									<div class="footer-reestr-title">Мы в реестре туроператоров!</div>
+									<div class="footer-reestr-text">ООО «Вантач Трэвел»</div>
+									<div class="footer-reestr-id">РТО 017160</div>
+								</div>
+							</div>
+							<div class="footer-offer-text">
+								Все материалы и цены, размещенные на сайте, носят справочный характер и не являются публичной офертой, определяемой положениями Статьи 437 (2) Гражданского кодекса Российской Федерации.
+							</div>
 						</div>
-						</div>
-						<div class="footer-offer-text">
-						Все материалы и цены, размещенные на сайте, носят справочный характер и не являются публичной офертой, определяемой положениями Статьи 437 (2) Гражданского кодекса Российской Федерации.
-						</div>
-					</div>
 
-					<!-- Внутренняя разделительная "палка" -->
-					<hr class="footer-subdivider">
+						<!-- Внутренняя разделительная "палка" -->
+						<hr class="footer-subdivider">
 
-					<!-- Нижняя строка -->
-					<div class="footer-subfooter-row">
-						<div class="footer-reestr-item">
-						<img class="footer-reestr-logo" src="images/rst.svg" width="32" height="32" alt="РСТ">
-						<div class="footer-reestr-content">
-							<div class="footer-reestr-title">Российский Союз Туриндустрии</div>
-							<div class="footer-reestr-text">ООО «Вантач Трэвел»</div>
-							<div class="footer-reestr-id">РСТ 760</div>
+						<!-- Нижняя строка -->
+						<div class="footer-subfooter-row">
+							<div class="footer-reestr-item">
+								<img class="footer-reestr-logo" src="images/rst.svg" width="32" height="32" alt="РСТ">
+								<div class="footer-reestr-content">
+									<div class="footer-reestr-title">Российский Союз Туриндустрии</div>
+									<div class="footer-reestr-text">ООО «Вантач Трэвел»</div>
+									<div class="footer-reestr-id">РСТ 760</div>
+								</div>
+							</div>
+							<div class="footer-copyright-text">
+								© ООО "Вантач Трэвел" Любое использование либо копирование материалов или подборки материалов сайта, элементов дизайна и оформления допускается лишь с разрешения правообладателя и только со ссылкой на источник:
+								<a href="https://onetouch.travel/">https://onetouch.travel/</a>
+							</div>
 						</div>
-						</div>
-						<div class="footer-copyright-text">
-						© ООО "Вантач Трэвел" Любое использование либо копирование материалов или подборки материалов сайта, элементов дизайна и оформления допускается лишь с разрешения правообладателя и только со ссылкой на источник: 
-						<a href="https://onetouch.travel/">https://onetouch.travel/</a>
-						</div>
-					</div>
 					</div>
 				</div>
 			</footer>
 		</div>
 	</div>
 	<script>
-	document.querySelectorAll('.searchTabs__nav-item').forEach(tab => {
-		tab.addEventListener('click', () => {
-			document.querySelectorAll('.searchTabs__nav-item').forEach(t => t.classList.remove('searchTabs__nav-item_active'));
-			tab.classList.add('searchTabs__nav-item_active');
+		document.querySelectorAll('.searchTabs__nav-item').forEach(tab => {
+			tab.addEventListener('click', () => {
+				document.querySelectorAll('.searchTabs__nav-item').forEach(t => t.classList.remove('searchTabs__nav-item_active'));
+				tab.classList.add('searchTabs__nav-item_active');
+			});
 		});
-	});
 	</script>
-	<script src="js/gallery.js"></script>
-	<script src="js/calendare.js" defer></script>
+	<script charset="UTF-8" src="js/gallery.js"></script>
+	<script charset="UTF-8" src="js/calendare.js" defer></script>
+	<script charset="UTF-8" src="js/filters.js"></script>
+	<script charset="UTF-8" src="js/searcher.js"></script>
+	<script type="text/x-template" id="tour-card-template">
+		<div class="tour-card">
+			<div class="tour-card__inner">
+				<div class="tour-card__left">
+					<a class="tour-card__image-link" href="{{HotelUrl}}">
+						<img class="tour-card__image" src="{{PhotoUrl}}" alt="{{HotelName}}">
+					</a>
+				</div>
+
+				<div class="tour-card__center">
+					<div class="tour-card__top-row">
+						<div class="tour-card__stars">{{StarsHtml}}</div>
+						<a class="tour-card__name" href="{{HotelUrl}}">{{HotelName}}</a>
+					</div>
+
+					<div class="tour-card__location">
+						{{CityName}} ({{RegionName}})
+					</div>
+
+					<div class="tour-card__info-row">
+						<div class="tour-card__info-item">
+							Заезд: {{CheckInDate}}
+						</div>
+						<div class="tour-card__info-item">
+							Ночей: {{Nights}}
+						</div>
+					</div>
+
+					<div class="tour-card__info-row"
+						<div class="tour-card__info-item">
+							Питание: {{MealPlan}}
+						</div>
+					</div>
+				</div>
+
+				<div class="tour-card__right">
+					<div class="tour-card__price">{{Price}} ₽</div>
+				</div>
+			</div>
+		</div>
+	</script>
+
 	<div id="calendarPopup" class="ot-calendar-popup"></div>
 </body>
 </html>

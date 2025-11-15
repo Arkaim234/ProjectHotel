@@ -8,61 +8,107 @@ using MyORMLibrary;
 
 namespace MiniHttpServer.Repositories
 {
-    /// <summary>
-    /// Репозиторий для работы с отелями.
-    /// </summary>
     public class HotelRepository : OrmRepositories<Hotel>
     {
+        private readonly HotelMealPlanRepository _hmpRepo;
+        private readonly MealPlanRepository _mealRepo;
+
         public HotelRepository(IORMContext context)
-            : base(context, "Hotels") { }
+            : base(context, "Hotels")
+        {
+            _hmpRepo = new HotelMealPlanRepository(context);
+            _mealRepo = new MealPlanRepository(context);
+        }
 
         public HotelRepository(string connectionString)
-            : base(connectionString, "Hotels") { }
+            : base(connectionString, "Hotels")
+        {
+            var ctx = new ORMContext(connectionString);
+            _hmpRepo = new HotelMealPlanRepository(ctx);
+            _mealRepo = new MealPlanRepository(ctx);
+        }
 
-        /// <summary>
-        /// Получить отель по его slug (для страницы отеля).
-        /// </summary>
+        /* =====================================================
+                         Получение одного отеля
+        ====================================================== */
         public Hotel? GetBySlug(string slug)
         {
             if (string.IsNullOrWhiteSpace(slug))
                 return null;
 
-            return Find(h => h.Slug == slug).FirstOrDefault();
+            var hotel = Find(h => h.Slug == slug).FirstOrDefault();
+            if (hotel == null)
+                return null;
+
+            hotel.MealPlans = LoadMealPlans(hotel.Id);
+            return hotel;
         }
 
-        /// <summary>
-        /// Поиск по типу отеля (HotelType).
-        /// Если type пустой — возвращаем все отели.
-        /// </summary>
+        /* =====================================================
+                     Получить всех отелей + питание
+        ====================================================== */
+        public IEnumerable<Hotel> GetAllWithMealPlans()
+        {
+            var hotels = GetAll().ToList();
+
+            foreach (var h in hotels)
+                h.MealPlans = LoadMealPlans(h.Id);
+
+            return hotels;
+        }
+
+        /* =====================================================
+                     Загрузка типов питания (Many-To-Many)
+        ====================================================== */
+        private List<string> LoadMealPlans(int hotelId)
+        {
+            var mpIds = _hmpRepo.GetMealPlanIdsForHotel(hotelId);
+
+            return _mealRepo
+                .Find(m => mpIds.Contains(m.Id))
+                .Select(m => m.Code)
+                .ToList();
+        }
+
+        /* =====================================================
+                             Поиск по типу
+        ====================================================== */
         public IEnumerable<Hotel> SearchByType(string type)
         {
             if (string.IsNullOrWhiteSpace(type))
-                return GetAll();
+                return GetAllWithMealPlans();
 
-            return Find(h => h.HotelType == type);
+            var hotels = Find(h => h.HotelType == type).ToList();
+
+            foreach (var h in hotels)
+                h.MealPlans = LoadMealPlans(h.Id);
+
+            return hotels;
         }
 
-        /// <summary>
-        /// Поиск по имени отеля (LIKE '%name%').
-        /// Если name пустой — возвращаем все.
-        /// </summary>
+        /* =====================================================
+                             Поиск по имени
+        ====================================================== */
         public IEnumerable<Hotel> SearchByName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return GetAll();
+                return GetAllWithMealPlans();
 
-            // .Contains будет ORM переведён в ILIKE '%value%' для PostgreSQL
-            return Find(h => h.Name.Contains(name));
+            var hotels = Find(h => h.Name.Contains(name)).ToList();
+
+            foreach (var h in hotels)
+                h.MealPlans = LoadMealPlans(h.Id);
+
+            return hotels;
         }
 
-        /// <summary>
-        /// Комплексный поиск по фильтру.
-        /// Вся фильтрация уходит в базу (через Expression → SQL).
-        /// </summary>
+        /* =====================================================
+                        Комплексный поиск
+        ====================================================== */
         public IEnumerable<Hotel> Search(HotelFilter filter)
         {
             if (filter == null)
-                return GetAll();
+                return GetAllWithMealPlans();
 
             Expression<Func<Hotel, bool>> predicate = h => true;
 
@@ -72,28 +118,20 @@ namespace MiniHttpServer.Repositories
             if (!string.IsNullOrWhiteSpace(filter.Type))
                 predicate = And(predicate, h => h.HotelType == filter.Type);
 
-            if (!string.IsNullOrWhiteSpace(filter.MealPlanCode))
-                predicate = And(predicate, h => h.MealPlanCode == filter.MealPlanCode);
-
             if (filter.CityId != null)
                 predicate = And(predicate, h => h.CityId == filter.CityId);
 
-            return Find(predicate);
-        }
-        public IEnumerable<Hotel> Search(int cityId, string? mealPlan)
-        {
-            var filter = new HotelFilter
-            {
-                CityId = cityId,
-                MealPlanCode = mealPlan
-            };
+            var hotels = Find(predicate).ToList();
 
-            return Search(filter);
+            foreach (var h in hotels)
+                h.MealPlans = LoadMealPlans(h.Id);
+
+            return hotels;
         }
 
-        /// <summary>
-        /// Вернуть список всех уникальных типов отелей (HotelType).
-        /// </summary>
+        /* =====================================================
+                        Список категорий отелей
+        ====================================================== */
         public IEnumerable<string> GetAllHotelTypes()
         {
             return GetAll()
@@ -103,9 +141,9 @@ namespace MiniHttpServer.Repositories
                 .OrderBy(t => t);
         }
 
-        /// <summary>
-        /// Помогалка для склейки нескольких выражений через AND.
-        /// </summary>
+        /* =====================================================
+                    Склейка выражений через AND
+        ====================================================== */
         private Expression<Func<T, bool>> And<T>(
             Expression<Func<T, bool>> expr1,
             Expression<Func<T, bool>> expr2)

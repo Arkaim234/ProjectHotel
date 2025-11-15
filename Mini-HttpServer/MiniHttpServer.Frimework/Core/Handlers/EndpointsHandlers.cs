@@ -211,26 +211,31 @@ namespace MiniHttpServer.Frimework.Core.Handlers
         private static bool TryMatchRoute(string template, string[] actualParts, out Dictionary<string, string> routeValues)
         {
             routeValues = new(StringComparer.OrdinalIgnoreCase);
-            var tplParts = (template ?? "").Split('/', StringSplitOptions.RemoveEmptyEntries);
-            if (tplParts.Length == 0 || actualParts.Length == 0 || tplParts.Length > actualParts.Length) return false;
+
+            var tplParts = template.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+            // ❗ Требуем ТОЧНОЕ совпадение кол-ва сегментов
+            if (tplParts.Length != actualParts.Length)
+                return false;
 
             for (int i = 0; i < tplParts.Length; i++)
             {
                 var tpl = tplParts[i];
-                var actual = actualParts.ElementAtOrDefault(i);
+                var actual = actualParts[i];
+
+                // Параметр {id}
                 if (tpl.StartsWith("{") && tpl.EndsWith("}"))
                 {
                     var name = tpl[1..^1];
-                    if (name.StartsWith("*"))
-                    {
-                        routeValues[name[1..]] = WebUtility.UrlDecode(string.Join('/', actualParts.Skip(i)));
-                        return true;
-                    }
-                    routeValues[name] = WebUtility.UrlDecode(actual ?? "");
+                    routeValues[name] = WebUtility.UrlDecode(actual);
+                    continue;
                 }
-                else if (!tpl.Equals(actual, StringComparison.OrdinalIgnoreCase))
+
+                // Если сегмент — не параметр, сравниваем строго
+                if (!tpl.Equals(actual, StringComparison.OrdinalIgnoreCase))
                     return false;
             }
+
             return true;
         }
 

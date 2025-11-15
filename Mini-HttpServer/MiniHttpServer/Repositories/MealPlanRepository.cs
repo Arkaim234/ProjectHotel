@@ -1,21 +1,32 @@
 ﻿using MiniHttpServer.Model;
 using MyORMLibrary;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MiniHttpServer.Repositories
 {
     public class MealPlanRepository : OrmRepositories<MealPlan>
     {
         public MealPlanRepository(IORMContext context)
-            : base(context, "MealPlans") { }
-
-        public IEnumerable<MealPlan> GetByHotel(int hotelId)
+            : base(context, "mealplans")
         {
-            return Find(x => x.HotelId == hotelId);
+        }
+
+        public MealPlanRepository(string connectionString)
+            : base(connectionString, "mealplans")
+        {
+        }
+
+        /// <summary>
+        /// Вернуть ВСЕ коды питания (AI, BB, FB...)
+        /// </summary>
+        public IEnumerable<string> GetAllCodes()
+        {
+            return GetAll()
+                .Select(mp => mp.Code)
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Distinct()
+                .OrderBy(c => c);
         }
     }
 }

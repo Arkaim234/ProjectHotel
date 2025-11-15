@@ -5,16 +5,25 @@ namespace MiniHttpServer.Services
 {
     public class MealPlanService
     {
-        private readonly MealPlanRepository _repo;
+        private readonly HotelMealPlanRepository _hmpRepo;
+        private readonly MealPlanRepository _mealRepo;
 
-        public MealPlanService(MealPlanRepository repo)
+        public MealPlanService(
+            HotelMealPlanRepository hmpRepo,
+            MealPlanRepository mealRepo)
         {
-            _repo = repo;
+            _hmpRepo = hmpRepo;
+            _mealRepo = mealRepo;
         }
 
+        // Получить планы питания отеля
         public IEnumerable<MealPlan> GetHotelMeals(int hotelId)
         {
-            return _repo.GetByHotel(hotelId);
+            var mealIds = _hmpRepo.GetMealPlanIdsForHotel(hotelId);
+
+            return _mealRepo
+                .Find(m => mealIds.Contains(m.Id))
+                .ToList();
         }
     }
 }
