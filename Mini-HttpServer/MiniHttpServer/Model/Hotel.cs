@@ -17,5 +17,6 @@ namespace MiniHttpServer.Model
         public string PhotoUrl { get; set; }
         public List<string> MealPlans { get; set; }
         public int Price { get; set; }
+        public string[] Contacts { get; set; } = Array.Empty<string>();
     }
 }

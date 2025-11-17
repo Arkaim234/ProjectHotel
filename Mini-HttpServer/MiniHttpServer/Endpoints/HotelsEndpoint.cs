@@ -23,12 +23,11 @@ namespace MiniHttpServer.Endpoints
             _hotelRepo = new HotelRepository(context);
 
             var roomRepo = new RoomTypeRepository(context);
-            var mealRepo = new MealPlanRepository(context);
+            var mealRepo = new MealPlanRepository(context);        
             var descRepo = new HotelDescriptionRepository(context);
             var placeRepo = new HotelPlaceInfoRepository(context);
             var serviceRepo = new HotelServiceRepository(context);
 
-            // !!! ВНИМАНИЕ: HotelService принимает РОВНО 6 аргументов
             _hotelService = new HotelService(
                 _hotelRepo,
                 roomRepo,

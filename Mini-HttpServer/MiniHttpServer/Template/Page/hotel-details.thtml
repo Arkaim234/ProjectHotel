@@ -198,123 +198,161 @@
     </header>
 
     <!-- ====== КОНТЕНТ СТРАНИЦЫ ОТЕЛЯ ====== -->
-    <div class="cmn-l-content cmn-l-content_main">
+<div class="cmn-l-content cmn-l-content_main">
 
-        <!-- Хлебные крошки -->
-        <div class="cmn-l-breadcrumbs">
-            <div class="cmn-l-breadcrumbs__items">
-                <a class="cmn-l-breadcrumbs__item" href="/">Главная</a> »
-                <a class="cmn-l-breadcrumbs__item" href="/countries/">Страны</a> »
-                <a class="cmn-l-breadcrumbs__item" href="/country/$CountrySlug">$CountryName</a> »
-                <a class="cmn-l-breadcrumbs__item" href="/country/$CountrySlug/hotels/">Список отелей</a> »
-                <span class="cmn-l-breadcrumbs__item">$HotelName</span>
+    <!-- Хлебные крошки -->
+    <div class="cmn-l-breadcrumbs">
+        <div class="cmn-l-breadcrumbs__items">
+            <a class="cmn-l-breadcrumbs__item" href="/">Главная</a> »
+            <a class="cmn-l-breadcrumbs__item" href="/countries/">Страны</a> »
+            $if(PlaceInfo)
+                <a class="cmn-l-breadcrumbs__item" href="/country/">${PlaceInfo.Country}</a> »
+                <a class="cmn-l-breadcrumbs__item" href="/country/hotels/">Список отелей</a> »
+            $endif
+            <span class="cmn-l-breadcrumbs__item">${Hotel.Name}</span>
+        </div>
+    </div>
+
+    <div class="cmn-l-block-wrap">
+
+        <!-- Заголовок: Название + "звезды" (тип) -->
+        <h2 class="cmn-l-block-title">
+            ${Hotel.Name}
+            $if(Hotel.HotelType)
+                <span class="hotel-stars">${Hotel.HotelType}</span>
+            $endif
+        </h2>
+
+        <!-- Локация под заголовком -->
+        <div class="hotel-location-line">
+            $if(PlaceInfo)
+                <span class="hotel-location-country">${PlaceInfo.Country}</span>,
+                <span class="hotel-location-city">${PlaceInfo.City}</span>
+                $if(PlaceInfo.Address)
+                    <span class="hotel-location-district">${PlaceInfo.Address}</span>
+                $endif
+            $endif
+        </div>
+
+        <!-- Табы (Описание / Номера / Инфраструктура / Акции) -->
+        <div class="pages-main-nav">
+            <a class="pages-main-nav__item pages-main-nav__item_active">Описание</a>
+            <a class="pages-main-nav__item">Номера</a>
+            <a class="pages-main-nav__item">Инфраструктура</a>
+            <a class="pages-main-nav__item">Акции и новости</a>
+        </div>
+
+        <!-- Верхняя часть: большое фото + правая колонка с фотографиями -->
+        <div class="hotel-top-block">
+
+            <!-- Большое фото слева -->
+            <div class="hotel-top-block__main-photo">
+                <img src="${Hotel.PhotoUrl}" alt="${Hotel.Name}" class="hotel-main-image">
+            </div>
+
+            <!-- Правая колонка: маленькие фото (пока пусто, данных нет) -->
+            <div class="hotel-top-block__side-photos">
+                <!-- сюда потом можно будет сделать $foreach по фотографиям -->
             </div>
         </div>
 
-        <div class="cmn-l-block-wrap">
-
-            <!-- Заголовок: Название + звезды -->
-            <h2 class="cmn-l-block-title">
-                ${HotelName} <span class="hotel-stars">$StarsHtml</span>
-            </h2>
-
-            <!-- Локация под заголовком -->
-            <div class="hotel-location-line">
-                <a href="/country/$CountrySlug/" class="hotel-location-country">$CountryName</a>,
-                <span class="hotel-location-city">$City</span>
-                <span class="hotel-location-district">$District</span>
-            </div>
-
-            <!-- Табы (Описание / Номера / Инфраструктура / Акции) -->
-            <div class="pages-main-nav">
-                <a class="pages-main-nav__item pages-main-nav__item_active">Описание</a>
-                <a class="pages-main-nav__item">Номера</a>
-                <a class="pages-main-nav__item">Инфраструктура</a>
-                <a class="pages-main-nav__item">Акции и новости</a>
-            </div>
-
-            <!-- Верхняя часть: большое фото + правая колонка с фотографиями -->
-            <div class="hotel-top-block">
-
-                <!-- Большое фото слева -->
-                <div class="hotel-top-block__main-photo">
-                    <img src="$MainPhotoUrl" alt="$HotelName" class="hotel-main-image">
-                </div>
-
-                <!-- Правая колонка: маленькие фото -->
-                <div class="hotel-top-block__side-photos">
-                    $SidePhotosHtml
-                    <!--
-                        Ожидаемый формат SidePhotosHtml:
-                        <div class="hotel-thumb">
-                            <img src="/images/hotels/xxx1.jpg" alt="">
-                        </div>
-                        <div class="hotel-thumb">
-                            <img src="/images/hotels/xxx2.jpg" alt="">
-                        </div>
-                        ...
-                    -->
-                </div>
-            </div>
-
-            <!-- Можно добавить ссылку "На карте" где-нибудь справа -->
-            <div class="hotel-map-link-row">
-                <a href="$MapUrl" class="hotel-map-link">На карте</a>
-            </div>
-
-            <!-- Основной текстовой блок с описанием -->
-            <div class="hotel-info-grid">
-
-                <div class="hotel-info-row">
-                    <div class="hotel-info-label">Расположение</div>
-                    <div class="hotel-info-value">
-                        $LocationHtml$
-                    </div>
-                </div>
-
-                <div class="hotel-info-row">
-                    <div class="hotel-info-label">Пляж</div>
-                    <div class="hotel-info-value">
-                        $BeachHtml
-                    </div>
-                </div>
-
-                <div class="hotel-info-row">
-                    <div class="hotel-info-label">Основная информация</div>
-                    <div class="hotel-info-value">
-                        $MainInfoHtml
-                    </div>
-                </div>
-
-                <div class="hotel-info-row">
-                    <div class="hotel-info-label">Контакты</div>
-                    <div class="hotel-info-value">
-                        $ContactsHtml
-                        <!-- Пример:
-                             Сайт: <a href="https://forshotel.com" target="_blank">forshotel.com</a><br>
-                             Тел.: +90 (212) 517-09-61
-                        -->
-                    </div>
-                </div>
-
-                <div class="hotel-info-row">
-                    <div class="hotel-info-label">Примечание</div>
-                    <div class="hotel-info-value">
-                        $NotesHtml
-                    </div>
-                </div>
-            </div>
-
-            <!-- Кнопка бронирования -->
-            <div class="hotel-booking-row">
-                <a href="/search/?hotelId=$HotelId"
-                   class="hotel-booking-btn">
-                    Забронировать от $MinPrice ₽
+        <!-- Ссылка "На карте" -->
+        <div class="hotel-map-link-row">
+            $if(PlaceInfo)
+                <a href="https://www.google.com/maps/search/?api=1&query=${PlaceInfo.Address}"
+                   class="hotel-map-link"
+                   target="_blank" rel="noopener">
+                    На карте
                 </a>
+            $endif
+        </div>
+
+        <!-- Основной текстовый блок с описанием -->
+        <div class="hotel-info-grid">
+
+            <!-- Расположение -->
+            <div class="hotel-info-row">
+                <div class="hotel-info-label">Расположение</div>
+                <div class="hotel-info-value">
+                    $if(PlaceInfo)
+                        <p>${PlaceInfo.Address}</p>
+                        <p>${PlaceInfo.City}, ${PlaceInfo.Country}</p>
+                        <p>До аэропорта: ${PlaceInfo.DistanceToAirport}</p>
+                        <p>До центра: ${PlaceInfo.DistanceToCenter}</p>
+                        <p>До пляжа: ${PlaceInfo.DistanceToBeach}</p>
+                    $else
+                        <p>Информация уточняется.</p>
+                    $endif
+                </div>
             </div>
 
-        </div> <!-- /cmn-l-block-wrap -->
-    </div> <!-- /cmn-l-content_main -->
+            <!-- Пляж -->
+            <div class="hotel-info-row">
+                <div class="hotel-info-label">Пляж</div>
+                <div class="hotel-info-value">
+                    $if(PlaceInfo)
+                        <p>Расстояние до пляжа: ${PlaceInfo.DistanceToBeach}</p>
+                    $else
+                        <p>Информация уточняется.</p>
+                    $endif
+                </div>
+            </div>
+
+            <!-- Основная информация -->
+            <div class="hotel-info-row">
+                <div class="hotel-info-label">Основная информация</div>
+                <div class="hotel-info-value">
+                    $if(Description)
+                        <p>Год открытия: ${Description.YearOpened} г.</p>
+                        <p>Год реновации: ${Description.YearRenovated} г.</p>
+                        <p>Площадь территории: ${Description.TotalAreaSquareMeters} м²</p>
+                        <p>${Description.BuildingInfo}</p>
+                    $else
+                        <p>Описание уточняется.</p>
+                    $endif
+                </div>
+            </div>
+
+            <!-- Контакты (List<string> Contacts) -->
+            <div class="hotel-info-row">
+                <div class="hotel-info-label">Контакты</div>
+                <div class="hotel-info-value">
+                    $if(Contacts)
+                        <ul class="hotel-contacts">
+                            $foreach(var c in Contacts)
+                                <li>${c}</li>
+                            $endfor
+                        </ul>
+                    $else
+                        <p>Контактная информация уточняется.</p>
+                    $endif
+                </div>
+            </div>
+
+            <!-- Примечание -->
+            <div class="hotel-info-row">
+                <div class="hotel-info-label">Примечание</div>
+                <div class="hotel-info-value">
+                    $if(Hotel.Description)
+                        <p>${Hotel.Description}</p>
+                    $else
+                        <p>Информация уточняется.</p>
+                    $endif
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка бронирования -->
+        <div class="hotel-booking-row">
+            <a href="/search/?hotelId=${Hotel.Id}"
+               class="hotel-booking-btn">
+                Забронировать от ${Hotel.Price} ₽
+            </a>
+        </div>
+
+    </div> <!-- /cmn-l-block-wrap -->
+</div> <!-- /cmn-l-content_main -->
+
 
     <!-- ====== ФУТЕР ====== -->
     <footer class="footer-all-wrap">

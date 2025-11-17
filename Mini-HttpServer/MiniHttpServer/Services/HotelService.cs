@@ -27,7 +27,7 @@ namespace MiniHttpServer.Services
         {
             _hotelRepo = hotelRepo;
             _roomRepo = roomRepo;
-            _mealRepo = mealRepo;
+            _mealRepo = mealRepo;          // ВЕРНУЛИ
             _descRepo = descRepo;
             _placeRepo = placeRepo;
             _serviceRepo = serviceRepo;
@@ -36,26 +36,52 @@ namespace MiniHttpServer.Services
         // ---------- Детальная страница ----------
         public HotelDetailsDto? GetHotelDetails(string slug)
         {
+            if (string.IsNullOrWhiteSpace(slug))
+                return null;
+
             var hotel = _hotelRepo.GetBySlug(slug);
-            if (hotel == null) return null;
+            if (hotel == null)
+                return null;
+
+            var description = _descRepo.GetByHotelId(hotel.Id);
+            var placeInfo = _placeRepo.GetByHotelId(hotel.Id);
+            var roomTypes = _roomRepo.GetByHotel(hotel.Id).ToList();
+            var services = _serviceRepo.GetByHotelId(hotel.Id).ToList();
+
+            // --- типы питания: код + описание ---
+            var mealPlanDtos = new List<MealPlanDto>();
+
+            if (hotel.MealPlans != null && hotel.MealPlans.Any())
+            {
+                var codes = hotel.MealPlans; // List<string> кодов (BB, AI, ...)
+
+                var meals = _mealRepo
+                    .Find(m => codes.Contains(m.Code))
+                    .ToList();
+
+                mealPlanDtos = meals
+                    .Select(m => new MealPlanDto
+                    {
+                        Code = m.Code,
+                        Description = m.Description
+                    })
+                    .ToList();
+            }
 
             var hotelDto = new HotelDetailsDto
             {
                 Hotel = hotel,
+                Description = description,
+                PlaceInfo = placeInfo,
+                RoomTypes = roomTypes,
+                AvailableMealPlans = mealPlanDtos,
 
-                Description = ConvertDescription(_descRepo.GetByHotelId(hotel.Id)),
-                PlaceInfo = ConvertPlace(_placeRepo.GetByHotelId(hotel.Id)),
-                RoomTypes = ConvertRooms(_roomRepo.GetByHotel(hotel.Id)),
-
-                // ВОТ ТУТ ПРАВИЛЬНО:
-                AvailableMealPlans = hotel.MealPlans
-                    .Select(code => new MealPlanDto { Code = code })
-                    .ToList()
+                Contacts = hotel.Contacts != null
+                    ? hotel.Contacts.ToList()
+                    : new List<string>()
             };
 
             // Сервисы
-            var services = _serviceRepo.GetByHotelId(hotel.Id).ToList();
-
             hotelDto.ChildServices = services
                 .Where(s => s.Category == "Для детей")
                 .Select(s => s.Name)
@@ -77,57 +103,6 @@ namespace MiniHttpServer.Services
                 .ToList();
 
             return hotelDto;
-        }
-
-
-        // ---------- Конвертация ----------
-        private HotelDescriptionDto? ConvertDescription(HotelDescription? d)
-        {
-            if (d == null) return null;
-
-            return new HotelDescriptionDto
-            {
-                YearOpened = d.YearOpened,
-                YearRenovated = d.YearRenovated,
-                TotalAreaSquareMeters = d.TotalAreaSquareMeters,
-                BuildingInfo = d.BuildingInfo
-            };
-        }
-
-        private InformatioPlaceHotelDto? ConvertPlace(HotelPlaceInfo? p)
-        {
-            if (p == null) return null;
-
-            return new InformatioPlaceHotelDto
-            {
-                Address = p.Address,
-                City = p.City,
-                Country = p.Country,
-                DistanceToAirport = p.DistanceToAirport,
-                DistanceToCenter = p.DistanceToCenter,
-                DistanceToBeach = p.DistanceToBeach
-            };
-        }
-
-        private List<RoomTypeDto> ConvertRooms(IEnumerable<RoomType> rooms)
-        {
-            return rooms.Select(r => new RoomTypeDto
-            {
-                Name = r.Name,
-                View = r.View,
-                BedConfiguration = r.BedConfiguration,
-                MaxOccupancy = r.MaxOccupancy,
-                AreaSquareMeters = r.AreaSquareMeters
-            }).ToList();
-        }
-
-        private List<MealPlanDto> ConvertMeals(IEnumerable<MealPlan> meals)
-        {
-            return meals.Select(m => new MealPlanDto
-            {
-                Code = m.Code,
-                Description = m.Description
-            }).ToList();
         }
 
         // ---------- Поиск для фильтров ----------

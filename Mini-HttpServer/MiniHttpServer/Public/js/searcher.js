@@ -719,4 +719,4 @@ function filterModalList(modal, searchValue) {
         listWrap.appendChild(emptyEl);
     }
     emptyEl.style.display = visibleCount === 0 ? "block" : "none";
-}
+} 
