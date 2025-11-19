@@ -11,10 +11,6 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["MiniHttpServer/MiniHttpServer.csproj", "MiniHttpServer/"]
-COPY ["MiniHttpServer.Data/MiniHttpServer.Repository.csproj", "MiniHttpServer.Data/"]
-COPY ["MyORMContext/MyORMLibrary.csproj", "MyORMContext/"]
-COPY ["MiniHttpServer.Frimework/MiniHttpServer.Frimework.csproj", "MiniHttpServer.Frimework/"]
-COPY ["iniTemplateEngine/MiniTemplateEngine.csproj", "iniTemplateEngine/"]
 RUN dotnet restore "./MiniHttpServer/MiniHttpServer.csproj"
 COPY . .
 WORKDIR "/src/MiniHttpServer"

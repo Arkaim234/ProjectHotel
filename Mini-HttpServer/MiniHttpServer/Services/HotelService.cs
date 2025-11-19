@@ -48,16 +48,12 @@ namespace MiniHttpServer.Services
             var roomTypes = _roomRepo.GetByHotel(hotel.Id).ToList();
             var services = _serviceRepo.GetByHotelId(hotel.Id).ToList();
 
-            // --- типы питания: код + описание ---
+            // типы питания с описаниями
             var mealPlanDtos = new List<MealPlanDto>();
-
             if (hotel.MealPlans != null && hotel.MealPlans.Any())
             {
-                var codes = hotel.MealPlans; // List<string> кодов (BB, AI, ...)
-
-                var meals = _mealRepo
-                    .Find(m => codes.Contains(m.Code))
-                    .ToList();
+                var codes = hotel.MealPlans;
+                var meals = _mealRepo.Find(m => codes.Contains(m.Code)).ToList();
 
                 mealPlanDtos = meals
                     .Select(m => new MealPlanDto
@@ -75,35 +71,46 @@ namespace MiniHttpServer.Services
                 PlaceInfo = placeInfo,
                 RoomTypes = roomTypes,
                 AvailableMealPlans = mealPlanDtos,
-
-                Contacts = hotel.Contacts != null
-                    ? hotel.Contacts.ToList()
-                    : new List<string>()
+                Contacts = hotel.Contacts != null ? hotel.Contacts.ToList() : new List<string>()
             };
 
-            // Сервисы
+            // В НОМЕРЕ
+            hotelDto.InRoomServices = services
+                .Where(s => s.Category == "В номере")
+                .Select(s => s.Name)
+                .ToList();
+
+            // ДЛЯ ДЕТЕЙ
             hotelDto.ChildServices = services
                 .Where(s => s.Category == "Для детей")
                 .Select(s => s.Name)
                 .ToList();
 
-            hotelDto.FreeEntertainment = services
-                .Where(s => s.Category == "Развлечения и спорт" && !s.Name.Contains("(платно)"))
-                .Select(s => s.Name)
+            var entertainmentNames = services
+                .Where(s => s.Category != null && s.Category.Trim() == "Развлечения и спорт")
+                .Select(s => s.Name ?? string.Empty)
                 .ToList();
 
-            hotelDto.PaidEntertainment = services
-                .Where(s => s.Category == "Развлечения и спорт" && s.Name.Contains("(платно)"))
-                .Select(s => s.Name)
+            hotelDto.PaidEntertainment = entertainmentNames
+                .Where(name => name.ToLower().Contains("платно"))
                 .ToList();
 
+            hotelDto.FreeEntertainment = entertainmentNames
+                .Where(name => !name.ToLower().Contains("платно"))
+                .ToList();
+
+            // УСЛУГИ НА ТЕРРИТОРИИ
             hotelDto.OnSiteServices = services
                 .Where(s => s.Category == "Услуги на территории")
                 .Select(s => s.Name)
                 .ToList();
 
+            hotelDto.FreeEntertainmentHtml = BuildListHtml(hotelDto.FreeEntertainment);
+            hotelDto.PaidEntertainmentHtml = BuildListHtml(hotelDto.PaidEntertainment);
+
             return hotelDto;
         }
+
 
         // ---------- Поиск для фильтров ----------
         public IEnumerable<Hotel> SearchHotels(int cityId, string? mealPlanCode)
@@ -118,5 +125,20 @@ namespace MiniHttpServer.Services
         }
 
         public IEnumerable<Hotel> GetAll() => _hotelRepo.GetAllWithMealPlans();
+        private static string BuildListHtml(IEnumerable<string> items)
+        {
+            if (items == null)
+                return string.Empty;
+
+            var arr = items
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToArray();
+
+            if (arr.Length == 0)
+                return string.Empty;
+
+            // <li>• текст</li><li>• текст2</li>...
+            return string.Join("", arr.Select(s => $"<li>• {s}</li>"));
+        }
     }
 }

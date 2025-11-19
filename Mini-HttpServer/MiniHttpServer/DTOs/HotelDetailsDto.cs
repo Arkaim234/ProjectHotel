@@ -21,5 +21,9 @@ namespace MiniHttpServer.DTOs
         public List<string> OnSiteServices { get; set; } = new();
 
         public List<string> Contacts { get; set; } = new();
+        public List<string> InRoomServices { get; set; } = new();
+        public string FreeEntertainmentHtml { get; set; } = string.Empty;
+        public string PaidEntertainmentHtml { get; set; } = string.Empty;
+
     }
 }

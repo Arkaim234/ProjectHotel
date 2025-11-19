@@ -1,0 +1,186 @@
+﻿/* ===== Заголовок и строка с локацией ===== */
+
+.cmn-l-block-title {
+    font-size: 26px;
+    font-weight: 400;
+    margin: 0 0 4px;
+    color: #333;
+}
+
+.hotel-location-line {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+    .hotel-location-line img {
+        margin-right: 5px;
+    }
+
+/* страна – как ссылка */
+.hotel-location-country {
+    color: #0d5cab;
+    text-decoration: underline;
+    margin-right: 3px;
+}
+
+/* город просто текстом */
+.hotel-location-city {
+    margin-left: 3px;
+}
+
+/* ===== Табы (Описание / Номера / Инфраструктура / Акции) ===== */
+
+.pages-main-nav {
+    display: flex;
+    border-bottom: 1px solid #d3d3d3;
+    margin-bottom: 10px;
+}
+
+/*.pages-main-nav__item {
+    padding: 8px 24px;
+    font-size: 13px;
+    color: #555;
+    background: #f5f5f5;
+    border: 1px solid #d3d3d3;
+    border-bottom: none;
+    margin-right: 3px;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+}
+
+.pages-main-nav__item_active {
+    background: #7ab92d;
+    border-color: #6fa729;
+    color: #fff;
+    font-weight: bold;
+}*/
+
+/* ===== Верхний блок с фото ===== */
+
+.hotel-top-block {
+    display: grid;
+    grid-template-columns: 3fr 1.05fr;
+    column-gap: 10px;
+    margin-bottom: 8px;
+}
+
+.hotel-top-block__main-photo {
+    /* чтобы картинка не приливала к краям */
+}
+
+.hotel-main-image {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+}
+
+.hotel-top-block__side-photos {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+    .hotel-top-block__side-photos img {
+        width: 100%;
+        height: 104px;
+        object-fit: cover;
+        display: block;
+    }
+
+/* ===== Ссылка "На карте" справа под фото ===== */
+
+.hotel-map-link-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.photo-block-map-toggler-img-wrap {
+    margin-right: 4px;
+}
+
+.hotel-map-link {
+    color: #3b8b1e;
+    text-decoration: none;
+}
+
+    .hotel-map-link:hover {
+        text-decoration: underline;
+    }
+
+/* ===== Таблица с текстом: Расположение / Пляж / … ===== */
+
+.hotel-info-grid {
+    margin-bottom: 20px;
+}
+
+.hotel-info-row {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.hotel-info-label {
+    width: 150px; /* колонка слева как на примере */
+    font-weight: bold;
+    font-size: 13px;
+    color: #444;
+}
+
+.hotel-info-value {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #333;
+}
+
+    .hotel-info-value p {
+        margin: 0 0 3px;
+    }
+
+    /* ссылки внутри текста */
+    .hotel-info-value a {
+        color: #0d5cab;
+        text-decoration: underline;
+    }
+
+/* список контактов */
+.hotel-contacts {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+}
+
+/* ===== Кнопка бронирования ===== */
+
+.hotel-booking-row {
+    margin-top: 15px;
+}
+
+.hotel-booking-btn {
+    display: inline-block;
+    padding: 12px 35px;
+    background: #429410;
+    color: #fff;
+    font-weight: bold;
+    font-size: 13px;
+    text-decoration: none;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+
+    .hotel-booking-btn:hover {
+        background: #71ac2a;
+    }
+.hotel-tab-content {
+    display: none;
+}
+
+.hotel-tab-content_active {
+    display: block;
+}

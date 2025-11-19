@@ -2,17 +2,18 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>$HotelName — описание, номера, инфраструктура | OneTouch & Travel</title>
+    <title>${Hotel.Name} — описание, номера, инфраструктура | OneTouch & Travel</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-          content="$HotelName — $City, $CountryName. Описание отеля, номера, инфраструктура, пляж, контакты. Туроператор OneTouch & Travel.">
+          content="${Hotel.Name} — ${PlaceInfo.City}, ${PlaceInfo.Country}. Описание отеля, номера, инфраструктура, пляж, контакты. Туроператор OneTouch & Travel.">
 
     <!-- Стили из папки Public/css -->
     <link type="text/css" rel="stylesheet" href="/css/main.css">
     <link type="text/css" rel="stylesheet" href="/css/gallery.css">
     <link type="text/css" rel="stylesheet" href="/css/searcher.css">
     <link type="text/css" rel="stylesheet" href="/css/filters.css">
+    <link type="text/css" rel="stylesheet" href="/css/Template.css">
 
     <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="icon" type="image/png" href="/images/onetouch_travel_favicon_96x96.png">
@@ -198,161 +199,281 @@
     </header>
 
     <!-- ====== КОНТЕНТ СТРАНИЦЫ ОТЕЛЯ ====== -->
-<div class="cmn-l-content cmn-l-content_main">
+    <div class="cmn-l-content cmn-l-content_main">
 
-    <!-- Хлебные крошки -->
-    <div class="cmn-l-breadcrumbs">
-        <div class="cmn-l-breadcrumbs__items">
-            <a class="cmn-l-breadcrumbs__item" href="/">Главная</a> »
-            <a class="cmn-l-breadcrumbs__item" href="/countries/">Страны</a> »
-            $if(PlaceInfo)
-                <a class="cmn-l-breadcrumbs__item" href="/country/">${PlaceInfo.Country}</a> »
-                <a class="cmn-l-breadcrumbs__item" href="/country/hotels/">Список отелей</a> »
-            $endif
-            <span class="cmn-l-breadcrumbs__item">${Hotel.Name}</span>
-        </div>
-    </div>
-
-    <div class="cmn-l-block-wrap">
-
-        <!-- Заголовок: Название + "звезды" (тип) -->
-        <h2 class="cmn-l-block-title">
-            ${Hotel.Name}
-            $if(Hotel.HotelType)
-                <span class="hotel-stars">${Hotel.HotelType}</span>
-            $endif
-        </h2>
-
-        <!-- Локация под заголовком -->
-        <div class="hotel-location-line">
-            $if(PlaceInfo)
-                <span class="hotel-location-country">${PlaceInfo.Country}</span>,
-                <span class="hotel-location-city">${PlaceInfo.City}</span>
-                $if(PlaceInfo.Address)
-                    <span class="hotel-location-district">${PlaceInfo.Address}</span>
+        <!-- Хлебные крошки -->
+        <div class="cmn-l-breadcrumbs">
+            <div class="cmn-l-breadcrumbs__items">
+                <a class="cmn-l-breadcrumbs__item" href="/">Главная</a> »
+                <a class="cmn-l-breadcrumbs__item" href="/countries/">Страны</a> »
+                $if(PlaceInfo)
+                    <a class="cmn-l-breadcrumbs__item" href="/country/">${PlaceInfo.Country}</a> »
+                    <a class="cmn-l-breadcrumbs__item" href="/country/hotels/">Список отелей</a> »
                 $endif
-            $endif
-        </div>
-
-        <!-- Табы (Описание / Номера / Инфраструктура / Акции) -->
-        <div class="pages-main-nav">
-            <a class="pages-main-nav__item pages-main-nav__item_active">Описание</a>
-            <a class="pages-main-nav__item">Номера</a>
-            <a class="pages-main-nav__item">Инфраструктура</a>
-            <a class="pages-main-nav__item">Акции и новости</a>
-        </div>
-
-        <!-- Верхняя часть: большое фото + правая колонка с фотографиями -->
-        <div class="hotel-top-block">
-
-            <!-- Большое фото слева -->
-            <div class="hotel-top-block__main-photo">
-                <img src="${Hotel.PhotoUrl}" alt="${Hotel.Name}" class="hotel-main-image">
-            </div>
-
-            <!-- Правая колонка: маленькие фото (пока пусто, данных нет) -->
-            <div class="hotel-top-block__side-photos">
-                <!-- сюда потом можно будет сделать $foreach по фотографиям -->
+                <span class="cmn-l-breadcrumbs__item">${Hotel.Name}</span>
             </div>
         </div>
 
-        <!-- Ссылка "На карте" -->
-        <div class="hotel-map-link-row">
-            $if(PlaceInfo)
-                <a href="https://www.google.com/maps/search/?api=1&query=${PlaceInfo.Address}"
-                   class="hotel-map-link"
-                   target="_blank" rel="noopener">
-                    На карте
-                </a>
-            $endif
-        </div>
+        <div class="cmn-l-block-wrap">
 
-        <!-- Основной текстовый блок с описанием -->
-        <div class="hotel-info-grid">
+            <!-- Заголовок: Название -->
+            <h2 class="cmn-l-block-title">
+                ${Hotel.Name}
+            </h2>
 
-            <!-- Расположение -->
-            <div class="hotel-info-row">
-                <div class="hotel-info-label">Расположение</div>
-                <div class="hotel-info-value">
-                    $if(PlaceInfo)
-                        <p>${PlaceInfo.Address}</p>
-                        <p>${PlaceInfo.City}, ${PlaceInfo.Country}</p>
-                        <p>До аэропорта: ${PlaceInfo.DistanceToAirport}</p>
-                        <p>До центра: ${PlaceInfo.DistanceToCenter}</p>
-                        <p>До пляжа: ${PlaceInfo.DistanceToBeach}</p>
-                    $else
-                        <p>Информация уточняется.</p>
-                    $endif
+            <!-- Локация под заголовком -->
+            <div class="hotel-location-line">
+                <img class="topcontent-header__location-img" src="/images/geo-pin.svg"
+                     width="15" height="15" alt="Выбор страны">
+                $if(PlaceInfo)
+                    <span class="hotel-location-country">${PlaceInfo.Country}</span>,
+                    <span class="hotel-location-city">${PlaceInfo.City}</span>
+                $endif
+            </div>
+
+            <!-- Табы -->
+            <div class="pages-main-nav">
+                <a class="pages-main-nav__item pages-main-nav__item_active"
+                   data-tab="description">Описание</a>
+                <a class="pages-main-nav__item"
+                   data-tab="rooms">Номера</a>
+                <a class="pages-main-nav__item"
+                   data-tab="infra">Инфраструктура</a>
+                <a class="pages-main-nav__item"
+                   data-tab="news">Акции и новости</a>
+            </div>
+
+            <!-- Верхняя часть: фото -->
+            <div class="hotel-top-block">
+                <div class="hotel-top-block__main-photo">
+                    <img src="${Hotel.PhotoUrl}" alt="${Hotel.Name}" class="hotel-main-image">
+                </div>
+
+                <div class="hotel-top-block__side-photos">
+                    <!-- Здесь позже можно сделать $foreach по дополнительным фото -->
                 </div>
             </div>
 
-            <!-- Пляж -->
-            <div class="hotel-info-row">
-                <div class="hotel-info-label">Пляж</div>
-                <div class="hotel-info-value">
-                    $if(PlaceInfo)
-                        <p>Расстояние до пляжа: ${PlaceInfo.DistanceToBeach}</p>
-                    $else
-                        <p>Информация уточняется.</p>
-                    $endif
+            <!-- Ссылка "На карте" -->
+            <div class="hotel-map-link-row">
+                <span class="photo-block-map-toggler-img-wrap">
+                    <img class="photo-block-map-toggler-img" src="/images/geo-pin2.svg">
+                </span>
+                $if(PlaceInfo)
+                    <a href="https://www.google.com/maps/search/?api=1&query=${PlaceInfo.Address}"
+                       class="hotel-map-link"
+                       target="_blank" rel="noopener">
+                        На карте
+                    </a>
+                $endif
+            </div>
+
+            <!-- ====== ВКЛАДКА: ОПИСАНИЕ ====== -->
+            <div class="hotel-tab-content hotel-tab-content_active" data-tab="description">
+
+                <div class="hotel-info-grid">
+                    <!-- Расположение -->
+                    <div class="hotel-info-row">
+                        <div class="hotel-info-label">Расположение</div>
+                        <div class="hotel-info-value">
+                            $if(PlaceInfo)
+                                <p>${PlaceInfo.City}, ${PlaceInfo.Country}, ${PlaceInfo.Address}</p>
+                                <p>До аэропорта: ${PlaceInfo.DistanceToAirport}</p>
+                                <p>До центра: ${PlaceInfo.DistanceToCenter}</p>
+                            $else
+                                <p>Информация уточняется.</p>
+                            $endif
+                        </div>
+                    </div>
+
+                    <!-- Пляж -->
+                    <div class="hotel-info-row">
+                        <div class="hotel-info-label">Пляж</div>
+                        <div class="hotel-info-value">
+                            $if(PlaceInfo)
+                                <p>Расстояние до пляжа: ${PlaceInfo.DistanceToBeach}</p>
+                            $else
+                                <p>Информация уточняется.</p>
+                            $endif
+                        </div>
+                    </div>
+
+                    <!-- Основная информация -->
+                    <div class="hotel-info-row">
+                        <div class="hotel-info-label">Основная информация</div>
+                        <div class="hotel-info-value">
+                            $if(Description)
+                                <p>Год открытия: ${Description.YearOpened} г.</p>
+                                <p>Год реновации: ${Description.YearRenovated} г.</p>
+                                <p>Площадь территории: ${Description.TotalAreaSquareMeters} м²</p>
+                                <p>${Description.BuildingInfo}</p>
+                            $else
+                                <p>Описание уточняется.</p>
+                            $endif
+                        </div>
+                    </div>
+
+                    <!-- Контакты -->
+                    <div class="hotel-info-row">
+                        <div class="hotel-info-label">Контакты</div>
+                        <div class="hotel-info-value">
+                            $if(Contacts)
+                                <ul class="hotel-contacts">
+                                    $foreach(var c in Contacts)
+                                        <li>${c}</li>
+                                    $endfor
+                                </ul>
+                            $else
+                                <p>Контактная информация уточняется.</p>
+                            $endif
+                        </div>
+                    </div>
+
+                    <!-- Примечание -->
+                    <div class="hotel-info-row">
+                        <div class="hotel-info-label">Примечание</div>
+                        <div class="hotel-info-value">
+                            $if(Hotel.Description)
+                                <p>${Hotel.Description}</p>
+                            $else
+                                <p>Информация уточняется.</p>
+                            $endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопка бронирования -->
+                <div class="hotel-booking-row">
+                    <a href="/search/?hotelId=${Hotel.Id}"
+                       class="hotel-booking-btn">
+                        Забронировать от ${Hotel.Price} ₽
+                    </a>
                 </div>
             </div>
 
-            <!-- Основная информация -->
-            <div class="hotel-info-row">
-                <div class="hotel-info-label">Основная информация</div>
-                <div class="hotel-info-value">
-                    $if(Description)
-                        <p>Год открытия: ${Description.YearOpened} г.</p>
-                        <p>Год реновации: ${Description.YearRenovated} г.</p>
-                        <p>Площадь территории: ${Description.TotalAreaSquareMeters} м²</p>
-                        <p>${Description.BuildingInfo}</p>
-                    $else
-                        <p>Описание уточняется.</p>
-                    $endif
+            <!-- ====== ВКЛАДКА: НОМЕРА ====== -->
+            <div class="hotel-tab-content" data-tab="rooms">
+                <div class="hotel-info-grid">
+                    <div class="hotel-info-row">
+                        <div class="hotel-info-label">В номере</div>
+                        <div class="hotel-info-value">
+                            $if(InRoomServices)
+                                <ul>
+                                    $foreach(var s in InRoomServices)
+                                        <li>• ${s}</li>
+                                    $endfor
+                                </ul>
+                            $else
+                                <p>Информация о номерах пока отсутствует.</p>
+                            $endif
+                        </div>
+                    </div>
+                    <div class="hotel-info-row">
+                        <div class="hotel-info-label">Описание номеров</div>
+                        <div class="hotel-info-value">
+                            $if(RoomTypes)
+                                <ul>
+                                    $foreach(var room in RoomTypes)
+                                        <li>
+                                            <strong>${room.Name}</strong> —
+                                            вид: ${room.View},
+                                            кровати: ${room.BedConfiguration},
+                                            макс. размещение: ${room.MaxOccupancy} чел.,
+                                            площадь: ${room.AreaSquareMeters} м²
+                                        </li>
+                                    $endfor
+                                </ul>
+                            $else
+                                <p>Информация о номерах пока отсутствует.</p>
+                            $endif
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Контакты (List<string> Contacts) -->
-            <div class="hotel-info-row">
-                <div class="hotel-info-label">Контакты</div>
-                <div class="hotel-info-value">
-                    $if(Contacts)
-                        <ul class="hotel-contacts">
-                            $foreach(var c in Contacts)
-                                <li>${c}</li>
-                            $endfor
-                        </ul>
-                    $else
-                        <p>Контактная информация уточняется.</p>
-                    $endif
+            <!-- ====== ВКЛАДКА: ИНФРАСТРУКТУРА ====== -->
+            <div class="hotel-tab-content" data-tab="infra">
+                <div class="hotel-info-grid">
+
+                    <div class="hotel-info-row">
+                        <div class="hotel-info-label">Питание</div>
+                        <div class="hotel-info-value">
+                            $if(AvailableMealPlans)
+                                <ul>
+                                    $foreach(var mp in AvailableMealPlans)
+                                        <li><strong>${mp.Code}</strong> — ${mp.Description}</li>
+                                    $endfor
+                                </ul>
+                            $else
+                                <p>Информация о питании отсутствует.</p>
+                            $endif
+                        </div>
+                    </div>
+
+                    <div class="hotel-info-row">
+                        <div class="hotel-info-label">Для детей</div>
+                        <div class="hotel-info-value">
+                            $if(ChildServices)
+                                <ul>
+                                    $foreach(var s in ChildServices)
+                                        <li>${s}</li>
+                                    $endfor
+                                </ul>
+                            $else
+                                <p>Нет данных.</p>
+                            $endif
+                        </div>
+                    </div>
+
+                   <div class="hotel-info-row">
+                        <div class="hotel-info-label">Развлечения и спорт</div>
+                        <div class="hotel-info-value">
+
+                            $if(FreeEntertainmentHtml)
+                                <p><strong>Бесплатно:</strong></p>
+                                <ul>
+                                    ${FreeEntertainmentHtml}
+                                </ul>
+                            $endif
+
+                            $if(PaidEntertainmentHtml)
+                                <p><strong>Платно:</strong></p>
+                                <ul>
+                                    ${PaidEntertainmentHtml}
+                                </ul>
+                            $endif
+
+                            $if(!FreeEntertainmentHtml && !PaidEntertainmentHtml)
+                                <p>Информация о развлечениях пока отсутствует.</p>
+                            $endif
+
+                        </div>
+                    </div>
+                    <div class="hotel-info-row">
+                        <div class="hotel-info-label">Услуги на территории</div>
+                        <div class="hotel-info-value">
+                            $if(OnSiteServices)
+                                <ul>
+                                    $foreach(var s in OnSiteServices)
+                                        <li>${s}</li>
+                                    $endfor
+                                </ul>
+                            $else
+                                <p>Нет данных.</p>
+                            $endif
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Примечание -->
-            <div class="hotel-info-row">
-                <div class="hotel-info-label">Примечание</div>
-                <div class="hotel-info-value">
-                    $if(Hotel.Description)
-                        <p>${Hotel.Description}</p>
-                    $else
-                        <p>Информация уточняется.</p>
-                    $endif
-                </div>
+            <!-- ====== ВКЛАДКА: АКЦИИ И НОВОСТИ ====== -->
+            <div class="hotel-tab-content" data-tab="news">
+                <p>Акции и новости по этому отелю появятся позже.</p>
             </div>
-        </div>
 
-        <!-- Кнопка бронирования -->
-        <div class="hotel-booking-row">
-            <a href="/search/?hotelId=${Hotel.Id}"
-               class="hotel-booking-btn">
-                Забронировать от ${Hotel.Price} ₽
-            </a>
-        </div>
-
-    </div> <!-- /cmn-l-block-wrap -->
-</div> <!-- /cmn-l-content_main -->
-
+        </div> <!-- /cmn-l-block-wrap -->
+    </div> <!-- /cmn-l-content_main -->
 
     <!-- ====== ФУТЕР ====== -->
     <footer class="footer-all-wrap">
@@ -474,5 +595,33 @@
     </footer>
 
 </div> <!-- /appmain -->
+
+<!-- Простейший JS для переключения вкладок -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var tabs = document.querySelectorAll('.pages-main-nav__item');
+    var contents = document.querySelectorAll('.hotel-tab-content');
+
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            var target = tab.getAttribute('data-tab');
+
+            tabs.forEach(function (t) {
+                t.classList.remove('pages-main-nav__item_active');
+            });
+            tab.classList.add('pages-main-nav__item_active');
+
+            contents.forEach(function (c) {
+                if (c.getAttribute('data-tab') === target) {
+                    c.classList.add('hotel-tab-content_active');
+                } else {
+                    c.classList.remove('hotel-tab-content_active');
+                }
+            });
+        });
+    });
+});
+</script>
+
 </body>
 </html>
