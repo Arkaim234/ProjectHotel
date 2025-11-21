@@ -42,9 +42,6 @@
     <None Update="Public\Searcher\searcher.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Template\Page\login.thtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
 	<None Include="Public\**\*.*" CopyToOutputDirectory="Always" />
 	<Content Include="Public\**\*.*">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>

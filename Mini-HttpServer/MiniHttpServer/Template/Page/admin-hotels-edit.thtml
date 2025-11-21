@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html> 
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>${Title}</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        h1, h2 { margin-bottom: 0.5rem; }
+        .section { border: 1px solid #ccc; padding: 10px 15px; margin-bottom: 15px; }
+        .section h2 { margin-top: 0; }
+        label { display: block; margin-bottom: 6px; }
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        textarea { min-height: 80px; font-family: monospace; }
+        .hint { font-size: 0.85rem; color: #666; }
+        .actions { margin-top: 15px; }
+        .actions button { padding: 8px 20px; }
+    </style>
+</head>
+<body>
+    <h1>${Title}</h1>
+    <p><a href="/admin/hotels">← К списку отелей</a> | <a href="/admin">Админ-панель</a></p>
+
+    <!-- ВАЖНО: action и name-ы полей соответствуют SaveHotelDetails -->
+    <form method="post" action="/admin/hotels/details?id=${HotelId}">
+        <input type="hidden" name="HotelId" value="${HotelId}" />
+
+        <!-- ===== Основная информация об отеле (таблица hotels) ===== -->
+        <div class="section">
+            <h2>Основная информация</h2>
+
+            <label>
+                Название отеля:
+                <input type="text" name="HotelName" value="${HotelName}" />
+            </label>
+
+            <label>
+                Slug (URL-часть, уникальная):
+                <input type="text" name="HotelSlug" value="${HotelSlug}" />
+            </label>
+
+            <label>
+                ID города (CityId):
+                <input type="number" name="HotelCityId" value="${HotelCityId}" />
+            </label>
+
+            <label>
+                Тип отеля (HotelType):
+                <input type="text" name="HotelType" value="${HotelType}" />
+            </label>
+
+            <label>
+                Фото (PhotoUrl: ПАПКА или URL):
+                <input type="text" name="HotelPhotoUrl" value="${HotelPhotoUrl}" />
+                <span class="hint">
+                    Для локальных фоток рекомендуется: /uploads/hotels/${HotelId}
+                </span>
+            </label>
+
+            <label>
+                Текущее фото:
+                <br>
+                $if(HotelPhotoPreviewUrl != "")
+                    <img src="${HotelPhotoPreviewUrl}" alt="Фото отеля"
+                         style="max-width:200px;display:block;margin-bottom:5px;">
+                $else
+                    <span class="hint">Фотография ещё не загружена</span>
+                $endif
+            </label>
+
+            <label>
+                Загрузить новое фото:
+                <input type="file" id="HotelPhotoFile" accept="image/*" />
+            </label>
+
+            <!-- сюда JS положит ЧИСТЫЙ base64 и имя файла -->
+            <input type="hidden" name="HotelPhotoUploadBase64" id="HotelPhotoUploadBase64" />
+            <input type="hidden" name="HotelPhotoFileName" id="HotelPhotoFileName" />
+
+            <label>
+                Цена от (Price, руб):
+                <input type="number" name="HotelPrice" value="${HotelPrice}" />
+            </label>
+
+            <label>
+                Краткое описание:
+                <textarea name="HotelDescription" class="wysiwyg">${HotelDescription}</textarea>
+            </label>
+        </div>
+
+        <!-- ===== Расположение (hotelplaceinfos) ===== -->
+        <div class="section">
+            <h2>Расположение (hotelplaceinfos)</h2>
+
+            <label>
+                Адрес:
+                <input type="text" name="Place_Address" value="${Place_Address}" />
+            </label>
+
+            <label>
+                Город (текстом, для карточки):
+                <input type="text" name="Place_City" value="${Place_City}" />
+            </label>
+
+            <label>
+                Страна (текстом):
+                <input type="text" name="Place_Country" value="${Place_Country}" />
+            </label>
+
+            <label>
+                Расстояние до аэропорта:
+                <input type="text" name="Place_DistanceToAirport" value="${Place_DistanceToAirport}" />
+            </label>
+
+            <label>
+                Расстояние до центра:
+                <input type="text" name="Place_DistanceToCenter" value="${Place_DistanceToCenter}" />
+            </label>
+
+            <label>
+                Расстояние до пляжа:
+                <input type="text" name="Place_DistanceToBeach" value="${Place_DistanceToBeach}" />
+            </label>
+        </div>
+
+        <!-- ===== Техническое описание (hoteldescriptions) ===== -->
+        <div class="section">
+            <h2>Техническое описание (hoteldescriptions)</h2>
+
+            <label>
+                Год открытия:
+                <input type="number" name="Desc_YearOpened" value="${Desc_YearOpened}" />
+            </label>
+
+            <label>
+                Год реновации:
+                <input type="number" name="Desc_YearRenovated" value="${Desc_YearRenovated}" />
+            </label>
+
+            <label>
+                Площадь территории (м²):
+                <input type="number" step="0.01" name="Desc_TotalArea" value="${Desc_TotalArea}" />
+            </label>
+
+            <label>
+                Дополнительная информация о корпусах:
+                <textarea name="Desc_BuildingInfo" class="wysiwyg">${Desc_BuildingInfo}</textarea>
+            </label>
+        </div>
+
+        <!-- ===== Контакты (массив contacts в hotels) ===== -->
+        <div class="section">
+            <h2>Контакты (hotel.contacts)</h2>
+
+            <label>
+                Контакты (одна строка — один контакт, например телефон или e-mail):
+                <textarea name="ContactsText" class="wysiwyg">${ContactsText}</textarea>
+            </label>
+        </div>
+
+        <!-- ===== Услуги (hotelservices) ===== -->
+        <div class="section">
+            <h2>Услуги (hotelservices)</h2>
+
+            <label>
+                В номере (Category = "В номере") — по одной услуге на строку:
+                <textarea name="InRoomServicesText" class="wysiwyg">${InRoomServicesText}</textarea>
+            </label>
+
+            <label>
+                Для детей (Category = "Для детей"):
+                <textarea name="ChildServicesText" class="wysiwyg">${ChildServicesText}</textarea>
+            </label>
+
+            <label>
+                Услуги на территории (Category = "Услуги на территории"):
+                <textarea name="OnSiteServicesText" class="wysiwyg">${OnSiteServicesText}</textarea>
+            </label>
+
+            <label>
+                Развлечения и спорт (Category = "Развлечения и спорт"):
+                <textarea name="EntertainmentServicesText" class="wysiwyg">${EntertainmentServicesText}</textarea>
+            </label>
+
+            <p class="hint">
+                Для разделения «бесплатно/платно» на пользовательской странице логика уже есть
+                в <code>HotelService.GetHotelDetails</code> — там ищется слово <strong>«платно»</strong>
+                в названии услуги.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Типы номеров (roomtypes)</h2>
+
+            <p class="hint">
+                Формат одной строки:<br>
+                <code>Название;Вид;Кровати;Макс.чел.;Площадь</code><br>
+                Пример: <code>Standard;Sea view;1 dbl;3;25</code>
+            </p>
+
+            <label>
+                Список типов номеров:
+                <!-- тут БЕЗ WYSIWYG, иначе сломаем формат -->
+                <textarea name="RoomTypesText">${RoomTypesText}</textarea>
+            </label>
+        </div>
+
+        <div class="actions">
+            <button type="submit">Сохранить изменения</button>
+        </div>
+    </form>
+
+    <!-- Скрипт загрузки фото: кладём ЧИСТЫЙ base64 и имя файла -->
+    <script>
+        (function () {
+            var form = document.querySelector('form');
+            var fileInput = document.getElementById('HotelPhotoFile');
+            var hiddenBase64 = document.getElementById('HotelPhotoUploadBase64');
+            var hiddenName = document.getElementById('HotelPhotoFileName');
+
+            if (!form || !fileInput || !hiddenBase64 || !hiddenName) return;
+
+            fileInput.addEventListener('change', function () {
+                var file = fileInput.files && fileInput.files[0];
+                if (!file) {
+                    hiddenBase64.value = "";
+                    hiddenName.value = "";
+                    return;
+                }
+
+                hiddenName.value = file.name || "";
+
+                var reader = new FileReader();
+                reader.onload = function (ev) {
+                    var dataUrl = ev.target.result || "";
+                    var commaIndex = dataUrl.indexOf(',');
+                    if (commaIndex === -1) {
+                        hiddenBase64.value = "";
+                        return;
+                    }
+
+                    // после запятой идёт чистый base64
+                    var pureBase64 = dataUrl.substring(commaIndex + 1);
+                    hiddenBase64.value = pureBase64;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            form.addEventListener('submit', function (e) {
+                var file = fileInput.files && fileInput.files[0];
+
+                // если файл не выбран или base64 уже есть — обычный сабмит
+                if (!file || (hiddenBase64.value && hiddenBase64.value.length > 0)) {
+                    return;
+                }
+
+                // если файл есть, а base64 ещё нет — дочитаем и только потом сабмит
+                e.preventDefault();
+
+                hiddenName.value = file.name || "";
+
+                var reader = new FileReader();
+                reader.onload = function (ev) {
+                    var dataUrl = ev.target.result || "";
+                    var commaIndex = dataUrl.indexOf(',');
+                    if (commaIndex === -1) {
+                        hiddenBase64.value = "";
+                        form.submit();
+                        return;
+                    }
+
+                    var pureBase64 = dataUrl.substring(commaIndex + 1);
+                    hiddenBase64.value = pureBase64;
+                    form.submit();
+                };
+                reader.readAsDataURL(file);
+            });
+        })();
+    </script>
+
+    <!-- CKEditor 5 Classic без ключей -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var areas = document.querySelectorAll('textarea.wysiwyg');
+            for (var i = 0; i < areas.length; i++) {
+                (function (el) {
+                    ClassicEditor
+                        .create(el, {
+                            toolbar: [
+                                'undo', 'redo', '|',
+                                'bold', 'italic', 'underline', '|',
+                                'bulletedList', 'numberedList', '|',
+                                'link'
+                            ]
+                        })
+                        .catch(function (error) {
+                            console.error('CKEditor init error:', error);
+                        });
+                })(areas[i]);
+            }
+        });
+    </script>
+</body>
+</html>

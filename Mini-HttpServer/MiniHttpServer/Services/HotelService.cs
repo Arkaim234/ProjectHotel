@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using MiniHttpServer.DTOs;
+﻿using MiniHttpServer.DTOs;
 using MiniHttpServer.DTOs.HelperDTOs;
 using MiniHttpServer.Model;
 using MiniHttpServer.Model.Filters;
@@ -27,7 +25,7 @@ namespace MiniHttpServer.Services
         {
             _hotelRepo = hotelRepo;
             _roomRepo = roomRepo;
-            _mealRepo = mealRepo;          // ВЕРНУЛИ
+            _mealRepo = mealRepo;          
             _descRepo = descRepo;
             _placeRepo = placeRepo;
             _serviceRepo = serviceRepo;
@@ -64,6 +62,10 @@ namespace MiniHttpServer.Services
                     .ToList();
             }
 
+            // ФОТО: берём либо одну картинку, либо все из директории, указанной в Hotel.PhotoUrl
+            var (photos, coverPhoto) = HotelPhotosHelper.ResolvePhotos(hotel);
+            var coverUrl = coverPhoto ?? "/images/default-hotel.jpg"; 
+
             var hotelDto = new HotelDetailsDto
             {
                 Hotel = hotel,
@@ -71,7 +73,9 @@ namespace MiniHttpServer.Services
                 PlaceInfo = placeInfo,
                 RoomTypes = roomTypes,
                 AvailableMealPlans = mealPlanDtos,
-                Contacts = hotel.Contacts != null ? hotel.Contacts.ToList() : new List<string>()
+                Contacts = hotel.Contacts != null ? hotel.Contacts.ToList() : new List<string>(),
+                PhotoUrls = photos,
+                CoverPhotoUrl = coverUrl
             };
 
             // В НОМЕРЕ
@@ -111,7 +115,6 @@ namespace MiniHttpServer.Services
             return hotelDto;
         }
 
-
         // ---------- Поиск для фильтров ----------
         public IEnumerable<Hotel> SearchHotels(int cityId, string? mealPlanCode)
         {
@@ -125,6 +128,7 @@ namespace MiniHttpServer.Services
         }
 
         public IEnumerable<Hotel> GetAll() => _hotelRepo.GetAllWithMealPlans();
+
         private static string BuildListHtml(IEnumerable<string> items)
         {
             if (items == null)

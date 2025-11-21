@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using MiniHttpServer.Frimework.Core;
+﻿using MiniHttpServer.Frimework.Core;
 using MiniHttpServer.Frimework.Core.Atributes;
 using MiniHttpServer.Frimework.Core.HttpResponse;
 using MiniHttpServer.Frimework.Settings;
-
+using MiniHttpServer.Services;
 using MiniHttpServer.Repositories;
 using MiniHttpServer.Model.Filters;
 using MyORMLibrary;
@@ -58,6 +54,22 @@ namespace MiniHttpServer.Endpoints
             var cities = _cityRepo
                 .GetAll()
                 .Where(c => c.CountryId == 1)        // 1 — Россия
+                .Select(c => new { id = c.Id, name = c.Name })
+                .OrderBy(c => c.name)
+                .ToList();
+
+            return new JsonResult(cities);
+        }
+
+        // *** НОВЫЙ МЕТОД ***
+        // GET /api/cities/by-country?countryId=2
+        [HttpGet("cities/by-country")]
+        public IActionResult GetCitiesByCountry(int countryId)
+        {
+            // безопасный вариант через GetAll()
+            var cities = _cityRepo
+                .GetAll()
+                .Where(c => c.CountryId == countryId)
                 .Select(c => new { id = c.Id, name = c.Name })
                 .OrderBy(c => c.name)
                 .ToList();
@@ -193,12 +205,6 @@ namespace MiniHttpServer.Endpoints
         }
 
         // --------- ПОИСК ТУРОВ / ОТЕЛЕЙ ДЛЯ КНОПКИ "НАЙТИ" ---------
-        //
-        // JS дергает:
-        // GET /api/hotels/search?fromCityId=...&countryId=...&dateFrom=...&...
-        //
-        // Даты/ночи/люди пока принимаем, но не используем.
-
         [HttpGet("hotels/search")]
         public IActionResult SearchHotels(
             int? fromCityId,
@@ -215,10 +221,10 @@ namespace MiniHttpServer.Endpoints
             string? mealCodes
         )
         {
-            // 1) Берём все отели сразу с типами питания
+            // Берём все отели сразу с типами питания
             var hotels = _hotelRepo.GetAllWithMealPlans().ToList();
 
-            // 2) Фильтр по стране назначения -> набор допустимых городов
+            // Фильтр по стране назначения -> набор допустимых городов
             if (countryId.HasValue)
             {
                 var countryCitySet = _cityRepo
@@ -232,7 +238,7 @@ namespace MiniHttpServer.Endpoints
                     .ToList();
             }
 
-            // 3) Нижний фильтр "Город" (список ID через запятую)
+            // Нижний фильтр "Город" (список ID через запятую)
             if (!string.IsNullOrWhiteSpace(cityIds))
             {
                 var cityIdList = cityIds
@@ -251,7 +257,7 @@ namespace MiniHttpServer.Endpoints
                 }
             }
 
-            // 4) Конкретные отели (чекбоксы "Отели")
+            // Конкретные отели (чекбоксы "Отели")
             if (!string.IsNullOrWhiteSpace(hotelIds))
             {
                 var hotelIdSet = hotelIds
@@ -269,7 +275,7 @@ namespace MiniHttpServer.Endpoints
                 }
             }
 
-            // 5) Категории (звёздность и т.п.) через промежуточную таблицу
+            // Категории (звёздность и т.п.) 
             if (!string.IsNullOrWhiteSpace(categoryIds))
             {
                 var categoryIdList = categoryIds
@@ -295,7 +301,7 @@ namespace MiniHttpServer.Endpoints
                 }
             }
 
-            // 6) Питание (BB / AI / HB ...). Если выбран хотя бы 1 код — фильтруем
+            // Питание (BB / AI / HB ...). Если выбран хотя бы 1 код — фильтруем
             if (!string.IsNullOrWhiteSpace(mealCodes))
             {
                 var mealCodeList = mealCodes
@@ -314,21 +320,28 @@ namespace MiniHttpServer.Endpoints
                 }
             }
 
-            // 7) Даты / ночи / количество человек пока игнорируем
+            // Даты / ночи / количество человек пока игнорируем
 
-            // 8) Собираем DTO для фронта
+            // Собираем DTO для фронта
             var allCities = _cityRepo.GetAll().ToList();
             var cityDict = allCities.ToDictionary(c => c.Id, c => c.Name);
 
-            var result = hotels.Select(h => new
+            var result = hotels.Select(h =>
             {
-                id = h.Id,
-                name = h.Name,
-                city = cityDict.TryGetValue(h.CityId, out var cityName) ? cityName : "",
-                price = h.Price,
-                slug = h.Slug,
-                photoUrl = h.PhotoUrl,
-                mealPlans = h.MealPlans
+                // Берём фотки и обложку так же, как на детальной странице
+                var (photos, cover) = HotelPhotosHelper.ResolvePhotos(h);
+                var coverUrl = cover ?? "/images/no-photo.png"; // заглушка, если фоток нет
+
+                return new
+                {
+                    id = h.Id,
+                    name = h.Name,
+                    city = cityDict.TryGetValue(h.CityId, out var cityName) ? cityName : "",
+                    price = h.Price,
+                    slug = h.Slug,
+                    photoUrl = coverUrl,   // сюда идёт уже готовый URL файла изображения
+                    mealPlans = h.MealPlans
+                };
             }).ToList();
 
             return new JsonResult(result);

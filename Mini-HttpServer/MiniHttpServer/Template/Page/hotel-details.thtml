@@ -243,14 +243,41 @@
                    data-tab="news">Акции и новости</a>
             </div>
 
-            <!-- Верхняя часть: фото -->
-            <div class="hotel-top-block">
-                <div class="hotel-top-block__main-photo">
-                    <img src="${Hotel.PhotoUrl}" alt="${Hotel.Name}" class="hotel-main-image">
-                </div>
+            <!-- Верхняя часть: фото (галерея) -->
+            <div class="photo-block-wrap">
+                <div class="cmn-l-block-wrap_OFF photo-block-wrap__yamap photo-block-wrap__yamap_got-img">
+                    <div class="photo-block">
+                        <div class="photo-block__main">
 
-                <div class="hotel-top-block__side-photos">
-                    <!-- Здесь позже можно сделать $foreach по дополнительным фото -->
+                            $if(PhotoUrls)
+                                $foreach(var p in PhotoUrls)
+                                    <div class="photoslider-block__slide">
+                                        <div class="photoslider-block__item">
+                                            <a class="photoslider-block__img-link">
+                                                <img class="photoslider-block__img"
+                                                     src="${p}"
+                                                     alt="${Hotel.Name}">
+                                            </a>
+                                        </div>
+                                    </div>
+                                $endfor
+                            $elseif(CoverPhotoUrl)
+                                <!-- fallback: если PhotoUrls нет, но есть обложка -->
+                                <div class="photoslider-block__slide">
+                                    <div class="photoslider-block__item">
+                                        <a class="photoslider-block__img-link">
+                                            <img class="photoslider-block__img"
+                                                 src="${CoverPhotoUrl}"
+                                                 alt="${Hotel.Name}">
+                                        </a>
+                                    </div>
+                                </div>
+                            $endif
+
+                        </div>
+                    </div>
+
+                    <div id="teleportYaMap"></div>
                 </div>
             </div>
 
@@ -425,7 +452,7 @@
                         </div>
                     </div>
 
-                   <div class="hotel-info-row">
+                    <div class="hotel-info-row">
                         <div class="hotel-info-label">Развлечения и спорт</div>
                         <div class="hotel-info-value">
 
@@ -449,6 +476,7 @@
 
                         </div>
                     </div>
+
                     <div class="hotel-info-row">
                         <div class="hotel-info-label">Услуги на территории</div>
                         <div class="hotel-info-value">
@@ -622,6 +650,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
+<script charset="UTF-8" src="/js/gallery.js"></script>
 </body>
 </html>

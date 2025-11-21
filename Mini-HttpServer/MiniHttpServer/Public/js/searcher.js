@@ -1,18 +1,9 @@
 ﻿/* ===================================================
-   ЗАГРУЗКА ФИЛЬТРОВ (нижние чекбоксы)
+   ЗАГРУЗКА ЛОГИКИ ПОИСКА (ТОЛЬКО МОДАЛКИ/ПОИСК)
+   Нижние фильтры (города/категории/отели/питание)
+   инициализируются в filters.js
 =================================================== */
 document.addEventListener("DOMContentLoaded", () => {
-    const toInput = document.querySelector("[data-field='to']");
-
-    // если у инпута Куда? уже есть data-value – берём города этой страны,
-    // иначе пока грузим все города
-    const initialCountryId = toInput?.dataset.value || null;
-    loadCities(initialCountryId);        // нижний блок "Город"
-
-    loadCategories();
-    loadHotelsList();
-    loadMealPlans();
-
     loadCityModal();
     loadCountryModal();
     initNightsModal();
@@ -42,7 +33,7 @@ function toggleExtraFilters() {
         Локальный поиск по спискам
 =================================================== */
 function filterLocalList(id, value) {
-    value = value.toLowerCase();
+    value = (value || "").toLowerCase();
     document.querySelectorAll(`#${id} label`).forEach(label => {
         label.style.display = label.textContent.toLowerCase().includes(value)
             ? "flex"
@@ -57,13 +48,18 @@ async function loadCities(countryId) {
     try {
         // если страна выбрана – берём города только этой страны
         const url = countryId
-            ? `/api/cities/by-country?countryId=${countryId}`
+            ? `/api/cities/by-country?countryId=${encodeURIComponent(countryId)}`
             : "/api/cities";
 
         const res = await fetch(url);
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
         const list = await res.json();
 
-        document.getElementById("ot-city-list").innerHTML = list.map(x => `
+        const box = document.getElementById("ot-city-list");
+        if (!box) return;
+
+        box.innerHTML = list.map(x => `
             <label>
                 <input type="checkbox" value="${x.id}">
                 ${x.name}
@@ -80,9 +76,14 @@ async function loadCities(countryId) {
 async function loadCategories() {
     try {
         const res = await fetch("/api/categories");
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
         const list = await res.json();
 
-        document.getElementById("ot-type-list").innerHTML = list.map(c => `
+        const box = document.getElementById("ot-type-list");
+        if (!box) return;
+
+        box.innerHTML = list.map(c => `
             <label>
                 <input type="checkbox" value="${c.id}">
                 ${c.name}
@@ -99,6 +100,8 @@ async function loadCategories() {
 async function loadHotelsList() {
     try {
         const res = await fetch("/api/hotels/all");
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
         const list = await res.json();
         renderHotelsList(list);
     } catch (e) {
@@ -107,7 +110,10 @@ async function loadHotelsList() {
 }
 
 function renderHotelsList(list) {
-    document.getElementById("ot-hotels-list").innerHTML = list.map(h => `
+    const box = document.getElementById("ot-hotels-list");
+    if (!box) return;
+
+    box.innerHTML = list.map(h => `
         <label>
             <input type="checkbox" value="${h.id}">
             ${h.name}
@@ -121,9 +127,14 @@ function renderHotelsList(list) {
 async function loadMealPlans() {
     try {
         const res = await fetch("/api/mealplans");
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
         const list = await res.json();
 
-        document.getElementById("ot-meal-list").innerHTML = list.map(m => `
+        const box = document.getElementById("ot-meal-list");
+        if (!box) return;
+
+        box.innerHTML = list.map(m => `
             <label>
                 <input type="checkbox" value="${m.code}">
                 ${m.code}
@@ -140,6 +151,8 @@ async function loadMealPlans() {
 function loadCityModal() {
     const modal = document.getElementById("modal-city");
     const input = document.querySelector("[data-field='from']");
+
+    if (!modal || !input) return;
 
     // стартовое валидное значение
     if (!input.dataset.lastValue && input.value.trim()) {
@@ -213,11 +226,10 @@ function loadCityModal() {
 
                         modal.classList.remove("open");
                     }));
-            });
+            })
+            .catch(err => console.error("Ошибка загрузки городов вылета:", err));
     });
 }
-
-
 
 /* ===================================================
                     МОДАЛКА "Куда?"
@@ -225,6 +237,8 @@ function loadCityModal() {
 function loadCountryModal() {
     const modal = document.getElementById("modal-country");
     const input = document.querySelector("[data-field='to']");
+
+    if (!modal || !input) return;
 
     if (!input.dataset.lastValue && input.value.trim()) {
         input.dataset.lastValue = input.value.trim();
@@ -290,12 +304,16 @@ function loadCountryModal() {
 
                         input.value = item.textContent.trim();
                         input.dataset.value = countryId;
+                        input.dataset.lastValue = input.value;
+                        input.dataset.lastId = countryId;
+
                         modal.classList.remove("open");
 
                         // обновляем нижний фильтр "Город" под выбранную страну
                         loadCities(countryId);
                     }));
-            });
+            })
+            .catch(err => console.error("Ошибка загрузки стран:", err));
     });
 }
 
@@ -305,6 +323,8 @@ function loadCountryModal() {
 function initNightsModal() {
     const modal = document.getElementById("modal-nights");
     const btn = document.querySelector("[data-field='nights']");
+
+    if (!modal || !btn) return;
 
     btn.addEventListener("click", () => {
         // читаем текущие значения из текста кнопки "6 - 9"
@@ -373,6 +393,8 @@ function initTouristsModal() {
     const modal = document.getElementById("modal-tourists");
     const btn = document.querySelector("[data-field='tourists']");
 
+    if (!modal || !btn) return;
+
     btn.addEventListener("click", () => {
         modal.innerHTML = `
             <div class="ot-msf-tourists-row">
@@ -425,10 +447,17 @@ function initTouristsModal() {
         updateText();
     });
 }
+
 /* ===================================================
            Общая функция показа модалки
 =================================================== */
 function showModal(modal, trigger) {
+    if (!modal || !trigger) return;
+
+    // запомним, от какого инпута открывали модалку
+    modal._trigger = trigger;
+
+    // сначала закрываем все остальные
     document.querySelectorAll(".ot-msf-modal").forEach(x => x.classList.remove("open"));
 
     const rect = trigger.getBoundingClientRect();
@@ -437,6 +466,25 @@ function showModal(modal, trigger) {
 
     modal.classList.add("open");
 }
+
+/* ===================================================
+   Глобально закрываем модалки при клике вне
+=================================================== */
+document.addEventListener("click", (e) => {
+    const openModals = document.querySelectorAll(".ot-msf-modal.open");
+
+    openModals.forEach(modal => {
+        const trigger = modal._trigger;
+
+        const clickInsideModal = modal.contains(e.target);
+        const clickOnTrigger = trigger && (trigger === e.target || trigger.contains(e.target));
+
+        // если кликнули НЕ по модалке и НЕ по её инпуту — закрываем
+        if (!clickInsideModal && !clickOnTrigger) {
+            modal.classList.remove("open");
+        }
+    });
+});
 
 /* ===================================================
                 AJAX — кнопка "Найти"
@@ -455,10 +503,10 @@ function initSearchSubmit() {
         const touristsInp = document.querySelector("[data-field='tourists']");
 
         // id города вылета / страны
-        const fromId = fromInput?.dataset.value || "";
-        const toId = toInput?.dataset.value || "";
+        const fromId = fromInput && fromInput.dataset ? fromInput.dataset.value || "" : "";
+        const toId = toInput && toInput.dataset ? toInput.dataset.value || "" : "";
 
-        // --- даты "🗓️ 11.11.25 - 14.11.25"
+        // даты " 11.11.25 - 14.11.25"
         let dateFrom = "";
         let dateTo = "";
         if (dateBtn) {
@@ -469,7 +517,7 @@ function initSearchSubmit() {
             }
         }
 
-        // --- ночи "6 - 9"
+        // ночи "6 - 9"
         let nightsFrom = "";
         let nightsTo = "";
         if (nightsInput && nightsInput.value) {
@@ -480,7 +528,7 @@ function initSearchSubmit() {
             }
         }
 
-        // --- туристы "2 взр. / 0 реб."
+        // туристы "2 взр. / 0 реб."
         let adults = "";
         let childs = "";
         if (touristsInp && touristsInp.value) {
@@ -491,7 +539,7 @@ function initSearchSubmit() {
             }
         }
 
-        // --- нижние фильтры (чекбоксы)
+        // нижние фильтры (чекбоксы)
         const selectedCities = Array.from(
             document.querySelectorAll("#ot-city-list input:checked")
         ).map(i => i.value);
@@ -539,7 +587,7 @@ function initSearchSubmit() {
 
             const data = await response.json();
 
-            // выводим результаты и скроллим вверх (как у тебя уже было)
+            // выводим результаты и скроллим вверх 
             showResults(data);
             cutPageToSearchbar();
 
@@ -572,7 +620,7 @@ function cutPageToSearchbar() {
         while (prev) {
             const el = prev;
             prev = prev.previousElementSibling;
-            el.style.display = "none";     // если хочешь прям удалить: el.remove();
+            el.style.display = "none"; 
         }
     }
 
@@ -652,11 +700,11 @@ function showResults(list) {
     }
 
     if (nightsInput && nightsInput.value) {
-        nightsText = nightsInput.value; // "6 - 9" или что там у тебя
+        nightsText = nightsInput.value; // "6 - 9" 
     }
 
     list.forEach(hotel => {
-        // hotel — это объект из твоего API:
+        // hotel — это объект API:
         // { id, name, city, price, slug, photoUrl, mealPlans }
 
         const meal =
@@ -665,15 +713,15 @@ function showResults(list) {
                 : "";
 
         const dataForTemplate = {
-            HotelUrl: `/hotels/${hotel.slug}`,         // при желании поменяешь путь
+            HotelUrl: `/hotels/${hotel.slug}`,       
             PhotoUrl: hotel.photoUrl || "/images/no-photo.png",
             HotelName: hotel.name || "",
-            StarsHtml: "",                             // звёзды пока пустые
+            StarsHtml: "",                            
             CityName: hotel.city || "",
-            RegionName: "",                            // если потом появится — подставим
+            RegionName: "",                            
             CheckInDate: checkInText,
             Nights: nightsText,
-            RoomName: "",                              // "Размещение" не используем
+            RoomName: "",                            
             MealPlan: meal,
             Price: formatPrice(hotel.price)
         };
@@ -689,7 +737,9 @@ function showResults(list) {
             container.appendChild(card);
         }
     });
-}/* ===================================================
+}
+
+/* ===================================================
    ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ: фильтрация + "ничего не найдено"
 =================================================== */
 function filterModalList(modal, searchValue) {
@@ -719,4 +769,4 @@ function filterModalList(modal, searchValue) {
         listWrap.appendChild(emptyEl);
     }
     emptyEl.style.display = visibleCount === 0 ? "block" : "none";
-} 
+}

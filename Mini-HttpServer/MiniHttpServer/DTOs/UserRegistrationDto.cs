@@ -10,6 +10,6 @@ namespace MiniHttpServer.DTOs
     {
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty; // ← открытый пароль (только здесь!)
+        public string Password { get; set; } = string.Empty; 
     }
 }

@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>${Title}</title>
+</head>
+<body>
+    <h1>${Title}</h1>
+
+    <p><a href="/admin">← Назад в админ-панель</a></p>
+    <p>
+    <a href="/admin/hotels/create">+ Создать новый отель</a>
+    </p>
+    <table border="1" cellspacing="0" cellpadding="4">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Slug</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        ${HotelsRows}
+        </tbody>
+    </table>
+</body>
+</html>

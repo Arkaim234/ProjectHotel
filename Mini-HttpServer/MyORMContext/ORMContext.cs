@@ -49,11 +49,15 @@ namespace MyORMLibrary
 
             foreach (var prop in props)
             {
-                if (!string.Equals(prop.Name, "Id", StringComparison.OrdinalIgnoreCase))
-                {
-                    columns.Add(prop.Name);
-                    parameters.Add($"@{prop.Name}");
-                }
+                if (string.Equals(prop.Name, "Id", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                if (typeof(T).Name == "Hotel" &&
+                    string.Equals(prop.Name, "MealPlans", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                columns.Add(prop.Name);
+                parameters.Add($"@{prop.Name}");
             }
 
             string sql = $"INSERT INTO {tableName} ({string.Join(", ", columns)}) VALUES ({string.Join(", ", parameters)}) RETURNING Id";
@@ -61,10 +65,14 @@ namespace MyORMLibrary
             using var cmd = new NpgsqlCommand(sql, connection);
             foreach (var prop in props)
             {
-                if (!string.Equals(prop.Name, "Id", StringComparison.OrdinalIgnoreCase))
-                {
-                    cmd.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
-                }
+                if (string.Equals(prop.Name, "Id", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                if (typeof(T).Name == "Hotel" &&
+                    string.Equals(prop.Name, "MealPlans", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                cmd.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
             }
 
             var newId = cmd.ExecuteScalar();
@@ -131,6 +139,9 @@ namespace MyORMLibrary
         /// <param name="tableName">Имя таблицы.</param>
         public void Update<T>(int id, T entity, string tableName) where T : class
         {
+            if (string.IsNullOrWhiteSpace(tableName))
+                tableName = typeof(T).Name.ToLower() + "s";
+
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
@@ -138,8 +149,18 @@ namespace MyORMLibrary
                 .Where(p => !string.Equals(p.Name, "Id", StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
+            if (typeof(T).Name.Equals("Hotel", StringComparison.OrdinalIgnoreCase))
+            {
+                props = props
+                    .Where(p =>
+                        (p.PropertyType.IsValueType || p.PropertyType == typeof(string)) ||
+                        (p.PropertyType.IsArray && p.PropertyType.GetElementType() == typeof(string))
+                    )
+                    .ToList();
+            }
+
             var setClauses = string.Join(", ", props.Select(p => $"{p.Name} = @{p.Name}"));
-            string sql = $"UPDATE {tableName} SET {setClauses} WHERE Id = @id";
+            var sql = $"UPDATE {tableName} SET {setClauses} WHERE id = @id";
 
             using var cmd = new NpgsqlCommand(sql, connection);
             cmd.Parameters.AddWithValue("@id", id);
@@ -148,6 +169,8 @@ namespace MyORMLibrary
 
             cmd.ExecuteNonQuery();
         }
+
+
 
         /// <summary>
         /// Удаляет запись по идентификатору.
@@ -206,7 +229,6 @@ namespace MyORMLibrary
         /// </summary>
         private string ParseExpression(Expression expr)
         {
-            // ---- 0. Раскрытие Invocation (Invoke) ----
             if (expr is InvocationExpression invoke && invoke.Expression is LambdaExpression lambda)
             {
                 var map = new Dictionary<ParameterExpression, Expression>();
@@ -220,16 +242,13 @@ namespace MyORMLibrary
                 return ParseExpression(inlinedBody);
             }
 
-            // ---- 0.1. Игнорируем приведения типов (Convert) ----
             if (expr is UnaryExpression conv &&
                 (conv.NodeType == ExpressionType.Convert ||
                  conv.NodeType == ExpressionType.ConvertChecked))
             {
-                // просто парсим то, к чему приводили
                 return ParseExpression(conv.Operand);
             }
 
-            // ---- 1. Остальной разбор как у тебя был ----
             return expr switch
             {
                 BinaryExpression binary =>
@@ -279,7 +298,6 @@ namespace MyORMLibrary
         /// </summary>
         private string ParseMethodCall(MethodCallExpression method)
         {
-            // ---- 1. string.Contains / StartsWith / EndsWith ----
             if (method.Method.DeclaringType == typeof(string))
             {
                 string member = ParseExpression(method.Object);
@@ -295,11 +313,9 @@ namespace MyORMLibrary
                 };
             }
 
-            // ---- 2. list.Contains(x.Property)  ->  Property IN ( ... ) ----
             if (method.Method.Name == "Contains" &&
                 typeof(IEnumerable).IsAssignableFrom(method.Method.DeclaringType))
             {
-                // list в выражении: list.Contains(x.Id)
                 var collectionObj = EvaluateExpression(method.Object) as IEnumerable;
                 if (collectionObj == null)
                 {
@@ -307,24 +323,20 @@ namespace MyORMLibrary
                         "Contains on non-constant collection is not supported");
                 }
 
-                // Аргумент Contains — это колонка (x.Id / x.CategoryId)
                 string columnSql = ParseExpression(method.Arguments[0]);
 
                 var sqlValues = new List<string>();
                 foreach (var item in collectionObj)
                 {
-                    // заворачиваем каждый элемент как константу и прогоняем через общий парсер
                     sqlValues.Add(ParseExpression(Expression.Constant(item)));
                 }
 
-                // Если список пустой — заведомо ложное условие
                 if (sqlValues.Count == 0)
                     return "1 = 0";
 
                 return $"{columnSql} IN ({string.Join(", ", sqlValues)})";
             }
 
-            // Все прочие методы пока не поддерживаем
             throw new NotSupportedException($"Unsupported method call: {method.Method.Name}");
         }
 

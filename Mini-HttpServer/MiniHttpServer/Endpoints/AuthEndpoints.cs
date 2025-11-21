@@ -6,6 +6,7 @@ using MiniHttpServer.Frimework.Settings;
 using MyORMLibrary;
 using MiniHttpServer.Frimework.Core;
 using MiniHttpServer.Frimework.Core.HttpResponse;
+using System.Net;
 
 namespace MiniHttpServer.Endpoints
 {
@@ -47,25 +48,38 @@ namespace MiniHttpServer.Endpoints
                 string.IsNullOrWhiteSpace(dto.Login) ||
                 string.IsNullOrWhiteSpace(dto.Password))
             {
-                Context.Response.StatusCode = 400;
-                return Json(new { message = "Login и Password обязательны" });
+                return Json(new { message = "Login и Password обязательны" }, 400);
             }
 
             var hashed = _securityService.HashPassword(dto.Password);
             var user = _authService.Login(dto.Login, hashed);
 
-            if (user != null)
+            if (user == null)
             {
-                return Json(new
-                {
-                    message = "Успешный вход",
-                    user = new { user.Id, user.Login, user.Email, user.Role }
-                });
+                return Json(new { message = "Неверный логин или пароль" }, 401);
             }
 
-            Context.Response.StatusCode = 401;
-            return Json(new { message = "Неверный логин или пароль" });
+            var token = SessionStore.CreateSession(user.Id, user.Role);
+
+            try
+            {
+                var cookie = new Cookie("token", token)
+                {
+                    Path = "/",
+                    HttpOnly = false
+                };
+                Context.Response.Cookies.Add(cookie);
+            }
+            catch { }
+
+            return Json(new
+            {
+                message = "Успешный вход",
+                token = token,
+                user = new { user.Id, user.Login, user.Email, user.Role }
+            }, 200);
         }
+
 
         // POST /auth/register
         [HttpPost("register")]
@@ -85,7 +99,7 @@ namespace MiniHttpServer.Endpoints
                 Login = dto.Name,
                 Email = dto.Email,
                 PasswordHash = _securityService.HashPassword(dto.Password),
-                Role = "user"
+                Role = "User" // обычный юзер
             };
 
             if (!_authService.Register(newUser))

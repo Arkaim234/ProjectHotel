@@ -168,7 +168,7 @@
 								</div>
 							</div>
 							<!-- Личный кабинет -->
-							<a target="_blank" href="https://online.onetouch.travel/cl_refer_person" class="topcontent-header__cabinet-link">
+							<a target="_blank" href="autorization.html" class="topcontent-header__cabinet-link">
 								<img class="topcontent-header__cabinet-img" src="images/lk-user.svg" width="15" height="16">
 								Личный кабинет
 							</a>
@@ -676,6 +676,7 @@
 	<script type="text/x-template" id="tour-card-template">
 		<div class="tour-card">
 			<div class="tour-card__inner">
+
 				<div class="tour-card__left">
 					<a class="tour-card__image-link" href="{{HotelUrl}}">
 						<img class="tour-card__image" src="{{PhotoUrl}}" alt="{{HotelName}}">
@@ -693,24 +694,19 @@
 					</div>
 
 					<div class="tour-card__info-row">
-						<div class="tour-card__info-item">
-							Заезд: {{CheckInDate}}
-						</div>
-						<div class="tour-card__info-item">
-							Ночей: {{Nights}}
-						</div>
+						<div class="tour-card__info-item">Заезд: {{CheckInDate}}</div>
+						<div class="tour-card__info-item">Ночей: {{Nights}}</div>
 					</div>
 
-					<div class="tour-card__info-row"
-						<div class="tour-card__info-item">
-							Питание: {{MealPlan}}
-						</div>
+					<div class="tour-card__info-row">
+						<div class="tour-card__info-item">Питание: {{MealPlan}}</div>
 					</div>
 				</div>
 
 				<div class="tour-card__right">
 					<div class="tour-card__price">{{Price}} ₽</div>
 				</div>
+
 			</div>
 		</div>
 	</script>

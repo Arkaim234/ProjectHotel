@@ -1,13 +1,9 @@
-/* ---------------------------
-   Полный объединённый CSS
-   --------------------------- */
-
 /* Стиль для всего блока поиска */
 .cmn-l-block-wrap.js-ot-msf {
     margin: 30px 0;
 }
 
-/* Вкладки (TABs) — оставлены как в исходнике */
+/* Вкладки (TABs) */
 .searchTabs__nav {
     display: flex;
     flex-wrap: wrap;
@@ -84,18 +80,14 @@
     margin-top: 16px;
 }
 
-    /* ======================================================
-   Форма поиска — единый, чистый и предсказуемый набор правил
-   ====================================================== */
-
     /* общий контейнер формы (внутри .searchTabs__content) */
     .searchTabs__content .ot-msf-form,
     .ot-msf-form {
         display: flex;
-        align-items: center; /* все элементы строго по одной горизонтали */ /* визуальный интервал между ячейками */
+        align-items: center; 
         width: 100%;
         background-color: #fff;
-        overflow-x: auto; /* fallback: если не помещается */
+        overflow-x: auto; 
         scrollbar-width: none;
         -ms-overflow-style: none;
         box-sizing: border-box;
@@ -111,21 +103,20 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 6px 12px; /* комфортные внутренние отступы */
+        padding: 6px 12px; 
         background: #fff;
-        border-right: 1px solid #ebdbdb; /* старая окантовка-разделитель */
-        flex: 0 1 auto; /* не растёт бесконтрольно, но может сжиматься */
+        border-right: 1px solid #ebdbdb; 
+        flex: 0 1 auto; 
         width: auto;
-        min-width: 80px; /* чтобы совсем короткие не разваливались */
-        max-width: 360px; /* защитный максимум для очень длинных полей */
+        min-width: 80px; 
+        max-width: 360px; 
         box-sizing: border-box;
         white-space: nowrap;
-        min-height: 56px; /* единая высота строки */
+        min-height: 56px;
     }
 
-        /* При желании убрать правую границу у последнего элемента: */
         .searchTabs__content .ot-msf-form__item:last-child {
-            border-right: 1px solid #ebdbdb; /* можно оставить или убрать по вкусу */
+            border-right: 1px solid #ebdbdb; 
         }
 
     /* подпись/метка */
@@ -150,7 +141,7 @@
         font-weight: 500;
         color: #333;
         white-space: nowrap;
-        overflow: visible; /* важное: дата и иконки не обрезаются */
+        overflow: visible;
         text-overflow: clip;
         min-height: 36px;
     }
@@ -180,14 +171,14 @@
             padding: 0;
             margin: 0;
             text-align: left;
-            min-width: 0; /* позволяет флекс-контейнеру сжимать элемент при необходимости */
+            min-width: 0; 
             overflow: visible;
             white-space: nowrap;
         }
 
-/* Контейнер кнопки "Найти" — займет всё оставшееся пространство */
+/* Контейнер кнопки "Найти" */
 .ot-msf-form__submit {
-    flex: 1; /* Растягиваем контейнер кнопки на всё доступное пространство */
+    flex: 1; 
 }
 
 .ot-msf-form__submit-button {
@@ -203,8 +194,8 @@
     align-items: center;
     justify-content: center;
     min-height: 67.79px;
-    width: 100%; /* Кнопка занимает 100% ширины своего контейнера */
-    padding: 0 16px; /* Оптимальные отступы */
+    width: 100%; 
+    padding: 0 16px; 
 }
 
 /* подпись "Показать дополнительные поля" */
@@ -239,9 +230,7 @@ button {
     outline: none;
 }
 
-/* =========================
-   Адаптивные правила (мобильный)
-   ========================= */
+/* Адаптивные правила (мобильный) */
 @media (max-width: 1024px) {
     .searchTabs__content .ot-msf-form__item,
     .ot-msf-form__item {
@@ -377,7 +366,7 @@ button {
     outline: none !important;
     box-shadow: none !important;
 }
-/* === 1. Все поля формы .ot-msf без обводки и рамки === */
+
 .ot-msf-form .ot-msf-input {
     background: transparent !important;
     border: none !important;
@@ -386,10 +375,9 @@ button {
     padding: 0;
     margin: 0;
     font: inherit;
-    color: #000; /* текст видимый, чёрный */
+    color: #000;
 }
 
-    /* Убираем обводку при фокусе */
     .ot-msf-form .ot-msf-input:focus,
     .ot-msf-form .ot-msf-input:active {
         outline: none !important;
@@ -397,7 +385,6 @@ button {
         border-color: transparent !important;
     }
 
-    /* Системный стиль кнопок (type="button") убираем полностью */
     .ot-msf-form .ot-msf-input[type="button"] {
         appearance: none;
         -webkit-appearance: none;
@@ -406,7 +393,6 @@ button {
         border: none !important;
     }
 
-/* === 2. Кнопка с датой — тоже прозрачная, без рамки === */
 .ot-msf-form .ot-date-button {
     background: transparent !important;
     border: none !important;
@@ -419,13 +405,12 @@ button {
     cursor: pointer;
 }
 
-/* На всякий пожарный — убираем outline у любых кнопок внутри формы */
 .ot-msf-form button:focus,
 .ot-msf-form button:active {
     outline: none !important;
     box-shadow: none !important;
 }
-/* === Стрелки для "Ночей", "Туристы", "Период вылета" === */
+
 .ot-msf-form__item-value {
     position: relative;
     display: flex;
@@ -441,10 +426,9 @@ button {
         flex-shrink: 0;
     }
 
-/* === Стрелки для автокомплитов "Вылет из" и "Куда?" === */
 .autocomplete-box {
     position: relative;
-    padding-right: 14px; /* место под стрелку справа */
+    padding-right: 14px; 
 }
 
     .autocomplete-box::after {
@@ -457,7 +441,7 @@ button {
         transform: translateY(-50%);
         pointer-events: none;
     }
-/* ==== Общий размер для маленьких модалок "Ночей" и "Туристы" ==== */
+
 #modal-nights,
 #modal-tourists {
     width: auto;
@@ -465,7 +449,7 @@ button {
     padding: 10px 14px;
 }
 
-/* ==== Ряды в модалке Ночей ==== */
+
 .ot-msf-modal-row {
     display: flex;
     align-items: center;
@@ -503,7 +487,7 @@ button {
     gap: 2px;
 }
 
-/* Кастомные стрелки ▲ ▼ */
+
 .ot-arrow {
     width: 18px;
     height: 18px;
@@ -523,7 +507,7 @@ button {
         border-color: #429410;
     }
 
-/* ==== Модалка "Туристы" ==== */
+
 .ot-msf-tourists-row {
     display: flex;
     align-items: center;
@@ -553,7 +537,7 @@ button {
     font-weight: 500;
 }
 
-/* Зелёные круглые + / - */
+
 .ot-circle-btn {
     width: 24px;
     height: 24px;
@@ -573,7 +557,7 @@ button {
     .ot-circle-btn:hover {
         background: #2e7d32;
     }
-/* ===== КОНТЕЙНЕР РЕЗУЛЬТАТОВ ===== */
+
 
 #search-results {
     max-width: 1200px;
@@ -592,7 +576,7 @@ button {
 }
 
 
-/* ===== КАРТОЧКИ ТУРОВ ===== */
+
 
 .tour-card {
     margin-bottom: 20px;
@@ -601,7 +585,7 @@ button {
     box-shadow: 0 0 0 1px #e6e6e6;
 }
 
-/* Внутренняя обертка */
+
 
 .tour-card__inner {
     display: flex;
@@ -609,7 +593,7 @@ button {
     padding: 20px 25px;
 }
 
-/* Левая колонка — картинка */
+
 
 .tour-card__left {
     flex: 0 0 260px;
@@ -627,7 +611,7 @@ button {
     object-fit: cover;
 }
 
-/* Центральная колонка с текстом */
+
 
 .tour-card__center {
     flex: 1 1 auto;
@@ -674,7 +658,6 @@ button {
     font-weight: 600;
 }
 
-/* Правая колонка — цена и кнопки */
 
 .tour-card__right {
     flex: 0 0 180px;
@@ -705,7 +688,6 @@ button {
     cursor: pointer;
 }
 
-/* ===== АДАПТИВ ПОД УЗКИЕ ЭКРАНЫ ===== */
 
 @media (max-width: 900px) {
     .tour-card__inner {

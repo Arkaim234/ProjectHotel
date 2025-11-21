@@ -1,7 +1,6 @@
 
 @charset "UTF-8";
 
-/* Normalize */
 @font-face {
   font-family: 'MyCustomFont';
   src: url('../fonts/trebuchetms.ttf') format('truetype');
@@ -39,7 +38,6 @@ button, input, select, textarea {
   margin: 0;
 }
 
-/* Base layout */
 :root {
   --page-width: 71.25rem;
   --font-size-sm: 0.875rem;
@@ -64,7 +62,6 @@ body {
   margin: 10px auto 0;
   padding: 0 0.625rem;
 }
-/* Layout blocks */
 .cmn-l-block-wrap {
   width: 100%;
   max-width: var(--page-width);
@@ -104,7 +101,6 @@ body {
   .cmn-l-block-title { font-size: 2.625rem; margin-bottom: 1.25rem; font-weight: 400; }
 }
 
-/* Buttons */
 .cmn-btn {
   display: inline-flex;
   align-items: center;
@@ -127,7 +123,6 @@ body {
   opacity: 0.6;
 }
 
-/* Transparent buttons styling */
 button {
   background: transparent;
   border: none;
@@ -145,7 +140,6 @@ button:focus {
   outline-offset: 2px;
 }
 
-/* Forms */
 .multiselect, .cmn-form-elements__input, .cmn-textarea {
   font-family: inherit;
   font-size: 16px;
@@ -199,7 +193,6 @@ button:focus {
   outline: none;
 }
 
-/* Tables */
 .cmn-data-table {
   width: 100%;
   border-collapse: collapse;
@@ -213,7 +206,6 @@ button:focus {
   background: #f5f5f5;
 }
 
-/* Header styles */
 .topcontent-header-wrap {
   max-width: var(--page-width);
   margin: 0 auto;
@@ -805,14 +797,14 @@ button:focus {
   margin-bottom: -50px
 }
 
-/* Важно: сохраняем контент по центру */
+/* сохраняем контент по центру */
 .cmn-l-block-wrap.cmn-l-block-wrap_nobg {
   max-width: var(--page-width);
   margin: 0 auto;
   padding: 0 15px;
 }
 
-/* --- Верхний блок футера (сетка 4 колонки) --- */
+/* Верхний блок футера (сетка 4 колонки) */
 .footer-block-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -890,14 +882,14 @@ button:focus {
   height: 16px;
 }
 
-/* --- Разделительная линия между верхним и нижним блоком --- */
+/* Разделительная линия между верхним и нижним блоком */
 .footer-divider {
   border: 0;
   border-top: 1px solid #bbb;
   margin: 20px 0;
 }
 
-/* --- Нижний серый блок --- */
+/* Нижний серый блок */
 .footer-subfooter {
   background-color: #D4D4D4;
   padding: 20px 20px 10px;
@@ -947,7 +939,7 @@ button:focus {
   text-decoration: underline;
 }
 
-/* --- Внутренняя "палка" --- */
+/* Внутренняя "палка" */
 .footer-subdivider {
   border: 0;
   border-top: 1px solid #bbb;
@@ -968,7 +960,7 @@ button:focus {
   padding: 0 20px;
 }
 
-/* === Единый стиль для всех горизонтальных вкладок === */
+/* Единый стиль для всех горизонтальных вкладок */
 .countries-top-nav,
 .pages-main-nav {
   display: flex;
@@ -1026,7 +1018,7 @@ button:focus {
   color: #fff;
 }
 
-/* === Кнопка "На карте" под слайдером — прижата к правому краю === */
+/*  Кнопка "На карте" под слайдером — прижата к правому краю */
 .cmn-l-block-wrap_OFF-2 {
   text-align: right;
 }
