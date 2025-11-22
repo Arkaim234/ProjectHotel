@@ -1,4 +1,4 @@
-﻿using MiniHttpServer.Frimework.Core.Abstracts;
+using MiniHttpServer.Frimework.Core.Abstracts;
 using Npgsql;
 using System;
 using System.Collections;

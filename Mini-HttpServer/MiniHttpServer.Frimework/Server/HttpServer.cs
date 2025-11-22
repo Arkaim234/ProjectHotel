@@ -1,4 +1,4 @@
-﻿using MiniHttpServer.Frimework.Core.Abstracts;
+using MiniHttpServer.Frimework.Core.Abstracts;
 using MiniHttpServer.Frimework.Core.Handlers;
 using MiniHttpServer.Frimework.Settings;
 using System.Net;

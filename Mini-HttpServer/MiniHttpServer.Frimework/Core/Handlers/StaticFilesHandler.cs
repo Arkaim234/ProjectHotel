@@ -1,4 +1,4 @@
-﻿using MiniHttpServer.Frimework.Core.Abstracts;
+using MiniHttpServer.Frimework.Core.Abstracts;
 using MiniHttpServer.Frimework.Shared;
 using System;
 using System.Collections.Generic;

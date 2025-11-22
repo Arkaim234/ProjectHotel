@@ -1,4 +1,4 @@
-﻿using MiniHttpServer.Frimework.Core.HttpResponse;
+using MiniHttpServer.Frimework.Core.HttpResponse;
 using System.Net;
 using System.Reflection;
 using System.Text;
