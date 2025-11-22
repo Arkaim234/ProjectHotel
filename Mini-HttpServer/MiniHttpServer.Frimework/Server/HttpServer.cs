@@ -1,13 +1,7 @@
 ﻿using MiniHttpServer.Frimework.Core.Abstracts;
 using MiniHttpServer.Frimework.Core.Handlers;
 using MiniHttpServer.Frimework.Settings;
-using MiniHttpServer.Frimework.Shared;
-using System;
-using System.ComponentModel;
-using System.IO;
 using System.Net;
-using System.Net.Mime;
-using System.Reflection.Metadata;
 using System.Text;
 
 
@@ -44,17 +38,69 @@ namespace MiniHttpServer.Frimework.Server
 
         protected async void ListenerCallback(IAsyncResult result)
         {
-            if (_listener.IsListening && !_token.IsCancellationRequested)
+            HttpListenerContext? context = null;
+
+            try
             {
-                var context = _listener.EndGetContext(result);
+                if (!_listener.IsListening || _token.IsCancellationRequested)
+                    return;
 
-                Handler staticFilesHandler = new StaticFilesHandler();
-                Handler endpointsHandler = new EndpointsHandlers();
+                try
+                {
+                    context = _listener.EndGetContext(result);
+                }
+                catch (ObjectDisposedException)
+                {
+                    return;
+                }
+                catch (HttpListenerException ex)
+                {
+                    Console.WriteLine($"[HttpServer] Listener error: {ex}");
+                    if (!_token.IsCancellationRequested && _listener.IsListening)
+                        Receive();
+                    return;
+                }
+
+                var staticFilesHandler = new StaticFilesHandler();
+                var endpointsHandler = new EndpointsHandlers();
                 staticFilesHandler.Successor = endpointsHandler;
-                staticFilesHandler.HandleRequest(context);
 
-                if (!_token.IsCancellationRequested)
-                    Receive();
+                try
+                {
+                    await staticFilesHandler.HandleRequest(context);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[HttpServer] Unhandled request error: {ex}");
+
+                    try
+                    {
+                        if (context?.Response?.OutputStream?.CanWrite == true)
+                        {
+                            context.Response.StatusCode = 500;
+                            var bytes = Encoding.UTF8.GetBytes("Internal server error");
+                            await context.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
+                            await context.Response.OutputStream.FlushAsync();
+                        }
+                    }
+                    catch { }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[HttpServer] Fatal listener error: {ex}");
+            }
+            finally
+            {
+                try
+                {
+                    if (!_token.IsCancellationRequested && _listener.IsListening)
+                        Receive();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[HttpServer] Error while scheduling next Receive(): {ex}");
+                }
             }
         }
     }

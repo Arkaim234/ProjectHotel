@@ -37,49 +37,68 @@ namespace MyORMLibrary
         /// <typeparam name="T">Тип модели (должен иметь свойство Id).</typeparam>
         /// <param name="entity">Экземпляр объекта для вставки.</param>
         /// <param name="tableName">Имя таблицы в базе данных.</param>
-        /// <returns>Созданный объект с обновлённым Id.</returns>
+        /// <returns>Созданный объект с обновлённым Id (или исходный объект, если произошла ошибка).</returns>
         public T Create<T>(T entity, string tableName) where T : class
         {
+            if (string.IsNullOrWhiteSpace(tableName))
+                tableName = typeof(T).Name.ToLower() + "s";
+
             using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
 
-            var props = typeof(T).GetProperties();
-            var columns = new List<string>();
-            var parameters = new List<string>();
-
-            foreach (var prop in props)
+            try
             {
-                if (string.Equals(prop.Name, "Id", StringComparison.OrdinalIgnoreCase))
-                    continue;
+                connection.Open();
 
-                if (typeof(T).Name == "Hotel" &&
-                    string.Equals(prop.Name, "MealPlans", StringComparison.OrdinalIgnoreCase))
-                    continue;
+                var props = typeof(T).GetProperties();
+                var columns = new List<string>();
+                var parameters = new List<string>();
 
-                columns.Add(prop.Name);
-                parameters.Add($"@{prop.Name}");
+                foreach (var prop in props)
+                {
+                    if (string.Equals(prop.Name, "Id", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    if (typeof(T).Name == "Hotel" &&
+                        string.Equals(prop.Name, "MealPlans", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    columns.Add(prop.Name);
+                    parameters.Add($"@{prop.Name}");
+                }
+
+                string sql =
+                    $"INSERT INTO {tableName} ({string.Join(", ", columns)}) " +
+                    $"VALUES ({string.Join(", ", parameters)}) RETURNING Id";
+
+                using var cmd = new NpgsqlCommand(sql, connection);
+
+                foreach (var prop in props)
+                {
+                    if (string.Equals(prop.Name, "Id", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    if (typeof(T).Name == "Hotel" &&
+                        string.Equals(prop.Name, "MealPlans", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    cmd.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
+                }
+
+                var newId = cmd.ExecuteScalar();
+                var idProp = typeof(T).GetProperty("Id");
+                if (idProp != null && newId != null)
+                {
+                    idProp.SetValue(entity, Convert.ToInt32(newId));
+                }
             }
-
-            string sql = $"INSERT INTO {tableName} ({string.Join(", ", columns)}) VALUES ({string.Join(", ", parameters)}) RETURNING Id";
-
-            using var cmd = new NpgsqlCommand(sql, connection);
-            foreach (var prop in props)
+            catch (PostgresException ex)
             {
-                if (string.Equals(prop.Name, "Id", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                if (typeof(T).Name == "Hotel" &&
-                    string.Equals(prop.Name, "MealPlans", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                cmd.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
+                Console.WriteLine($"[Postgres][Create<{typeof(T).Name}>] {ex.Message}");
+                // При ошибке просто возвращаем исходный объект без падения приложения
             }
-
-            var newId = cmd.ExecuteScalar();
-            var idProp = typeof(T).GetProperty("Id");
-            if (idProp != null && newId != null)
+            catch (Exception ex)
             {
-                idProp.SetValue(entity, Convert.ToInt32(newId));
+                Console.WriteLine($"[Error][Create<{typeof(T).Name}>] {ex.Message}");
             }
 
             return entity;
@@ -91,19 +110,30 @@ namespace MyORMLibrary
         /// <typeparam name="T">Тип модели.</typeparam>
         /// <param name="id">Значение идентификатора.</param>
         /// <param name="tableName">Имя таблицы.</param>
-        /// <returns>Объект или null, если запись не найдена.</returns>
+        /// <returns>Объект или null, если запись не найдена или произошла ошибка.</returns>
         public T? ReadById<T>(int id, string tableName) where T : class, new()
         {
-            string sql = $"SELECT * FROM {tableName} WHERE Id = @id";
-            using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
+            try
+            {
+                string sql = $"SELECT * FROM {tableName} WHERE Id = @id";
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
 
-            using var cmd = new NpgsqlCommand(sql, connection);
-            cmd.Parameters.AddWithValue("@id", id);
+                using var cmd = new NpgsqlCommand(sql, connection);
+                cmd.Parameters.AddWithValue("@id", id);
 
-            using var reader = cmd.ExecuteReader();
-            if (reader.Read())
-                return MapReaderToObject<T>(reader);
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                    return MapReaderToObject<T>(reader);
+            }
+            catch (PostgresException ex)
+            {
+                Console.WriteLine($"[Postgres][ReadById<{typeof(T).Name}>] {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error][ReadById<{typeof(T).Name}>] {ex.Message}");
+            }
 
             return null;
         }
@@ -113,19 +143,31 @@ namespace MyORMLibrary
         /// </summary>
         /// <typeparam name="T">Тип модели.</typeparam>
         /// <param name="tableName">Имя таблицы.</param>
-        /// <returns>Список всех записей таблицы.</returns>
+        /// <returns>Список всех записей таблицы (или пустой список при ошибке).</returns>
         public List<T> ReadByAll<T>(string tableName) where T : class, new()
         {
             var result = new List<T>();
-            string sql = $"SELECT * FROM {tableName}";
 
-            using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
-            using var cmd = new NpgsqlCommand(sql, connection);
-            using var reader = cmd.ExecuteReader();
+            try
+            {
+                string sql = $"SELECT * FROM {tableName}";
 
-            while (reader.Read())
-                result.Add(MapReaderToObject<T>(reader));
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+                using var cmd = new NpgsqlCommand(sql, connection);
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                    result.Add(MapReaderToObject<T>(reader));
+            }
+            catch (PostgresException ex)
+            {
+                Console.WriteLine($"[Postgres][ReadByAll<{typeof(T).Name}>] {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error][ReadByAll<{typeof(T).Name}>] {ex.Message}");
+            }
 
             return result;
         }
@@ -143,34 +185,44 @@ namespace MyORMLibrary
                 tableName = typeof(T).Name.ToLower() + "s";
 
             using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
 
-            var props = typeof(T).GetProperties()
-                .Where(p => !string.Equals(p.Name, "Id", StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-            if (typeof(T).Name.Equals("Hotel", StringComparison.OrdinalIgnoreCase))
+            try
             {
-                props = props
-                    .Where(p =>
-                        (p.PropertyType.IsValueType || p.PropertyType == typeof(string)) ||
-                        (p.PropertyType.IsArray && p.PropertyType.GetElementType() == typeof(string))
-                    )
+                connection.Open();
+
+                var props = typeof(T).GetProperties()
+                    .Where(p => !string.Equals(p.Name, "Id", StringComparison.OrdinalIgnoreCase))
                     .ToList();
+
+                if (typeof(T).Name.Equals("Hotel", StringComparison.OrdinalIgnoreCase))
+                {
+                    props = props
+                        .Where(p =>
+                            (p.PropertyType.IsValueType || p.PropertyType == typeof(string)) ||
+                            (p.PropertyType.IsArray && p.PropertyType.GetElementType() == typeof(string))
+                        )
+                        .ToList();
+                }
+
+                var setClauses = string.Join(", ", props.Select(p => $"{p.Name} = @{p.Name}"));
+                var sql = $"UPDATE {tableName} SET {setClauses} WHERE id = @id";
+
+                using var cmd = new NpgsqlCommand(sql, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                foreach (var prop in props)
+                    cmd.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
+
+                cmd.ExecuteNonQuery();
             }
-
-            var setClauses = string.Join(", ", props.Select(p => $"{p.Name} = @{p.Name}"));
-            var sql = $"UPDATE {tableName} SET {setClauses} WHERE id = @id";
-
-            using var cmd = new NpgsqlCommand(sql, connection);
-            cmd.Parameters.AddWithValue("@id", id);
-            foreach (var prop in props)
-                cmd.Parameters.AddWithValue($"@{prop.Name}", prop.GetValue(entity) ?? DBNull.Value);
-
-            cmd.ExecuteNonQuery();
+            catch (PostgresException ex)
+            {
+                Console.WriteLine($"[Postgres][Update<{typeof(T).Name}>] {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error][Update<{typeof(T).Name}>] {ex.Message}");
+            }
         }
-
-
 
         /// <summary>
         /// Удаляет запись по идентификатору.
@@ -180,12 +232,24 @@ namespace MyORMLibrary
         public void Delete(int id, string tableName)
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            connection.Open();
 
-            string sql = $"DELETE FROM {tableName} WHERE Id = @id";
-            using var cmd = new NpgsqlCommand(sql, connection);
-            cmd.Parameters.AddWithValue("@id", id);
-            cmd.ExecuteNonQuery();
+            try
+            {
+                connection.Open();
+
+                string sql = $"DELETE FROM {tableName} WHERE Id = @id";
+                using var cmd = new NpgsqlCommand(sql, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+            catch (PostgresException ex)
+            {
+                Console.WriteLine($"[Postgres][Delete] {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error][Delete] {ex.Message}");
+            }
         }
 
         // =====================================================
@@ -272,6 +336,7 @@ namespace MyORMLibrary
                 _ => throw new NotSupportedException($"Unsupported expression: {expr.NodeType}")
             };
         }
+
         /// <summary>
         /// Заменяет параметры лямбды на реальные аргументы при разворачивании Invocation.
         /// </summary>
@@ -389,12 +454,24 @@ namespace MyORMLibrary
         /// </summary>
         private T? ExecuteQuerySingle<T>(string sql) where T : class, new()
         {
-            using var conn = new NpgsqlConnection(_connectionString);
-            conn.Open();
-            using var cmd = new NpgsqlCommand(sql, conn);
-            using var reader = cmd.ExecuteReader();
-            if (reader.Read())
-                return MapReaderToObject<T>(reader);
+            try
+            {
+                using var conn = new NpgsqlConnection(_connectionString);
+                conn.Open();
+                using var cmd = new NpgsqlCommand(sql, conn);
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                    return MapReaderToObject<T>(reader);
+            }
+            catch (PostgresException ex)
+            {
+                Console.WriteLine($"[Postgres][ExecuteQuerySingle<{typeof(T).Name}>] {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error][ExecuteQuerySingle<{typeof(T).Name}>] {ex.Message}");
+            }
+
             return null;
         }
 
@@ -404,12 +481,25 @@ namespace MyORMLibrary
         private IEnumerable<T> ExecuteQueryMultiple<T>(string sql) where T : class, new()
         {
             var list = new List<T>();
-            using var conn = new NpgsqlConnection(_connectionString);
-            conn.Open();
-            using var cmd = new NpgsqlCommand(sql, conn);
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
-                list.Add(MapReaderToObject<T>(reader));
+
+            try
+            {
+                using var conn = new NpgsqlConnection(_connectionString);
+                conn.Open();
+                using var cmd = new NpgsqlCommand(sql, conn);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                    list.Add(MapReaderToObject<T>(reader));
+            }
+            catch (PostgresException ex)
+            {
+                Console.WriteLine($"[Postgres][ExecuteQueryMultiple<{typeof(T).Name}>] {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Error][ExecuteQueryMultiple<{typeof(T).Name}>] {ex.Message}");
+            }
+
             return list;
         }
 
@@ -433,6 +523,11 @@ namespace MyORMLibrary
                 catch (IndexOutOfRangeException)
                 {
                     continue;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Error][MapReaderToObject<{typeof(T).Name}>] " +
+                                      $"Property: {prop.Name}, Message: {ex.Message}");
                 }
             }
             return obj;
