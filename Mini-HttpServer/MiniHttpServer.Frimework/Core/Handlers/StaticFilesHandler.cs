@@ -1,4 +1,4 @@
-﻿using MiniHttpServer.Frimework.Core.Abstracts;
+using MiniHttpServer.Frimework.Core.Abstracts;
 using MiniHttpServer.Frimework.Shared;
 using System;
 using System.Collections.Generic;
@@ -9,53 +9,68 @@ using System.Threading.Tasks;
 
 namespace MiniHttpServer.Frimework.Core.Handlers
 {
+    using System.IO;
+    using System.Text;
+
     class StaticFilesHandler : Handler
     {
         public async override Task HandleRequest(HttpListenerContext context)
         {
-            var request = context.Request;
-            var isGetNethod = context.Request.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase);
-            var isStaticFile = request.Url.AbsolutePath.Split('/').Any(x => x.Contains("."));
-
-            if (isGetNethod && isStaticFile)
+            try
             {
-                var response = context.Response;
+                var request = context.Request;
+                var isGetMethod = request.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase);
+                var isStaticFile = request.Url.AbsolutePath.Split('/').Any(x => x.Contains("."));
 
-                byte[]? buffer = null;
-
-                string path = request.Url.AbsolutePath.Trim('/');
-                /*
-                if (path == null || path == "/")
-                    buffer = GetResponseBytes.Invoke($"Public/index.html");
-                */
-                buffer = GetResponseBytes.Invoke(path);
-
-                response.ContentType = MiniHttpServer.Frimework.Shared.ContentType.GetContentType(path.Trim('/'));
-
-                if (buffer == null)
+                if (isGetMethod && isStaticFile)
                 {
-                    response.StatusCode = 404;
-                    string errorText = "<html><body>404 - Not Found</html></body>";
-                    buffer = Encoding.UTF8.GetBytes(errorText);
+                    var response = context.Response;
+
+                    byte[]? buffer = null;
+
+                    string path = request.Url.AbsolutePath.Trim('/');
+
+                    buffer = GetResponseBytes.Invoke(path);
+
+                    response.ContentType = MiniHttpServer.Frimework.Shared.ContentType.GetContentType(path.Trim('/'));
+
+                    if (buffer == null)
+                    {
+                        response.StatusCode = 404;
+                        string errorText = "<html><body>404 - Not Found</body></html>";
+                        buffer = Encoding.UTF8.GetBytes(errorText);
+                    }
+
+                    response.ContentLength64 = buffer.Length;
+
+                    using Stream output = response.OutputStream;
+                    await output.WriteAsync(buffer, 0, buffer.Length);
+                    await output.FlushAsync();
+
+                    Console.WriteLine($"[Static] {request.Url.AbsolutePath} - Status: {response.StatusCode}");
                 }
-
-                response.ContentLength64 = buffer.Length;
-
-                using Stream output = response.OutputStream;
-                await output.WriteAsync(buffer, 0, buffer.Length);
-                await output.FlushAsync();
-
-                if (response.StatusCode == 200)
-                    Console.WriteLine($"Запрос обработан: {request.Url.AbsolutePath} - Status: {response.StatusCode}");
-                else
-                    Console.WriteLine($"Ошибка запроса: {request.Url.AbsolutePath} - Status: {response.StatusCode}");
+                else if (Successor != null)
+                {
+                    await Successor.HandleRequest(context);
+                }
             }
-     
-            // передача запроса дальше по цепи при наличии в ней обработчиков
-            else if (Successor != null)
+            catch (Exception ex)
             {
-                Successor.HandleRequest(context);
+                Console.WriteLine($"[StaticFilesHandler] Error: {ex}");
+
+                try
+                {
+                    if (context?.Response?.OutputStream?.CanWrite == true)
+                    {
+                        context.Response.StatusCode = 500;
+                        var bytes = Encoding.UTF8.GetBytes("Internal server error");
+                        await context.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
+                        await context.Response.OutputStream.FlushAsync();
+                    }
+                }
+                catch { }
             }
         }
     }
+
 }
