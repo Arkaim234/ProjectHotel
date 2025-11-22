@@ -1,9 +1,10 @@
+````markdown
 # MiniHttpServer — Туристический сайт (Отели)
 
-Проект представляет собой учебный туристический сайт с динамическими страницами отелей, собственной ORM, шаблонизатором, админ-панелью и самописным веб-сервером на HttpListener.
+Проект представляет собой учебный туристический сайт с динамическими страницами отелей, собственной ORM, шаблонизатором, админ-панелью и самописным веб-сервером на `HttpListener`.
 
 Проект полностью работает через PostgreSQL — все данные загружаются из реальной базы.  
-Вёрстка и клиентская логика выполнены на чистом HTML, CSS и JavaScript.
+Вёрстка и клиентская логика выполнены на чистом **HTML**, **CSS** и **JavaScript**.
 
 ---
 
@@ -11,54 +12,58 @@
 
 - Публичный сайт (список отелей, детали отеля, галерея, поиск).
 - Полностью динамическая загрузка данных из БД.
-- AJAX фильтрация и AJAX авторизация (без перезагрузки страницы).
+- AJAX-фильтрация и AJAX-авторизация (без перезагрузки страницы).
 - Административная панель (CRUD отелей, описание, услуги, категории).
 - Авторизация пользователей (Admin / Employee / User).
 - Собственный HTML-шаблонизатор: переменные, условия, циклы.
-- Собственная ORM: CRUD, Where(Expression), маппинг объектов.
-- Собственный веб-сервер на HttpListener: роутинг, статические файлы, сессии.
+- Собственная ORM: CRUD, `Where(Expression)`, маппинг объектов.
+- Собственный веб-сервер на `HttpListener`: роутинг, статические файлы, сессии.
 - Чистый JavaScript без фреймворков.
 
 ---
 
 ## 📁 Структура проекта
 
-```
+```text
 MiniHttpServer/
 │
-├── Endpoints/          # Маршруты (аналог MVC контроллеров)
-├── Model/              # Доменные сущности (Hotel, City, Country …)
-├── DTOs/               # Объекты для запросов/ответов
-├── Services/           # Прикладная логика
-├── Validators/         # Серверная валидация
-├── Template/           # .thtml шаблоны страниц
-├── Public/             # HTML, CSS, JS (клиентская часть)
+├── Endpoints/              # Маршруты (аналог MVC контроллеров)
+├── Model/                  # Доменные сущности (Hotel, City, Country …)
+├── DTOs/                   # Объекты для запросов/ответов
+├── Services/               # Прикладная логика
+├── Validators/             # Серверная валидация
+├── Template/               # .thtml-шаблоны страниц
+├── Public/                 # HTML, CSS, JS (клиентская часть)
 │
 ├── MiniHttpServer.Framework/
-│   ├── Server/         # Реализация HttpListener сервера
-│   ├── Handlers/       # Роутинг, статика, обработка ошибок
-│   ├── Attributes/     # HttpGet, HttpPost, Endpoint и т.п.
-│   └── Settings/       # Настройки (порт, домен, БД)
+│   ├── Server/             # Реализация HttpListener сервера
+│   ├── Handlers/           # Роутинг, статика, обработка ошибок
+│   ├── Attributes/         # HttpGet, HttpPost, Endpoint и т.п.
+│   └── Settings/           # Настройки (порт, домен, БД)
 │
-├── MyORMContext/       # Собственная ORM
-├── MiniHttpServer.Data/# Репозитории (Repository/DAO)
-└── Tests/              # Юнит-тесты
-```
+├── MyORMContext/           # Собственная ORM
+├── MiniHttpServer.Data/    # Репозитории (Repository/DAO)
+└── Tests/                  # Юнит-тесты
+````
 
 ---
 
-## 🗄 Настройка PostgreSQL
+## 🗄 Настройка PostgreSQL (локальный запуск без Docker)
 
-1. Создать базу данных:
+### 1. Создать базу данных
 
 ```sql
 CREATE DATABASE onetouche;
 ```
 
+### 2. Создать структуру таблиц
+
+Можно либо выполнить файл `init.sql`, либо воспользоваться этим SQL-скриптом:
+
+```sql
 -- This script was generated by the ERD tool in pgAdmin 4.
 -- Please log an issue at https://github.com/pgadmin-org/pgadmin4/issues/new/choose if you find any bugs, including reproduction steps.
 BEGIN;
-
 
 CREATE TABLE IF NOT EXISTS public.cities
 (
@@ -191,13 +196,11 @@ ALTER TABLE IF EXISTS public.cities
 CREATE INDEX IF NOT EXISTS ix_cities_countryid
     ON public.cities(countryid);
 
-
 ALTER TABLE IF EXISTS public.hotel_category_map
     ADD CONSTRAINT hotel_category_map_category_id_fkey FOREIGN KEY (categoryid)
     REFERENCES public.hotel_categories (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE CASCADE;
-
 
 ALTER TABLE IF EXISTS public.hotel_category_map
     ADD CONSTRAINT hotel_category_map_hotel_id_fkey FOREIGN KEY (hotelid)
@@ -205,20 +208,17 @@ ALTER TABLE IF EXISTS public.hotel_category_map
     ON UPDATE NO ACTION
     ON DELETE CASCADE;
 
-
 ALTER TABLE IF EXISTS public.hotel_mealplans
     ADD CONSTRAINT hotel_mealplans_hotelid_fkey FOREIGN KEY (hotelid)
     REFERENCES public.hotels (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE CASCADE;
 
-
 ALTER TABLE IF EXISTS public.hotel_mealplans
     ADD CONSTRAINT hotel_mealplans_mealplanid_fkey FOREIGN KEY (mealplanid)
     REFERENCES public.mealplans (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE CASCADE;
-
 
 ALTER TABLE IF EXISTS public.hoteldescriptions
     ADD CONSTRAINT hoteldescriptions_hotelid_fkey FOREIGN KEY (hotelid)
@@ -228,7 +228,6 @@ ALTER TABLE IF EXISTS public.hoteldescriptions
 CREATE INDEX IF NOT EXISTS hoteldescriptions_hotelid_key
     ON public.hoteldescriptions(hotelid);
 
-
 ALTER TABLE IF EXISTS public.hotelplaceinfos
     ADD CONSTRAINT hotelplaceinfos_hotelid_fkey FOREIGN KEY (hotelid)
     REFERENCES public.hotels (id) MATCH SIMPLE
@@ -236,7 +235,6 @@ ALTER TABLE IF EXISTS public.hotelplaceinfos
     ON DELETE CASCADE;
 CREATE INDEX IF NOT EXISTS hotelplaceinfos_hotelid_key
     ON public.hotelplaceinfos(hotelid);
-
 
 ALTER TABLE IF EXISTS public.hotels
     ADD CONSTRAINT hotels_cityid_fkey FOREIGN KEY (cityid)
@@ -246,7 +244,6 @@ ALTER TABLE IF EXISTS public.hotels
 CREATE INDEX IF NOT EXISTS ix_hotels_cityid
     ON public.hotels(cityid);
 
-
 ALTER TABLE IF EXISTS public.hotelservices
     ADD CONSTRAINT hotelservices_hotelid_fkey FOREIGN KEY (hotelid)
     REFERENCES public.hotels (id) MATCH SIMPLE
@@ -254,7 +251,6 @@ ALTER TABLE IF EXISTS public.hotelservices
     ON DELETE CASCADE;
 CREATE INDEX IF NOT EXISTS ix_hotelservices_hotelid
     ON public.hotelservices(hotelid);
-
 
 ALTER TABLE IF EXISTS public.roomtypes
     ADD CONSTRAINT roomtypes_hotelid_fkey FOREIGN KEY (hotelid)
@@ -265,14 +261,17 @@ CREATE INDEX IF NOT EXISTS ix_roomtypes_hotelid
     ON public.roomtypes(hotelid);
 
 END;
-
-2. Открыть файл:
-
 ```
+
+### 3. Настроить строку подключения
+
+Файл:
+
+```text
 MiniHttpServer.Framework/Settings/settings.json
 ```
 
-3. Указать строку подключения:
+Пример для локального PostgreSQL:
 
 ```json
 {
@@ -284,11 +283,11 @@ MiniHttpServer.Framework/Settings/settings.json
 
 ---
 
-## ▶ Запуск проекта
+## ▶ Запуск проекта (локально, без Docker)
 
-1. Установить **.NET 9 SDK**  
-2. Установить и запустить **PostgreSQL**  
-3. Проверить правильность строки подключения  
+1. Установить **.NET 9 SDK**
+2. Установить и запустить **PostgreSQL**
+3. Проверить правильность строки подключения
 4. В терминале выполнить:
 
 ```bash
@@ -298,7 +297,7 @@ dotnet run
 
 Сервер запустится по адресу:
 
-```
+```text
 http://localhost:1337/
 ```
 
@@ -306,12 +305,12 @@ http://localhost:1337/
 
 ## 🌐 Публичные страницы
 
-| Описание | Путь |
-|---------|------|
-| Главная страница | `/Public/index.html` |
-| Авторизация | `/Public/autorization.html` |
-| Список отелей | `/hotels` |
-| Детали отеля | `/hotels/{id}` |
+| Описание         | Путь                        |
+| ---------------- | --------------------------- |
+| Главная страница | `/Public/index.html`        |
+| Авторизация      | `/Public/autorization.html` |
+| Список отелей    | `/hotels`                   |
+| Детали отеля     | `/hotels/{id}`              |
 
 ---
 
@@ -319,42 +318,47 @@ http://localhost:1337/
 
 После авторизации:
 
-```
+```text
 /admin
 ```
 
 Функции:
 
-- Просмотр списка отелей  
-- Добавление / редактирование / удаление  
-- Редактирование описания, характеристик, услуг, категорий  
-- Проверка ролей (Admin / Employee)
+* Просмотр списка отелей
+* Добавление / редактирование / удаление
+* Редактирование описания, характеристик, услуг, категорий
+* Проверка ролей (Admin / Employee)
 
 ---
 
 ## 📡 AJAX-функциональность
 
-- AJAX авторизация (`POST /auth/login`)
-- Фильтрация списка отелей
-- Подгрузка данных через API
-- Обновление интерфейса без перезагрузки страницы
+* AJAX-авторизация (`POST /auth/login`)
+* Фильтрация списка отелей (`/api/hotels/search`)
+* Подгрузка данных через API
+* Обновление интерфейса без перезагрузки страницы
 
 ---
 
 ## 🧩 Шаблонизатор (.thtml)
 
-### Переменные  
-```
+Поддерживает:
+
+### Переменные
+
+```text
 ${Hotel.Name}
 ```
 
-### Условия  
-```
+### Условия
+
+```csharp
 @if(Model.HasDiscount) { ... }
 ```
 
-### Циклы  
-```
+### Циклы
+
+```csharp
 @foreach(var item in Model.Items) { ... }
 ```
 
@@ -362,7 +366,7 @@ ${Hotel.Name}
 
 ## 🧪 Тесты
 
-Запуск:
+Запуск тестов:
 
 ```bash
 dotnet test
@@ -370,5 +374,122 @@ dotnet test
 
 Покрыто тестами:
 
-- движок шаблонизатора  
-- веб-сервер  
+* движок шаблонизатора
+* веб-сервер
+
+---
+
+## 🐳 Запуск проекта в Docker
+
+В проекте есть `docker-compose.yml`, который поднимает:
+
+* контейнер с **PostgreSQL** (`postgres`)
+* контейнер с **приложением** (`mini-http-server`)
+
+### 1. Требования
+
+* Установлен **Docker Desktop** (Windows / macOS / Linux).
+* В терминале команды работают:
+
+```bash
+docker --version
+docker compose version
+```
+
+### 2. Старт всего проекта
+
+Из корня решения (там, где лежит `docker-compose.yml`):
+
+```bash
+docker compose up --build
+```
+
+Что происходит:
+
+* собирается образ приложения из `MiniHttpServer/Dockerfile`;
+* поднимается контейнер `postgres`, выполняется `init.sql` (создание схемы и начальные данные);
+* после готовности БД запускается контейнер `app` (`mini-http-server`).
+
+### 3. Открыть сайт в браузере
+
+После запуска контейнеров:
+
+```text
+http://localhost:1337/index.html
+```
+
+или
+
+```text
+http://localhost:1337/Public/index.html
+```
+
+Админка:
+
+```text
+http://localhost:1337/admin
+```
+
+---
+
+## 🔁 Пересборка и перезапуск контейнеров
+
+Если изменили код, `settings.json` или `Dockerfile`:
+
+```bash
+docker compose down          # остановить контейнеры
+docker compose up --build    # пересобрать образ и запустить заново
+```
+
+Можно просто:
+
+```bash
+docker compose up --build
+```
+
+Docker сам пересоберёт образ при изменениях.
+
+---
+
+## 💣 Как «дропнуть» базу и пересоздать её через `init.sql`
+
+PostgreSQL в Docker хранит данные в томе `postgres_data`.
+Чтобы полностью сбросить БД и заново прогнать `init.sql`:
+
+1. Остановить и удалить контейнеры **с удалением томов**:
+
+```bash
+docker compose down -v
+```
+
+2. Запустить всё снова:
+
+```bash
+docker compose up --build
+```
+
+При первом старте:
+
+* создастся чистая БД `onetouche`;
+* выполнится `init.sql` (создаст таблицы, связи, тестовые данные и пользователя Admin).
+
+---
+
+## 🔍 Просмотр логов
+
+Логи приложения:
+
+```bash
+docker logs mini-http-server
+```
+
+Логи PostgreSQL:
+
+```bash
+docker logs postgres_db
+```
+
+(имена контейнеров можно уточнить командой `docker ps` или в Docker Desktop).
+
+```
+```

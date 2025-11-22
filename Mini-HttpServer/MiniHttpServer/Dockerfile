@@ -1,31 +1,35 @@
-# См. статью по ссылке https://aka.ms/customizecontainer, чтобы узнать как настроить контейнер отладки и как Visual Studio использует этот Dockerfile для создания образов для ускорения отладки.
-
-# Этот этап используется при запуске из VS в быстром режиме (по умолчанию для конфигурации отладки)
+# Базовый образ с рантаймом .NET
 FROM mcr.microsoft.com/dotnet/runtime:9.0 AS base
-USER $APP_UID
 WORKDIR /app
 
-
-# Этот этап используется для сборки проекта службы
+# Этап сборки
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
+# Копируем csproj
 COPY ["MiniHttpServer/MiniHttpServer.csproj", "MiniHttpServer/"]
-COPY ["MiniHttpServer.Data/MiniHttpServer.Repository.csproj", "MiniHttpServer.Data/"]
-COPY ["MyORMContext/MyORMLibrary.csproj", "MyORMContext/"]
+COPY ["MiniHttpServer.Repository/MiniHttpServer.Repository.csproj", "MiniHttpServer.Repository/"]
+COPY ["MyORMLibrary/MyORMLibrary.csproj", "MyORMLibrary/"]
 COPY ["MiniHttpServer.Frimework/MiniHttpServer.Frimework.csproj", "MiniHttpServer.Frimework/"]
-COPY ["iniTemplateEngine/MiniTemplateEngine.csproj", "iniTemplateEngine/"]
+COPY ["MiniTemplateEngine/MiniTemplateEngine.csproj", "MiniTemplateEngine/"]
+
+# Восстанавливаем зависимости
 RUN dotnet restore "./MiniHttpServer/MiniHttpServer.csproj"
+
+# Копируем весь остальной код
 COPY . .
 WORKDIR "/src/MiniHttpServer"
+
+# Сборка
 RUN dotnet build "./MiniHttpServer.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
+# Публикация
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./MiniHttpServer.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
+# Финальный образ
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

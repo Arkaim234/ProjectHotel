@@ -3,7 +3,7 @@
   "ChatGPTUri": "ChatGPT",
   "OlaraUri": "Olara",
   "LoginUri": "LoginForm",
-  "Domain": "localhost",
+  "Domain": "+",
   "Port": "1337",
-  "ConectionString" : "Host=localhost;Port=5432;Database=onetouche;Username=postgres;Password=Olganik496"
+  "ConectionString": "Host=postgres;Port=5432;Database=onetouche;Username=postgres;Password=Olganik496" 
 }
